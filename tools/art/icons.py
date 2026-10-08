@@ -46,6 +46,10 @@ def moodle(kind):
         d.ellipse([22 * k, 24 * k, 27 * k, 29 * k], fill=W)
         d.ellipse([37 * k, 24 * k, 42 * k, 29 * k], fill=W)
         d.arc([22 * k, 38 * k, 42 * k, 52 * k], 200, 340, fill=W, width=4 * k)
+    elif kind == "bleeding":      # blood drop with a cut line
+        d.polygon([(32 * k, 8 * k), (46 * k, 32 * k), (18 * k, 32 * k)], fill=W)
+        d.ellipse([18 * k, 22 * k, 46 * k, 52 * k], fill=W)
+        d.line([(10 * k, 56 * k), (54 * k, 56 * k)], fill=W, width=3 * k)
     elif kind == "stressed":      # lightning
         d.polygon([(36 * k, 8 * k), (18 * k, 36 * k), (30 * k, 36 * k), (26 * k, 56 * k), (46 * k, 26 * k), (34 * k, 26 * k)], fill=W)
     elif kind == "injured":       # bandage cross
@@ -163,4 +167,4 @@ def item_icon(item_id):
     return _done(im)
 
 
-MOODLES = ["hungry", "thirsty", "tired", "bored", "unhappy", "stressed", "injured", "infected"]
+MOODLES = ["hungry", "thirsty", "tired", "bored", "unhappy", "stressed", "injured", "bleeding", "infected"]

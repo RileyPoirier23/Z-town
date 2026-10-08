@@ -42,7 +42,7 @@ public class ArchitectureTests
         void Check(Type type, string path)
         {
             if (!seen.Add(type) || type.Assembly != Core) return;
-            Assert.False(type == typeof(Health) || type == typeof(Infection), $"memere state reaches {type.Name} via {path}");
+            Assert.False(type == typeof(Health) || type == typeof(Infection) || type == typeof(Wounds), $"memere state reaches {type.Name} via {path}");
             foreach (var p in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 Assert.False(HarmWords.Any(w => p.Name.Contains(w, StringComparison.OrdinalIgnoreCase)),
@@ -62,6 +62,7 @@ public class ArchitectureTests
         ["ZTown.Core.Entities.Health::Reduce"] = new[] { "ZTown.Core.Protection.HarmGate" },
         ["ZTown.Core.Entities.Infection::Infect"] = new[] { "ZTown.Core.Protection.HarmGate" },
         ["ZTown.Core.Entities.Infection::Advance"] = new[] { "ZTown.Core.Protection.HarmGate" },
+        ["ZTown.Core.Entities.Wounds::Add"] = new[] { "ZTown.Core.Protection.HarmGate" },
         // Restore sets values when loading a save or spawning
         ["ZTown.Core.Entities.Health::Restore"] = new[] { "ZTown.Core.Save.SaveSystem", "ZTown.Core.GameWorld" },
         ["ZTown.Core.Entities.Infection::Restore"] = new[] { "ZTown.Core.Save.SaveSystem" },
@@ -94,6 +95,7 @@ public class ArchitectureTests
         Assert.NotNull(typeof(Health).GetMethod("Reduce", BindingFlags.NonPublic | BindingFlags.Instance));
         Assert.NotNull(typeof(Infection).GetMethod("Infect", BindingFlags.NonPublic | BindingFlags.Instance));
         Assert.NotNull(typeof(Infection).GetMethod("Advance", BindingFlags.NonPublic | BindingFlags.Instance));
+        Assert.NotNull(typeof(Wounds).GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Instance));
         var target = typeof(ZombieBrain).GetProperty(nameof(ZombieBrain.Target))!;
         Assert.False(target.SetMethod!.IsPublic, "ZombieBrain.Target must not be publicly settable");
         Assert.False(typeof(Health).GetProperty(nameof(Health.Value))!.SetMethod!.IsPublic);

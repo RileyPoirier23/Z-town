@@ -288,6 +288,7 @@ public partial class Main : Node2D
         Key("quickload", Godot.Key.F9);
         Key("faster", Godot.Key.Equal, Godot.Key.KpAdd);
         Key("map", Godot.Key.M);
+        Key("bandage", Godot.Key.Q);
         Key("phone", Godot.Key.P);
         Key("quest_next", Godot.Key.J);
         Key("barricade", Godot.Key.B);
@@ -329,6 +330,11 @@ public partial class Main : Node2D
         }
         if (e.IsActionPressed("unbarricade") && FacingEdge(includeBroken: true) is { } ue && !_world.RemoveBarricade(ue.a, ue.b))
             _hud.Say("", "Need a hammer or crowbar to pry planks off.");
+        if (e.IsActionPressed("bandage"))
+        {
+            var bw = _world.BandageSelf();
+            _hud.Say("", bw != null ? $"Bandaged the {bw.Kind.ToString().ToLowerInvariant()} on your {bw.Part}." : _world.Player.Wounds.List.All(x => x.Bandaged) ? "Nothing to bandage." : "You need a bandage.");
+        }
         if (_map.IsOpen) return;
         if (e.IsActionPressed("use")) Use();
         if (e.IsActionPressed("channel") && NearTv()) _world.NextChannel();

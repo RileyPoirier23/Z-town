@@ -48,6 +48,7 @@ public abstract class Living : Entity
 {
     public Health Health { get; } = new();
     public Infection Infection { get; } = new();
+    public Wounds Wounds { get; } = new();
     public bool IsDead => Health.Value <= 0;
 }
 

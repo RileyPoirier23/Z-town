@@ -285,6 +285,14 @@ public sealed partial class GameWorld
         }
         n.ClampAll();
 
+        // wounds: bleed until bandaged, heal with time; the body recovers when fed and rested
+        if (p.Wounds.Bleeding) new Bleeding { Hours = (float)hours }.ApplyTo(this, p);
+        p.Wounds.Heal((float)hours * (p.Asleep ? 1.5f : 1f));
+        if (!p.Wounds.Bleeding && !p.Infection.Infected && n.Hunger < 0.7f && n.Thirst < 0.7f)
+            p.Health.Heal((float)hours * (p.Asleep ? 4f : 1.5f));
+        // sleeping through danger: something close wakes you
+        if (p.Asleep && Zombies.Any(z => !z.IsDead && z.DistanceTo(p) < 7)) p.Asleep = false;
+
         if (n.Hunger >= 1) new Starvation { Hours = (float)hours }.ApplyTo(this, p);
         if (n.Thirst >= 1) new Dehydration { Hours = (float)hours }.ApplyTo(this, p);
         if (p.Infection.Infected) new InfectionProgress { Hours = (float)hours }.ApplyTo(this, p);

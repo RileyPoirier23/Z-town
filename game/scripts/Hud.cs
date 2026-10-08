@@ -25,6 +25,9 @@ public partial class Hud : CanvasLayer
     Label _time = null!, _date = null!, _power = null!, _memereLine = null!, _asking = null!, _prompt = null!, _subtitle = null!, _help = null!, _equipName = null!;
     Label _questTitle = null!, _questStep = null!, _phoneBadge = null!;
     VBoxContainer _toasts = null!;
+    ColorRect _sleep = null!;
+    PanelContainer _wounds = null!;
+    Label _woundsText = null!;
     int _notesSeen;
     ProgressBar _comfort = null!, _health = null!;
     VBoxContainer _moodles = null!;
@@ -98,6 +101,25 @@ public partial class Hud : CanvasLayer
         _phoneBadge.Size = new Vector2(240, 30);
         AddChild(_phoneBadge);
 
+        // ---- sleep overlay
+        _sleep = new ColorRect { Color = new Color(0, 0, 0.02f, 0), Visible = false, MouseFilter = Control.MouseFilterEnum.Ignore };
+        _sleep.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        var zzz = new Label { Text = "Sleeping…   (any key to wake)", HorizontalAlignment = HorizontalAlignment.Center };
+        zzz.AddThemeFontSizeOverride("font_size", 22);
+        zzz.SetAnchorsPreset(Control.LayoutPreset.Center);
+        zzz.Position = new Vector2(-200, -20);
+        zzz.Size = new Vector2(400, 40);
+        _sleep.AddChild(zzz);
+        AddChild(_sleep);
+        MoveChild(_sleep, 0);
+
+        // ---- wounds panel (H)
+        _wounds = Panel(Control.LayoutPreset.CenterLeft, new Vector2(12, -120), 300);
+        _wounds.Visible = false;
+        var wv = (VBoxContainer)_wounds.GetChild(0);
+        Label(wv, 12, HorizontalAlignment.Left, Muted).Text = "HEALTH  ·  H to close  ·  Q to bandage";
+        _woundsText = Label(wv, 14);
+
         // ---- toasts (top centre)
         _toasts = new VBoxContainer();
         _toasts.SetAnchorsPreset(Control.LayoutPreset.CenterTop);
@@ -142,18 +164,30 @@ public partial class Hud : CanvasLayer
 
         _help = new Label
         {
-            Text = "WASD move · Shift run · Ctrl sneak · E use · Space swing · Tab inventory · Z sleep · F5 save · F9 load · +/- speed · F1 hide",
+            Text = "WASD move · Shift run · Ctrl sneak · E use · Space swing · Tab inventory · B/X board up · Q bandage · H health · M map · P phone · J quest · Z sleep · F5/F9 save/load · F1 hide",
             Modulate = new Color(1, 1, 1, 0.5f),
         };
         _help.AddThemeFontSizeOverride("font_size", 12);
         _help.SetAnchorsPreset(Control.LayoutPreset.CenterBottom);
-        _help.Position = new Vector2(-330, -26);
+        _help.Position = new Vector2(-470, -26);
         AddChild(_help);
     }
 
     public override void _UnhandledInput(InputEvent e)
     {
         if (e is InputEventKey { Pressed: true, Keycode: Key.F1 }) _help.Visible = !_help.Visible;
+        if (e is InputEventKey { Pressed: true, Keycode: Key.H }) _wounds.Visible = !_wounds.Visible;
+    }
+
+    static string WoundsText(GameWorld w)
+    {
+        var p = w.Player;
+        var lines = new List<string> { $"Health {p.Health.Value:0}%" };
+        if (p.Infection.Infected) lines.Add("Something's wrong. The bite's gone bad.");
+        if (p.Wounds.List.Count == 0) lines.Add("No wounds.");
+        foreach (var x in p.Wounds.List)
+            lines.Add($"• {x.Kind} on the {x.Part}{(x.Bleeding ? " — bleeding" : "")}{(x.Bandaged ? " — bandaged" : "")}{(x.Disinfected ? ", clean" : "")}");
+        return string.Join("\n", lines);
     }
 
     PanelContainer Panel(Control.LayoutPreset anchor, Vector2 pos, float width)
@@ -242,8 +276,14 @@ public partial class Hud : CanvasLayer
         var g = w.Power.Generator;
         _power.Text = w.Power.GridOn(w.Clock.Day) ? "Power: grid"
             : w.HousePowered ? $"Power: generator ({g.Fuel:0.0} L)" : "Power: OUT";
-        RefreshMoodles(Moodles.For(p.Needs, p.Health.Value / 100f, w.Data.Needs.Moodles)
-            .Concat(p.Infection.Infected ? new[] { new Moodle(MoodleKind.Infected, 3) } : System.Array.Empty<Moodle>()).ToList());
+        var extra = new List<Moodle>();
+        if (p.Wounds.Bleeding) extra.Add(new Moodle(MoodleKind.Bleeding, Mathf.Clamp(p.Wounds.List.Count(x => x.Bleeding) + 1, 2, 4)));
+        if (p.Infection.Infected) extra.Add(new Moodle(MoodleKind.Infected, 3));
+        RefreshMoodles(Moodles.For(p.Needs, p.Health.Value / 100f, w.Data.Needs.Moodles).Concat(extra).ToList());
+        _sleep.Visible = p.Asleep;
+        if (p.Asleep) _sleep.Color = new Color(0, 0, 0.02f, Mathf.Min(0.8f, _sleep.Color.A + (float)delta * 0.8f));
+        else _sleep.Color = new Color(0, 0, 0.02f, 0);
+        if (_wounds.Visible) _woundsText.Text = WoundsText(w);
 
         var m = w.Memere;
         _comfort.Value = m.Comfort.Value;

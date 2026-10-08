@@ -156,6 +156,18 @@ public sealed partial class GameWorld
 
     public void Sleep() => Player.Asleep = true;
 
+    /// <summary>Bandage your worst wound (uses a bandage; disinfectant too if you have it).</summary>
+    public Entities.Wound? BandageSelf()
+    {
+        if (!HasItem("bandage")) return null;
+        var dis = Player.Inventory.Stacks.FirstOrDefault(s => s.ItemId == "disinfectant" && s.UsesLeft > 0);
+        var w = Player.Wounds.Bandage(dis != null);
+        if (w == null) return null;
+        Player.Inventory.Remove("bandage", 1);
+        if (dis != null && --dis.UsesLeft <= 0) Player.Inventory.RemoveStack(dis);
+        return w;
+    }
+
     /// <summary>Swings the equipped weapon (or fists) at whatever's in front. Returns number hit.</summary>
     public int PlayerAttack(ItemStack? weapon)
     {

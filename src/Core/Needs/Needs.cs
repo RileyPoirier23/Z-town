@@ -57,6 +57,7 @@ public enum MoodleKind
     Unhappy,
     Stressed,
     Injured,
+    Bleeding,
     Infected,
 }
 

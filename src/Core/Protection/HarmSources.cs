@@ -130,3 +130,16 @@ public sealed class InfectionProgress : IHarmSource
         world.Harm.Apply(target, new HarmEvent(HarmKind.Infection, Hours / 60f, Id));
     }
 }
+
+/// <summary>Losing blood from open wounds.</summary>
+public sealed class Bleeding : IHarmSource
+{
+    public string Id => "bleeding";
+    public float Hours { get; init; } = 1;
+
+    public void ApplyTo(GameWorld world, Entity target)
+    {
+        int open = target is Living l ? l.Wounds.List.Count(w => w.Bleeding) : 1;
+        world.Harm.Apply(target, new HarmEvent(HarmKind.Illness, 4f * Hours * Math.Max(1, open), Id));
+    }
+}

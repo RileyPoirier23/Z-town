@@ -72,6 +72,7 @@ public static class SaveSystem
                 },
                 Inventory = w.Player.Inventory.Stacks.Select(Copy).ToList(),
                 Outfit = w.Player.Outfit.Clone(),
+                Wounds = w.Player.Wounds.List.Select(x => new Wound { Kind = x.Kind, Part = x.Part, Bleeding = x.Bleeding, Bandaged = x.Bandaged, Disinfected = x.Disinfected, HoursLeft = x.HoursLeft }).ToList(),
             },
             Memere = new MemereSave
             {
@@ -150,6 +151,8 @@ public static class SaveSystem
         p.Inventory.Stacks.Clear();
         p.Inventory.Stacks.AddRange(s.Player.Inventory.Select(Copy));
         if (s.Player.Outfit != null) p.Outfit = s.Player.Outfit.Clone();
+        p.Wounds.List.Clear();
+        p.Wounds.List.AddRange(s.Player.Wounds);
 
         var m = w.Memere;
         m.X = s.Memere.X; m.Y = s.Memere.Y; m.Z = s.Memere.Z;
@@ -309,6 +312,7 @@ public sealed class PlayerSave
     public List<ItemStack> Inventory { get; set; } = new();
     /// <summary>Added after v1 shipped as a fixture; older saves just lack it (default outfit).</summary>
     public Outfit? Outfit { get; set; }
+    public List<Wound> Wounds { get; set; } = new();
 }
 
 public sealed class NeedsSave

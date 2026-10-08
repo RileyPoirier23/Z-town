@@ -605,6 +605,7 @@
   "water_bottle": "res://assets/gen/items/water_bottle.png"
  },
  "moodles": {
+  "bleeding": "res://assets/gen/ui/moodle_bleeding.png",
   "bored": "res://assets/gen/ui/moodle_bored.png",
   "hungry": "res://assets/gen/ui/moodle_hungry.png",
   "infected": "res://assets/gen/ui/moodle_infected.png",

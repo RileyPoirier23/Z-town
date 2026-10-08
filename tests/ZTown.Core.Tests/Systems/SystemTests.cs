@@ -364,3 +364,32 @@ public class ClothingTests
         Assert.Equal("#aa3322", back.Player.Outfit.In("hat")!.Color);
     }
 }
+
+public class WoundTests
+{
+    [Fact]
+    public void Bites_bleed_until_bandaged_then_heal()
+    {
+        var w = TestData.World();
+        w.Harm.Apply(w.Player, new ZTown.Core.Protection.HarmEvent(ZTown.Core.Protection.HarmKind.Bite, 5, "test"));
+        Assert.True(w.Player.Wounds.Bleeding);
+        float hp = w.Player.Health.Value;
+        for (int i = 0; i < 300; i++) w.Tick(1);
+        Assert.True(w.Player.Health.Value < hp, "bleeding should hurt");
+        Assert.Null(w.BandageSelf()); // no bandage
+        w.Player.Inventory.TryAdd(w.Data.Item("bandage")!, 1, w.Data.Item);
+        Assert.NotNull(w.BandageSelf());
+        Assert.False(w.Player.Wounds.Bleeding);
+        for (int i = 0; i < 3600 * 3; i++) w.Tick(1); // three game days
+        Assert.Empty(w.Player.Wounds.List);
+    }
+
+    [Fact]
+    public void Wounds_never_land_on_memere()
+    {
+        var w = TestData.World();
+        foreach (var k in Enum.GetValues<ZTown.Core.Protection.HarmKind>())
+            w.Harm.Apply(w.Memere, new ZTown.Core.Protection.HarmEvent(k, 50, "test"));
+        Assert.False(typeof(Entities.MemereEntity).GetProperties().Any(p => p.PropertyType == typeof(Entities.Wounds)));
+    }
+}

@@ -44,6 +44,22 @@ public readonly record struct HarmRecord(int TargetId, EntityKind TargetKind, Ha
 /// </summary>
 public sealed class HarmGate
 {
+    static readonly string[] Parts = { "left arm", "right arm", "left hand", "right hand", "torso", "left leg", "right leg", "neck" };
+
+    Wound? WoundFor(HarmEvent h)
+    {
+        string part = Parts[(int)(_rand() * Parts.Length) % Parts.Length];
+        return h.Kind switch
+        {
+            HarmKind.Scratch => new Wound { Kind = WoundKind.Scratch, Part = part, Bleeding = _rand() < 0.4, HoursLeft = 12 },
+            HarmKind.Laceration or HarmKind.Sharp => new Wound { Kind = WoundKind.Laceration, Part = part, Bleeding = true, HoursLeft = 36 },
+            HarmKind.Bite => new Wound { Kind = WoundKind.Bite, Part = part, Bleeding = true, HoursLeft = 60 },
+            HarmKind.Bullet => new Wound { Kind = WoundKind.Bullet, Part = part, Bleeding = true, HoursLeft = 96 },
+            HarmKind.Fire => new Wound { Kind = WoundKind.Burn, Part = part, Bleeding = false, HoursLeft = 72 },
+            _ => null,
+        };
+    }
+
     readonly Func<double> _rand;
 
     /// <summary>Every refusal for a protected entity is recorded so tests can see attempts.</summary>
@@ -81,6 +97,7 @@ public sealed class HarmGate
         living.Health.Reduce(harm.Amount);
         if (harm.InfectionChance > 0 && target.Kind != EntityKind.Zombie && _rand() < harm.InfectionChance)
             living.Infection.Infect();
+        if (target.Kind != EntityKind.Zombie && WoundFor(harm) is { } wound) living.Wounds.Add(wound);
         return HarmOutcome.Applied;
     }
 }
