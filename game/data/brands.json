@@ -1,0 +1,9 @@
+[
+  { "id": "mepsi", "name": "Mepsi", "kind": "soft_drink", "status": "approved", "notes": "Riley's name for it." },
+  { "id": "memere_smokes", "name": "[BRAND TBD]", "kind": "cigarettes", "status": "draft",
+    "notes": "Memere's cigarettes. Ask Riley which brand she smoked, then make a parody of it." },
+  { "id": "corner_store", "name": "Kwik-Way", "kind": "convenience_store", "status": "draft", "notes": "Placeholder name for the corner store." },
+  { "id": "pharmacy", "name": "Rug Mart", "kind": "pharmacy", "status": "draft", "notes": "Parody pharmacy chain. Needs Riley's OK." },
+  { "id": "gas_station", "name": "Erving", "kind": "gas_station", "status": "draft", "notes": "Parody of the big NB gas station chain. Needs Riley's OK." },
+  { "id": "chips", "name": "Crunchos", "kind": "snack", "status": "draft", "notes": "Generic chip brand." }
+]

@@ -1,0 +1,16 @@
+[
+  { "id": "mepsi_can", "name": "Can of Mepsi", "category": "drink", "brand": "mepsi", "weight": 0.35,
+    "thirst": 0.12, "unhappiness": -0.05, "memereSupply": "mepsi", "memereSupplyAmount": 1, "tags": ["drink", "memere"] },
+  { "id": "mepsi_2l", "name": "2L of Mepsi", "category": "drink", "brand": "mepsi", "weight": 2.1,
+    "thirst": 0.25, "uses": 6, "memereSupply": "mepsi", "memereSupplyAmount": 6, "tags": ["drink", "memere"] },
+  { "id": "mepsi_case", "name": "Case of Mepsi (12)", "category": "drink", "brand": "mepsi", "weight": 4.4,
+    "memereSupply": "mepsi", "memereSupplyAmount": 12, "tags": ["memere"] },
+  { "id": "cigarettes_pack", "name": "Pack of smokes", "category": "misc", "brand": "memere_smokes", "weight": 0.05,
+    "memereSupply": "cigarettes", "memereSupplyAmount": 20, "tags": ["memere"] },
+  { "id": "cigarettes_carton", "name": "Carton of smokes", "category": "misc", "brand": "memere_smokes", "weight": 0.5,
+    "memereSupply": "cigarettes", "memereSupplyAmount": 200, "tags": ["memere"] },
+  { "id": "puffer", "name": "Puffer", "category": "medical", "weight": 0.1, "uses": 120,
+    "memereSupply": "puffers", "memereSupplyAmount": 120, "tags": ["medical", "memere"] },
+  { "id": "reruns_box", "name": "Reruns box", "category": "electronics", "weight": 1.5,
+    "tags": ["tv", "memere"] }
+]

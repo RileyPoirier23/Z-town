@@ -1,0 +1,6 @@
+lines:
+  - id: radio.chatter.placeholder
+    speaker: radio_unknown
+    text: "...anyone on this channel, we're at the... [static]"
+    context: "Random radio chatter event."
+    status: draft

@@ -1,0 +1,18 @@
+[
+  // Show names are drafts until Riley approves them. Blurbs are for the review tool only.
+  { "id": "family_fuss", "name": "Family Fuss", "nameStatus": "draft", "kind": "game_show", "herShow": true,
+    "blurb": "Two families guess what 100 people said. Parody of the family survey game show.",
+    "segments": ["tv.family_fuss.seg1"] },
+  { "id": "judge_trudy", "name": "Judge Trudy", "nameStatus": "draft", "kind": "judge_show", "herShow": true,
+    "blurb": "A no-nonsense TV judge settles small-claims fights.", "segments": ["tv.judge_trudy.seg1"] },
+  { "id": "the_morty_show", "name": "The Morty Show", "nameStatus": "draft", "kind": "talk_show", "herShow": true,
+    "blurb": "Daytime talk show: lie detectors, paternity results, a lot of yelling.", "segments": ["tv.morty.seg1"] },
+  { "id": "spin_to_win", "name": "Spin to Win", "nameStatus": "draft", "kind": "game_show", "herShow": true,
+    "blurb": "Spin the wheel, buy a vowel. Parody of the wheel puzzle show.", "segments": [] },
+  { "id": "local_news", "name": "Maritime Evening News", "nameStatus": "draft", "kind": "news", "herShow": false,
+    "blurb": "Local news. Gets stranger every night from day 1.", "segments": [] },
+  { "id": "infomercial", "name": "Paid Programming", "nameStatus": "draft", "kind": "filler", "herShow": false, "blurb": "", "segments": [] },
+  { "id": "emergency_broadcast", "name": "Emergency Broadcast", "nameStatus": "draft", "kind": "emergency", "herShow": false,
+    "blurb": "The emergency alert, looping.", "segments": [] },
+  { "id": "static", "name": "No signal", "nameStatus": "approved", "kind": "static", "herShow": false, "blurb": "", "segments": [] }
+]

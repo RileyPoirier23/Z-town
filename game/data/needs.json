@@ -1,0 +1,14 @@
+{
+  "hungerPerHour": 0.012,
+  "thirstPerHour": 0.02,
+  "fatiguePerHourAwake": 0.045,
+  "fatigueRecoveryPerHourAsleep": 0.12,
+  "sleepNeedsMultiplier": 0.5,
+  "boredomPerHour": 0.01,
+  "starvationDamagePerHour": 1.5,
+  "dehydrationDamagePerHour": 3,
+  // Being home with a comfortable memere is how you recover.
+  "memereMoraleReliefPerHour": 0.08,
+  "awayFromHomeStressPerHour": 0.01,
+  "moodles": { "levels": [0.25, 0.45, 0.7, 0.9] }
+}

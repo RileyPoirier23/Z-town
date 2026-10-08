@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6B407D97-448F-478D-92C2-37E84F9D1481}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZTown.Core", "src\Core\ZTown.Core.csproj", "{A75ECFC0-DF74-42D7-A4AE-EBEA6B291294}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{FFEF842F-0315-4037-B61B-B37B23570CC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZTown.Tools", "tools\ZTown.Tools\ZTown.Tools.csproj", "{16BB0E4C-AAFC-4AAE-B162-72A7750B79DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{68BB19B2-231C-4D0B-9E1C-7DAC55BE5CB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZTown.Core.Tests", "tests\ZTown.Core.Tests\ZTown.Core.Tests.csproj", "{511228C8-BA8D-484C-90AB-699BFEBE0B3D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A75ECFC0-DF74-42D7-A4AE-EBEA6B291294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A75ECFC0-DF74-42D7-A4AE-EBEA6B291294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A75ECFC0-DF74-42D7-A4AE-EBEA6B291294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A75ECFC0-DF74-42D7-A4AE-EBEA6B291294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16BB0E4C-AAFC-4AAE-B162-72A7750B79DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16BB0E4C-AAFC-4AAE-B162-72A7750B79DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16BB0E4C-AAFC-4AAE-B162-72A7750B79DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16BB0E4C-AAFC-4AAE-B162-72A7750B79DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511228C8-BA8D-484C-90AB-699BFEBE0B3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511228C8-BA8D-484C-90AB-699BFEBE0B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511228C8-BA8D-484C-90AB-699BFEBE0B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511228C8-BA8D-484C-90AB-699BFEBE0B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A75ECFC0-DF74-42D7-A4AE-EBEA6B291294} = {6B407D97-448F-478D-92C2-37E84F9D1481}
+		{16BB0E4C-AAFC-4AAE-B162-72A7750B79DF} = {FFEF842F-0315-4037-B61B-B37B23570CC1}
+		{511228C8-BA8D-484C-90AB-699BFEBE0B3D} = {68BB19B2-231C-4D0B-9E1C-7DAC55BE5CB5}
+	EndGlobalSection
+EndGlobal

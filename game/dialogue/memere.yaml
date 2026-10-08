@@ -1,0 +1,62 @@
+# Memere's lines. Built ONLY from what's in FACTS.md.
+# A line in [BRACKETS] is a placeholder: Riley, tell us what she'd actually say.
+# status: draft | approved | rejected   (only approved lines can ship)
+speaker: memere
+lines:
+  - id: memere.miss_you
+    text: "I love and miss you."
+    context: "You come home after being away a long time (a day or more)."
+    status: draft
+    notes: "Riley's own words for what she said. Approve to confirm the exact wording."
+
+  - id: memere.heart_text
+    text: "❤"
+    context: "A text on the player's phone in the first days, while the cell network still works. Just the heart."
+    status: draft
+    notes: "From FACTS.md: she sent texts that were just a heart. Waiting on Riley's OK to use this."
+
+  - id: memere.gift.mepsi
+    text: "[MEMERE: reacts to getting her Mepsi]"
+    context: "You hand her Mepsi."
+    status: draft
+    notes: "Need a real phrase. What would she say?"
+
+  - id: memere.gift.cigarettes
+    text: "[MEMERE: reacts to getting her smokes]"
+    context: "You hand her a pack or carton of her cigarettes."
+    status: draft
+
+  - id: memere.gift.puffers
+    text: "[MEMERE: reacts to getting a puffer]"
+    context: "You bring her a puffer from the pharmacy."
+    status: draft
+
+  - id: memere.gift.food.donair
+    text: "[MEMERE: reacts to getting a donair]"
+    context: "You bring her a donair."
+    status: draft
+
+  - id: memere.gift.not_for_me
+    text: "[MEMERE: politely says she doesn't want that]"
+    context: "You try to give her something that isn't for her (a hammer, a can of beans)."
+    status: draft
+
+  - id: memere.asking.mepsi
+    text: "[MEMERE: mentions she's out of Mepsi / running low]"
+    context: "Her Mepsi is down to about a day left. She mentions it when you're near."
+    status: draft
+
+  - id: memere.asking.cigarettes
+    text: "[MEMERE: mentions she's almost out of smokes]"
+    context: "Her smokes are down to about a day left."
+    status: draft
+
+  - id: memere.asking.puffers
+    text: "[MEMERE: mentions her puffer is getting low]"
+    context: "A few days of puffer left. Calm, just letting you know. Never shown struggling."
+    status: draft
+
+  - id: memere.tv.show_on
+    text: "[MEMERE: something she'd say when her show comes on]"
+    context: "One of her shows starts while you're in the room."
+    status: draft

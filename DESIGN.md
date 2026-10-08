@@ -84,8 +84,8 @@ Failure hits the player, the house, the supplies and the power, never her.
 
 | Failure | What happens | ❓ |
 |---|---|---|
-| Player dies out in town | You wake up at the house a day later, stiff and sore. You lose what you were carrying, and time passed. | ❓ Who brought you home? A rewind instead? |
-| Player bitten / infected | Infection runs its course for the player (Zomboid-style). If it would kill you, you get the same wake-up as above. ❓ Should there be a story cure, or should infection be turned off for the player in story mode? | ❓ |
+| Player dies | **Back to the last save** (Riley's call). Saves happen when you sleep, when you get home, and when you choose to save. | |
+| Player bitten / infected | Infection runs its course for the player (Zomboid-style). If it kills you, back to the last save. ❓ Infection on or off for the player in story mode? | ❓ |
 | Zombies get inside the house | Memere's room is a safe room zombies can't path into. You have to clear the house, and every door and window they came through is wrecked. Supplies inside can get spoiled or knocked over. | |
 | Generator dies / out of fuel | The house goes dark and her show cuts out. Her comfort drops, the fridge starts to spoil. | |
 | Run out of her Mepsi, smokes or puffers | She's unhappy and asks about them. You get a pharmacy or store run objective. She is **not** shown struggling to breathe. Low puffers = she worries and asks, nothing more. | |
@@ -101,7 +101,7 @@ Comfort is 0–100. It is made up of factors, all data-driven (`data/memere/comf
 | Mepsi | she has some | out |
 | Cigarettes | she has some | out |
 | Puffers | stocked | running low (she worries) |
-| Food she likes | ❓ need her favourites | only canned stuff |
+| Food she likes | donairs, ❓ more as Riley remembers | only canned stuff |
 | Her shows | on schedule | TV off / no signal |
 | House | tidy, quiet | mess, noise, boarded-up gloom |
 | You | you're home, you came back | you've been gone a long time |
@@ -114,8 +114,8 @@ Mood picks her idle animations and which lines can play. All states are calm; th
 ### 4.4 Her ambient life
 
 From the brief: napping in her chair, commenting on what you're doing, reacting to what you
-bring her, telling stories, knitting (❓ confirm she knit). Everything she says uses lines Riley
-has approved.
+bring her, telling stories, having a smoke, a Mepsi, watching her shows. (She didn't knit.)
+Everything she says uses lines Riley has approved.
 
 - **The heart texts.** In the first days while the cell network still works, your phone buzzes
   with a text from her that's just a heart. When the network goes down, they stop, and that's
@@ -276,7 +276,7 @@ annotated map, settings, keybinds, controller support. See `ART_SPEC.md`.
 
 ## 12. Open questions for Riley (collected)
 
-1. Memere's favourite foods and snacks.
+1. Memere's favourite foods (donairs ✔) and snacks: more as Riley remembers.
 2. Where memere's house is, and its layout (photos/notes).
 3. Her TV routine, and any phrases / stories / habits beyond `FACTS.md`.
 4. Parody name for her cigarette brand (I'll propose options for you to pick).
@@ -284,6 +284,6 @@ annotated map, settings, keybinds, controller support. See `ART_SPEC.md`.
 6. Where is the player when the outbreak starts (prologue)?
 7. Where is Dad's place? Does Dad come to live at memere's?
 8. Can Dad die, or only get hurt / go missing / relapse?
-9. Player death: wake up at the house, or rewind to last save? Infection on or off for the player in story mode?
+9. ~~Player death~~ → last save ✔. Infection on or off for the player in story mode?
 10. The ending (we talk before anything is written).
 11. Game title: "Memere" (working title) vs "Z-Town" (repo name) vs something else.

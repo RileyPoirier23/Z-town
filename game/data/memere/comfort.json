@@ -1,0 +1,30 @@
+{
+  // Comfort never affects memere's wellbeing. It changes her mood, and it feeds the player's morale.
+  "factors": [
+    { "id": "power", "label": "Power on", "weight": 15, "source": "power" },
+    { "id": "warmth", "label": "Warm house", "weight": 10, "source": "warmth" },
+    { "id": "mepsi", "label": "Her Mepsi", "weight": 15, "source": "supply:mepsi" },
+    { "id": "cigarettes", "label": "Her smokes", "weight": 15, "source": "supply:cigarettes" },
+    { "id": "puffers", "label": "Her puffers", "weight": 10, "source": "supply:puffers" },
+    { "id": "food", "label": "Food she likes", "weight": 10, "source": "food" },
+    { "id": "shows", "label": "Her shows", "weight": 15, "source": "shows" },
+    { "id": "house", "label": "Tidy and quiet", "weight": 5, "source": "house" },
+    { "id": "you", "label": "You came home", "weight": 5, "source": "you" }
+  ],
+  // Every mood is calm. The lowest one is "asking for something", never distress.
+  "moods": [
+    { "id": "asking", "min": 0 },
+    { "id": "quiet", "min": 30 },
+    { "id": "okay", "min": 50 },
+    { "id": "content", "min": 70 },
+    { "id": "happy", "min": 88 }
+  ],
+  "approachPerHour": 10,
+  "awayGraceHours": 6,
+  "awayZeroHours": 48,
+  // Nap/bed hours are placeholders until Riley says what her days were like.
+  "napFromHour": 14,
+  "napToHour": 15,
+  "bedFromHour": 22,
+  "bedToHour": 7
+}

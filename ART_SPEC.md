@@ -92,7 +92,7 @@ Memere's rig has **only** these animation states, and the engine refuses to play
 in her allow-list (checked by the protection data test):
 
 `idle_chair`, `idle_chair_variants`, `nap_chair`, `watch_tv`, `smoke`, `drink_mepsi`, `puffer`,
-`knit` ❓, `talk`, `laugh`, `react_happy`, `react_gift`, `walk_slow`, `sit_down`, `stand_up`,
+`talk`, `laugh`, `react_happy`, `react_gift`, `walk_slow`, `sit_down`, `stand_up`,
 `look_at_player`, `wave`.
 
 There is no hit-react, fall, sick, scared, cough-fit or death state for her rig. `puffer` is a

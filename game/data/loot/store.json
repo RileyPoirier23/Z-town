@@ -1,0 +1,14 @@
+[
+  { "id": "store_drinks", "rollsMin": 2, "rollsMax": 5, "emptyChance": 0.1, "entries": [
+    { "item": "mepsi_can", "weight": 4, "min": 1, "max": 6 }, { "item": "mepsi_2l", "weight": 2 },
+    { "item": "mepsi_case", "weight": 0.5 }, { "item": "water_bottle", "weight": 3, "min": 1, "max": 3 }, { "item": "milk", "weight": 1 } ] },
+  { "id": "store_snacks", "rollsMin": 2, "rollsMax": 5, "emptyChance": 0.15, "entries": [
+    { "item": "chips_bag", "weight": 3, "min": 1, "max": 3 }, { "item": "chocolate_bar", "weight": 3, "min": 1, "max": 4 },
+    { "item": "canned_soup", "weight": 2 }, { "item": "canned_beans", "weight": 2 }, { "item": "bread", "weight": 1 } ] },
+  { "id": "store_counter", "rollsMin": 1, "rollsMax": 3, "emptyChance": 0.2, "entries": [
+    { "item": "cigarettes_pack", "weight": 4, "min": 1, "max": 3 }, { "item": "cigarettes_carton", "weight": 0.5 },
+    { "item": "chocolate_bar", "weight": 1 }, { "item": "flashlight", "weight": 0.3 } ] },
+  { "id": "store_pharmacy", "rollsMin": 1, "rollsMax": 3, "emptyChance": 0.25, "entries": [
+    { "item": "puffer", "weight": 3 }, { "item": "bandage", "weight": 3, "min": 1, "max": 3 },
+    { "item": "disinfectant", "weight": 1 } ] }
+]

@@ -1,0 +1,14 @@
+{
+  "sightRange": 9,
+  "nightSightRange": 5,
+  "hearingMultiplier": 1,
+  "shamblerSpeed": 0.9,
+  "chaseSpeedMultiplier": 1.15,
+  "attackRange": 1.05,
+  "attackSeconds": 1.6,
+  "attackDamage": 6,
+  "biteInfectionChance": 0.25,
+  "thumpPerSecond": 1.2,
+  "thumpNoiseRadius": 12,
+  "health": 30
+}

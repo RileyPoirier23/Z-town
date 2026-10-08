@@ -1,0 +1,7 @@
+[
+  // perDay values are game balance, NOT facts about memere. Tune freely.
+  { "id": "mepsi", "label": "Mepsi", "perDay": 3, "comfortableDays": 3, "askBelowDays": 1, "startAmount": 8 },
+  { "id": "cigarettes", "label": "Smokes", "perDay": 10, "comfortableDays": 3, "askBelowDays": 1, "startAmount": 30 },
+  // puffers: she worries and asks when low. Nothing more. She is never shown struggling.
+  { "id": "puffers", "label": "Puffers", "perDay": 8, "comfortableDays": 7, "askBelowDays": 3, "startAmount": 60 }
+]

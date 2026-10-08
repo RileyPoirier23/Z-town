@@ -1,0 +1,212 @@
+{
+  "saveVersion": 1,
+  "gameVersion": "fixture",
+  "savedAtUtc": "2026-10-08T02:12:06.0946776Z",
+  "seed": 9,
+  "clock": 34800,
+  "rng": 4981370533069391941,
+  "hoursSincePlayerHome": 0,
+  "foodLiked": 0.4652773,
+  "player": {
+    "name": "Riley",
+    "x": 12.5,
+    "y": 13.5,
+    "z": 0,
+    "facing": 0,
+    "health": 0,
+    "infected": true,
+    "infectionProgress": 0.0036111106,
+    "asleep": false,
+    "needs": {
+      "hunger": 0.0066000004,
+      "thirst": 0.011000001,
+      "fatigue": 0.024749994,
+      "boredom": 0.0055000004,
+      "unhappiness": 0,
+      "stress": 0
+    },
+    "inventory": [
+      {
+        "itemId": "mepsi_can",
+        "count": 3,
+        "usesLeft": 1,
+        "condition": 1,
+        "ageHours": 0
+      },
+      {
+        "itemId": "puffer",
+        "count": 1,
+        "usesLeft": 120,
+        "condition": 1,
+        "ageHours": 0
+      }
+    ]
+  },
+  "memere": {
+    "x": 6.5,
+    "y": 9.5,
+    "z": 0,
+    "comfort": 77.29166,
+    "supplies": {
+      "mepsi": 7.79167,
+      "cigarettes": 29.305534,
+      "puffers": 59.44458
+    }
+  },
+  "zombies": [
+    {
+      "x": 7.5729117,
+      "y": 39.484875,
+      "z": 0,
+      "facing": 2.9370565,
+      "health": 30,
+      "speed": 0.9
+    },
+    {
+      "x": 20.404644,
+      "y": 31.02113,
+      "z": 0,
+      "facing": 1.3742392,
+      "health": 30,
+      "speed": 0.9
+    },
+    {
+      "x": 35.479652,
+      "y": 14.099916,
+      "z": 0,
+      "facing": 1.5199807,
+      "health": 30,
+      "speed": 0.9
+    },
+    {
+      "x": 12.499322,
+      "y": 34.090256,
+      "z": 0,
+      "facing": 1.5691425,
+      "health": 30,
+      "speed": 0.9
+    },
+    {
+      "x": 17.617685,
+      "y": 35.35345,
+      "z": 0,
+      "facing": -0.7687704,
+      "health": 30,
+      "speed": 0.9
+    }
+  ],
+  "power": {
+    "gridShutoffDay": 13,
+    "genPresent": true,
+    "genConnected": false,
+    "genRunning": false,
+    "genFuel": 7.5,
+    "genCondition": 1,
+    "appliances": {
+      "tv": true,
+      "fridge": true,
+      "lights": true
+    }
+  },
+  "tv": {
+    "on": false,
+    "channel": "ch2",
+    "rerunsBox": true
+  },
+  "containers": {
+    "house_fridge": {
+      "filled": false,
+      "items": []
+    },
+    "house_cupboard": {
+      "filled": false,
+      "items": []
+    },
+    "store_drinks": {
+      "filled": false,
+      "items": []
+    },
+    "store_shelf_1": {
+      "filled": false,
+      "items": []
+    },
+    "store_counter": {
+      "filled": false,
+      "items": []
+    },
+    "store_pharmacy": {
+      "filled": false,
+      "items": []
+    },
+    "shed": {
+      "filled": false,
+      "items": []
+    }
+  },
+  "openings": [
+    {
+      "x": 6,
+      "y": 4,
+      "z": 0,
+      "side": "N",
+      "state": "WindowClosed"
+    },
+    {
+      "x": 13,
+      "y": 4,
+      "z": 0,
+      "side": "N",
+      "state": "WindowClosed"
+    },
+    {
+      "x": 9,
+      "y": 8,
+      "z": 0,
+      "side": "W",
+      "state": "DoorClosed"
+    },
+    {
+      "x": 16,
+      "y": 8,
+      "z": 0,
+      "side": "W",
+      "state": "WindowClosed"
+    },
+    {
+      "x": 4,
+      "y": 10,
+      "z": 0,
+      "side": "W",
+      "state": "WindowClosed"
+    },
+    {
+      "x": 12,
+      "y": 14,
+      "z": 0,
+      "side": "N",
+      "state": "DoorOpen"
+    },
+    {
+      "x": 29,
+      "y": 26,
+      "z": 0,
+      "side": "N",
+      "state": "WindowClosed"
+    },
+    {
+      "x": 31,
+      "y": 26,
+      "z": 0,
+      "side": "N",
+      "state": "DoorClosed"
+    },
+    {
+      "x": 34,
+      "y": 26,
+      "z": 0,
+      "side": "N",
+      "state": "WindowClosed"
+    }
+  ],
+  "edgeDamage": []
+}

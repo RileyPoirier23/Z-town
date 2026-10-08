@@ -1,0 +1,25 @@
+# Parody TV segments. Short. No real show names, hosts, or catchphrases.
+lines:
+  - id: tv.family_fuss.seg1
+    speaker: tv_host_family_fuss
+    text: "We surveyed a hundred people. Name something you'd grab first in an emergency."
+    context: "Family Fuss, early days (before the outbreak is obvious on TV)."
+    status: draft
+
+  - id: tv.judge_trudy.seg1
+    speaker: tv_judge_trudy
+    text: "You borrowed his truck, you brought it back with no muffler. Pay the man."
+    context: "Judge Trudy, any day before broadcasts end."
+    status: draft
+
+  - id: tv.morty.seg1
+    speaker: tv_host_morty
+    text: "The lie detector test determined... that was a lie."
+    context: "The Morty Show."
+    status: draft
+
+  - id: tv.emergency.loop
+    speaker: tv_emergency
+    text: "This is an emergency alert for southeastern New Brunswick. Stay indoors. Lock your doors. Do not approach anyone showing signs of illness."
+    context: "Emergency broadcast, from day 3."
+    status: draft

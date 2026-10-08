@@ -1,0 +1,13 @@
+{
+  // Like Zomboid's sandbox setting: the grid goes down on a random day in this range.
+  "gridShutoffDayMin": 7,
+  "gridShutoffDayMax": 14,
+  "generator": {
+    "tankLitres": 20,
+    "idleLitresPerHour": 0.25,
+    "litresPerKwHour": 0.35,
+    "maxWatts": 3500,
+    "wearPerHour": 0.0015,
+    "noiseRadius": 22
+  }
+}

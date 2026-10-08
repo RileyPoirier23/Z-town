@@ -1,0 +1,11 @@
+[
+  { "id": "house_fridge", "rollsMin": 1, "rollsMax": 4, "emptyChance": 0.05, "entries": [
+    { "item": "milk", "weight": 2 }, { "item": "mepsi_can", "weight": 3, "min": 1, "max": 4 },
+    { "item": "donair_meat_frozen", "weight": 0.5 }, { "item": "bread", "weight": 1 }, { "item": "water_bottle", "weight": 2, "min": 1, "max": 2 } ] },
+  { "id": "house_kitchen", "rollsMin": 1, "rollsMax": 3, "emptyChance": 0.1, "entries": [
+    { "item": "canned_soup", "weight": 3, "min": 1, "max": 2 }, { "item": "canned_beans", "weight": 2 },
+    { "item": "kitchen_knife", "weight": 1 }, { "item": "frying_pan", "weight": 0.5 }, { "item": "chips_bag", "weight": 1 } ] },
+  { "id": "house_shed", "rollsMin": 2, "rollsMax": 3, "emptyChance": 0, "entries": [
+    { "item": "gas_can", "weight": 3 }, { "item": "hammer", "weight": 1 }, { "item": "planks", "weight": 2, "min": 1, "max": 3 },
+    { "item": "nails_box", "weight": 1 }, { "item": "flashlight", "weight": 1 } ] }
+]

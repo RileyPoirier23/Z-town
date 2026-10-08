@@ -1,0 +1,12 @@
+{
+  // The only animation states memere's rig may ever play. The protection tests fail the build
+  // if anything asks for a state not on this list, or if a listed state contains a forbidden word.
+  "memereAllowed": [
+    "idle_chair", "idle_chair_variant", "nap_chair", "watch_tv", "smoke", "drink_mepsi", "puffer",
+    "talk", "laugh", "react_happy", "react_gift", "walk_slow", "sit_down", "stand_up", "look_at_player", "wave"
+  ],
+  "forbiddenWords": [
+    "hurt", "hit", "injur", "wound", "bleed", "blood", "sick", "ill", "cough", "choke", "gasp", "faint",
+    "fall", "die", "dead", "death", "dying", "bite", "bitten", "infect", "scared", "fear", "panic", "scream", "cry"
+  ]
+}

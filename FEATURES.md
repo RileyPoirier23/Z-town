@@ -26,7 +26,7 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Mepsi, cigarettes, puffers as consumable supplies that run down | **P0** |
 | TV with a broadcast schedule and **one** parody show | **P0** |
 | Comfort feeds the player's mood (stress/unhappiness relief, sleep quality) | **P0** |
-| Memere idle life: chair, napping, reacting to what you bring her | **P0** (placeholder lines) |
+| Memere idle life: chair, napping, a smoke, a Mepsi, reacting to what you bring her | **P0** (placeholder lines) |
 | Full TV schedule: several parody shows, segments, emergency broadcasts, dead air | P1 |
 | Reruns box (found item) keeps her shows airing off the generator | P1 |
 | Heart texts on the player's phone in the early days ❓ | P1 |
@@ -140,6 +140,7 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Rain collectors, water purification | P1 |
 | Cooking: stove/oven/BBQ/campfire, recipes, food quality | P1 |
 | Food spoilage; fridges/freezers that need power | **P0** (fridge) / P1 |
+| Donairs: a donair shop as a location, frozen donair meat that spoils without power, making donairs for memere | P1 |
 | Farming (seasons matter in NB), foraging, fishing, trapping | P2 |
 | Tailoring, clothing repair, insulation for winter | P2 |
 | Smithing/pottery/glass/knapping tech tree **(B42)** | P3 |

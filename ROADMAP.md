@@ -38,7 +38,7 @@ One block of town, played start to finish, as the full EXE that auto-updates.
 - [ ] Power: grid on → grid off on day N → generator + fuel; lights/TV/fridge depend on it
 - [ ] Memere: chair, idle, nap, comfort meter, mood states, placeholder lines
 - [ ] TV with one parody show on a schedule
-- [ ] Player death → wake-up at the house (or ❓ rewind)
+- [ ] Player death → back to the last save
 - [ ] Save/load everything above
 - [ ] Installer from GitHub Release, auto-update tested by shipping v0.1.0 → v0.1.1
 

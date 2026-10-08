@@ -1,0 +1,10 @@
+{
+  // Game seconds per real second. 24 = one game day per real hour (Project Zomboid's default).
+  "timeScale": 24,
+  "startHour": 8,
+  "playerWalkSpeed": 2.2,
+  "playerRunSpeed": 3.8,
+  "playerSneakSpeed": 1.2,
+  "runNoiseRadius": 8,
+  "walkNoiseRadius": 3
+}
