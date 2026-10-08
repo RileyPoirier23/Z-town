@@ -1,0 +1,15 @@
+# Godot
+.godot/
+.import/
+export/
+# .NET
+bin/
+obj/
+*.user
+# build output
+release/
+Releases/
+# tools
+__pycache__/
+*.osm.pbf
+.DS_Store
