@@ -16,7 +16,8 @@ import urllib.request
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT = os.path.join(ROOT, "game", "data", "osm")
-ENDPOINTS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"]
+ENDPOINTS = ["https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter",
+             "https://overpass.kumi.systems/api/interpreter"]
 
 QUERY = """
 [out:json][timeout:120];
@@ -53,7 +54,7 @@ def fetch(bbox):
             except Exception as e:  # noqa: BLE001
                 last = e
                 print(f"  {url}: {e}")
-        time.sleep(10 * (attempt + 1))
+        time.sleep(20 * (attempt + 1))
     raise RuntimeError(f"Overpass failed: {last}")
 
 
@@ -67,7 +68,12 @@ def main():
             print(f"{a['name']}: cached")
             continue
         print(f"{a['name']}: fetching {a['bbox']}")
-        d = fetch(a["bbox"])
+        try:
+            d = fetch(a["bbox"])
+        except RuntimeError as e:
+            # keep what we got; the next run picks this one up again
+            print(f"::warning::{a['name']} not fetched this time: {e}")
+            continue
         d["ztown"] = {"name": a["name"], "bbox": a["bbox"], "fetched": time.strftime("%Y-%m-%d"),
                       "attribution": "© OpenStreetMap contributors, ODbL 1.0"}
         with open(path, "w", encoding="utf-8") as f:
