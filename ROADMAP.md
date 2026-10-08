@@ -23,6 +23,13 @@ The things everything else stands on. Little to look at, but it has to be right 
 
 **Riley's input needed:** approve the docs; pick the parody cigarette brand name.
 
+## Art pass (started with Phase 0)
+
+Riley asked for Zomboid-level looks from the start, so the art pipeline (`tools/art`) and a
+proper renderer came early: painted tiles, roofs, lighting, fog of war, layered clothing,
+character creator, Zomboid-style HUD. Keeps improving every phase; commissioned art replaces it
+over time (ART_SPEC.md §9).
+
 ## Phase 1 — Vertical slice
 
 One block of town, played start to finish, as the full EXE that auto-updates.
@@ -80,8 +87,10 @@ play it.
 - [ ] Basements, taller buildings
 - [ ] Era overlay: First winter
 
-## Phase 5 — Chapters 4–5: Thaw & Long after
+## Phase 5 — Chapters 4–6: Thaw, Scarcity, Long after (years 1–7)
 
+- [ ] Horses: farms, taming, care, riding, saddlebags
+- [ ] Stale gas, failing cars
 - [ ] Farming, other survivors, trading
 - [ ] Salisbury (❓ or Riverview) import, travel between towns
 - [ ] Era overlays: Thaw, Long after (*Last of Us Part II*-style overgrowth, collapsed landmarks)

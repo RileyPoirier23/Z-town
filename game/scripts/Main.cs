@@ -22,6 +22,7 @@ public partial class Main : Node2D
     GameData _data = null!;
     DialogueDb _dialogue = null!;
     GameWorld _world = null!;
+    bool Playing => _world != null && _menu == null;
     IsoView _view = null!;
     Camera2D _camera = null!;
     Hud _hud = null!;
@@ -42,16 +43,21 @@ public partial class Main : Node2D
 
         RegisterInput();
 
-        _view = new IsoView();
+        _view = new IsoView { Art = Art.Load() };
         AddChild(_view);
-        _camera = new Camera2D { Zoom = new Vector2(0.7f, 0.7f), PositionSmoothingEnabled = true, PositionSmoothingSpeed = 8 };
+        _camera = new Camera2D { Zoom = new Vector2(0.85f, 0.85f), PositionSmoothingEnabled = true, PositionSmoothingSpeed = 8 };
         AddChild(_camera);
-        _hud = new Hud { Dialogue = _dialogue, Version = "v" + (string)ProjectSettings.GetSetting("application/config/version") };
+        _hud = new Hud { Dialogue = _dialogue, Art = _view.Art, Version = "v" + (string)ProjectSettings.GetSetting("application/config/version") };
+        _hud.EquippedItem = () => _inventory?.Equipped?.ItemId;
         AddChild(_hud);
-        _inventory = new InventoryPanel { Toast = t => _hud.Say("", t) };
+        _inventory = new InventoryPanel { Toast = t => _hud.Say("", t), Art = _view.Art };
         AddChild(_inventory);
 
-        NewGame((ulong)DateTime.UtcNow.Ticks);
+        var args = OS.GetCmdlineUserArgs();
+        if (args.Contains("--quickstart") || args.Contains("--demo")) NewGame(42, "Riley", null);
+        else ShowTitle();
+        if (args.Contains("--demo")) DemoSetup();
+        if (args.Contains("--creator")) ShowCreator();
 
         // dev: `godot -- --screenshot=out.png` saves a frame and quits (used to preview builds)
         foreach (var arg in OS.GetCmdlineUserArgs())
@@ -63,9 +69,85 @@ public partial class Main : Node2D
 
     GameWorld CreateBase(ulong seed) => TestMaps.CreateTestWorld(_data, seed, zombies: 0);
 
-    void NewGame(ulong seed)
+    CanvasLayer? _menu;
+
+    /// <summary>dev: `-- --demo` puts the player outside with a few zombies around, for previews.</summary>
+    void DemoSetup()
+    {
+        var w = _world;
+        foreach (var z in w.Zombies.ToList()) w.Remove(z);
+        w.Player.PlaceAt(new TilePos(17, 17));
+        w.Player.Facing = Mathf.Pi * 0.25f;
+        foreach (var (x, y) in new[] { (22, 21), (25, 19), (20, 24), (27, 23), (15, 22) })
+        {
+            var z = w.TrySpawnZombie(new TilePos(x, y));
+            if (z != null) z.Facing = Mathf.Atan2(17 - y, 17 - x);
+        }
+        _wasHome = false;
+        w.Player.Needs.Hunger = 0.5f;
+        w.Player.Needs.Fatigue = 0.3f;
+        w.Player.Needs.Stress = 0.75f;
+        w.Memere.Supplies.Amounts["cigarettes"] = 6;
+        _camera.Position = Iso.ToScreen(w.Player.X, w.Player.Y) + new Vector2(0, -80);
+        _camera.ResetSmoothing();
+    }
+
+    void CloseMenu()
+    {
+        _menu?.QueueFree();
+        _menu = null;
+    }
+
+    void ShowTitle()
+    {
+        CloseMenu();
+        var layer = new CanvasLayer { Layer = 10 };
+        var bg = new ColorRect { Color = new Color(0.07f, 0.065f, 0.06f, 0.9f) };
+        bg.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        layer.AddChild(bg);
+        var box = new VBoxContainer();
+        box.SetAnchorsPreset(Control.LayoutPreset.Center);
+        box.Position = new Vector2(-160, -120);
+        box.CustomMinimumSize = new Vector2(320, 0);
+        box.AddThemeConstantOverride("separation", 12);
+        layer.AddChild(box);
+        var title = new Label { Text = "Memere", HorizontalAlignment = HorizontalAlignment.Center };
+        title.AddThemeFontSizeOverride("font_size", 48);
+        box.AddChild(title);
+        var sub = new Label { Text = "(working title)", HorizontalAlignment = HorizontalAlignment.Center, Modulate = new Color(1, 1, 1, 0.5f) };
+        box.AddChild(sub);
+        if (FileAccess.FileExists(SavePath))
+        {
+            var cont = new Button { Text = "Continue" };
+            cont.Pressed += () => { CloseMenu(); if (!LoadLastSave()) ShowCreator(); };
+            box.AddChild(cont);
+        }
+        var nw = new Button { Text = "New game" };
+        nw.Pressed += ShowCreator;
+        box.AddChild(nw);
+        var quit = new Button { Text = "Quit" };
+        quit.Pressed += () => GetTree().Quit();
+        box.AddChild(quit);
+        var ver = new Label { Text = "v" + (string)ProjectSettings.GetSetting("application/config/version"), HorizontalAlignment = HorizontalAlignment.Center, Modulate = new Color(1, 1, 1, 0.4f) };
+        box.AddChild(ver);
+        AddChild(layer);
+        _menu = layer;
+    }
+
+    void ShowCreator()
+    {
+        CloseMenu();
+        var cc = new CharacterCreator { Data = _data, Art = _view.Art!, Layer = 10 };
+        cc.OnStart = (name, outfit) => { CloseMenu(); NewGame((ulong)DateTime.UtcNow.Ticks, name, outfit); };
+        AddChild(cc);
+        _menu = cc;
+    }
+
+    void NewGame(ulong seed, string name, ZTown.Core.Entities.Outfit? outfit)
     {
         Attach(TestMaps.CreateTestWorld(_data, seed, zombies: 10));
+        _world.Player.Name = name;
+        _world.Player.Outfit = outfit ?? (_data.Clothing.Presets.GetValueOrDefault("player_default")?.Clone() ?? new());
         _world.Player.Inventory.TryAdd(_data.Item("baseball_bat")!, 1, _data.Item);
         _inventory.Equipped = _world.Player.Inventory.Stacks.FirstOrDefault();
         Save();
@@ -146,6 +228,7 @@ public partial class Main : Node2D
 
     public override void _UnhandledInput(InputEvent e)
     {
+        if (!Playing) return;
         if (e is InputEventMouseButton mb && mb.Pressed)
         {
             if (mb.ButtonIndex == MouseButton.WheelUp) _camera.Zoom = (_camera.Zoom * 1.1f).Clamp(new Vector2(0.3f, 0.3f), new Vector2(2, 2));
@@ -174,6 +257,12 @@ public partial class Main : Node2D
 
     public override void _Process(double delta)
     {
+        _hud.Visible = Playing;
+        if (!Playing)
+        {
+            if (_screenshotPath != null && ++_frames == 90) { GetViewport().GetTexture().GetImage().SavePng(_screenshotPath); GetTree().Quit(); }
+            return;
+        }
         float dt = (float)delta;
         var w = _world;
         var p = w.Player;
@@ -194,6 +283,8 @@ public partial class Main : Node2D
                 var weapon = _inventory.Equipped;
                 _attackCooldown = weapon != null ? _data.Item(weapon.ItemId)?.Weapon?.SwingSeconds ?? 0.8f : 0.6f;
                 w.PlayerAttack(weapon);
+                _view.PlayerSwing = 0.45f;
+                _view.PlayerHasWeapon = weapon != null;
                 if (weapon != null && !p.Inventory.Stacks.Contains(weapon)) { _inventory.Equipped = null; _hud.Say("", "Your weapon broke."); }
             }
         }
@@ -206,7 +297,9 @@ public partial class Main : Node2D
         {
             var m = w.Messages[_messagesSeen];
             var line = _dialogue.Lines.GetValueOrDefault(m.DialogueId);
-            _hud.Say(line?.Speaker == "memere" ? "Memere" : line?.Speaker ?? "", _dialogue.Text(m.DialogueId));
+            var text = _dialogue.Text(m.DialogueId);
+            if (line?.Speaker == "memere") _view.Speak(w.Memere.Id, text, 6);
+            else _hud.Say(line?.Speaker ?? "", text);
         }
 
         // coming home saves the game
@@ -216,7 +309,7 @@ public partial class Main : Node2D
 
         if (w.PlayerDied)
         {
-            if (!LoadLastSave()) NewGame((ulong)DateTime.UtcNow.Ticks);
+            if (!LoadLastSave()) NewGame((ulong)DateTime.UtcNow.Ticks, _world.Player.Name, _world.Player.Outfit);
             _hud.Say("", "You died. Back to your last save.");
             return;
         }

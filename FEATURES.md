@@ -59,7 +59,11 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Moodles-style status icons | **P0** (needs only) / P1 (all) |
 | Health panel (body-part view) | P1 |
 | Player infection (Zomboid-style), with story-mode options ❓ | P1 |
-| Character creation: name, traits (positive/negative with point budget), occupation | P1 (P0: name only) |
+| Character creation: name and look (skin, hair, clothes, colours) | **P0** ✔ |
+| Character creation: traits (positive/negative with point budget), occupation | P1 |
+| Layered clothing (hair, hat, top, jacket, bottoms, shoes), each tinted | **P0** ✔ |
+| Clothes as items: find, wear, swap; warmth, bite/scratch protection, condition, wet/bloody | P1 |
+| More garments (dresses, coats, uniforms by area, gloves, glasses, backpacks) | P2 |
 | Skills that level by doing; skill books & magazines | P1 |
 | Skill list: Carpentry, Cooking, First Aid, Electrical, Mechanics, Foraging, Agriculture, Fishing, Trapping, Tailoring, Maintenance, Aiming, Reloading, Short/Long Blade, Short/Long Blunt, Axe, Spear, Sprinting, Lightfooted, Nimble, Sneaking, Strength, Fitness | P1–P2 |
 | B42 craft skills: Carving, Blacksmithing, Welding, Masonry, Pottery, Knapping, Glassmaking **(B42)** | P3 |
@@ -91,6 +95,9 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Rope (sheet rope) escapes from upper floors | P2 |
 | Vehicles: drive, fuel, keys/hotwire, damage, repair, trunk storage | P1 |
 | EVs with batteries vs gas cars | P2 |
+| Gas goes stale, cars get harder to run as years pass | P2 |
+| **Horses**: find on farms, tame, feed/water/shelter, ride, saddlebags, panic near zombies, can be hurt | P2 |
+| Horse-drawn cart for big hauls | P3 |
 | Other survivors (radio, encounters, traders) | P2 |
 | Wild animals (deer, moose ❓), hunting, butchering **(B42)** | P2 |
 | Farm animals / husbandry **(B42)** | P3 |
@@ -106,7 +113,7 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Interiors: grocery, big-box, school, church, apartment, mall, hospital, police, fire hall, restaurants | P1–P2 |
 | Hand-edit & **lock** buildings | **P0** (memere's house) |
 | In-editor notes + photos per building | P1 |
-| Era overlays (vegetation, collapse, wrecks) driven by chapter | P2 (P1: Collapse era only) |
+| Era overlays (vegetation, collapse, wrecks) across 5–7 years, driven by chapter | P2 (P1: Collapse era only) |
 | Full Moncton / Riverview / Salisbury coverage | P2 |
 | OSM attribution in credits and map screen | **P0** |
 
@@ -176,6 +183,9 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Controller support | P1 |
 | Accessibility: subtitles, colourblind modes, text size, screen shake toggle | P1 |
 | Dynamic lighting, flashlights, outages darken the town | **P0** (house power) / P1 |
+| Smooth per-corner lighting, fog of war (what you can't see is darkened, zombies there hidden) | **P0** ✔ |
+| Roofs that hide when you go inside, wall cutaway, see-through trees | **P0** ✔ |
+| Speech over heads | **P0** ✔ |
 | Animations: walk/run/sneak, melee, shoot, climb, carry, craft, eat, sit, idles | P0 (walk/run/idle/swing) / P1–P2 |
 | Ambient audio, music system, sound propagation | P1 |
 | Credits incl. OSM attribution and asset licences | **P0** |

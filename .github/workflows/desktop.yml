@@ -69,7 +69,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/godot
-          key: godot-${{ env.GODOT_VERSION }}-mono-win64
+          key: godot-${{ env.GODOT_VERSION }}-mono-win64-v2
 
       - name: Download Godot + export templates
         if: steps.godot-cache.outputs.cache-hit != 'true'
@@ -79,12 +79,14 @@ jobs:
           curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_mono_win64.zip"
           curl -fsSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_mono_export_templates.tpz"
           unzip -q godot.zip && rm godot.zip
+          # keep only the Windows templates in the cache (the full set is 1.2 GB)
+          unzip -q templates.tpz 'templates/version.txt' 'templates/windows_*' -d tpl && rm templates.tpz
 
       - name: Install export templates
         run: |
           dest="$(cygpath -u "$APPDATA")/Godot/export_templates/${GODOT_VERSION}.stable.mono"
           mkdir -p "$dest"
-          cd ~/godot && unzip -q -o templates.tpz -d tpl && cp -r tpl/templates/* "$dest/"
+          cp -r ~/godot/tpl/templates/* "$dest/"
           echo "GODOT=$(ls ~/godot/Godot_v${GODOT_VERSION}-stable_mono_win64/Godot_v${GODOT_VERSION}-stable_mono_win64_console.exe)" >> "$GITHUB_ENV"
 
       - name: Export the game
@@ -115,9 +117,8 @@ jobs:
         with:
           name: Z-Town-windows
           path: |
-            Releases/Z-Town-*
-            Releases/*.nupkg
-            Releases/releases.win.json
+            Releases/Z-Town-Setup.exe
+            Releases/Z-Town-Portable.zip
           if-no-files-found: error
 
       # A release goes out for a v* tag, or when version.txt is bumped and no release for

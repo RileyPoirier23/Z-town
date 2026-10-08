@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using ZTown.Core;
@@ -16,6 +17,7 @@ public partial class InventoryPanel : CanvasLayer
     public LootContainer? Open { get; private set; }
     public ItemStack? Equipped { get; set; }
     public Action<string>? Toast { get; set; }
+    public Art? Art { get; set; }
 
     PanelContainer _root = null!;
     ItemList _mine = null!, _theirs = null!;
@@ -26,6 +28,7 @@ public partial class InventoryPanel : CanvasLayer
     public override void _Ready()
     {
         _root = new PanelContainer { Visible = false };
+        _root.AddThemeStyleboxOverride("panel", Hud.PanelStyle(0.92f));
         _root.SetAnchorsPreset(Control.LayoutPreset.Center);
         _root.Position = new Vector2(-420, -230);
         _root.CustomMinimumSize = new Vector2(840, 460);
@@ -50,7 +53,7 @@ public partial class InventoryPanel : CanvasLayer
     {
         var v = new VBoxContainer { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
         var l = new Label();
-        var list = new ItemList { SizeFlagsVertical = Control.SizeFlags.ExpandFill, CustomMinimumSize = new Vector2(300, 380) };
+        var list = new ItemList { SizeFlagsVertical = Control.SizeFlags.ExpandFill, CustomMinimumSize = new Vector2(300, 380), FixedIconSize = new Vector2I(32, 32) };
         v.AddChild(l);
         v.AddChild(list);
         parent.AddChild(v);
@@ -125,7 +128,7 @@ public partial class InventoryPanel : CanvasLayer
         lastHash = hash;
         int sel = list.GetSelectedItems().FirstOrDefault(-1);
         list.Clear();
-        foreach (var s in inv.Stacks) list.AddItem(Describe(s));
+        foreach (var s in inv.Stacks) list.AddItem(Describe(s), Art?.Items.GetValueOrDefault(s.ItemId));
         if (sel >= 0 && sel < list.ItemCount) list.Select(sel);
     }
 

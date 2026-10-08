@@ -164,15 +164,22 @@ using them is never a player mechanic.
 Chapters are separated by **time skips**. Each skip moves the world to a new *era*, and the map
 changes (§7.3). Chapter content below is an outline only, with no dialogue.
 
+The story covers **5–7 years** (Riley). By the end, humanity is down to almost nothing: a few
+survivors, no services, the towns grown over.
+
 | # | Era | Rough time | Shape |
 |---|---|---|---|
 | Prologue | Day 0 | Outbreak day | ❓ Where is the player when it starts? Get to memere's. |
 | 1 | Collapse | Days 1–14 | Lock down the house, first runs (store for Mepsi/smokes, pharmacy for puffers), phones and social media failing, heart texts, find Dad. |
-| 2 | Lights out | ~1–2 months | Grid power fails, water goes. Generator, fuel runs, Dad's withdrawal. Radio chatter, other survivors. |
-| 3 | First winter | ~6 months | NB winter: heat, snow, cold-weather runs, firewood, the house as a fortress. |
-| 4 | Thaw | ~1 year | Riverview/Salisbury opened up, overgrown town, bigger hordes, Dad's relapse arc. |
-| 5 | Long after | ~3+ years | *Last of Us Part II*-style overgrowth. Memere's house is cozy and fortified. |
+| 2 | Lights out | Months 1–3 | Grid power fails, water goes. Generator, fuel runs, Dad's withdrawal. Radio chatter, other survivors. |
+| 3 | First winter | Year 1 | NB winter: heat, snow, cold-weather runs, firewood, the house as a fortress. |
+| 4 | Thaw | Years 1–2 | Riverview/Salisbury opened up, overgrown town, bigger hordes, Dad's relapse arc. Gas going stale: cars get unreliable, **horses** come in. |
+| 5 | Scarcity | Years 3–4 | Factory goods run out: Mepsi and smokes become rare finds and trades. Farming, trapping, horses, other survivor groups. |
+| 6 | Long after | Years 5–7 | *Last of Us Part II*-style overgrowth, collapsed landmarks, very few people left. Memere's house is the last warm place. |
 | End | ❓ | ❓ | **Talk to Riley before writing the ending.** |
+
+❓ Over 5–7 years, does memere visibly age in the game, or stay as she is? (Either way she is
+never shown sick or frail; that's rule #1.)
 
 Main quests carry the chapter; side quests come from places (Dad, neighbours ❓, survivors,
 landmarks Riley cares about). There's a quest log, cutscenes are in-engine scripted scenes, and
@@ -228,6 +235,22 @@ that's your upgrades).
 Hordes with sound and sight detection, migration, wandering. Sandbox options: shamblers / fast
 shamblers / sprinters, lunges, crawlers, barricade breaking. Weighty melee and gunplay with
 weapon durability. Aiming uses a reticle (like Zomboid Build 42).
+
+### 7.6 Getting around: cars, then horses
+
+Cars work early on, but over the years gas goes stale, batteries die and parts run out. When you
+can't find a car or can't get one going, you **ride a horse** (Riley). Horses are found on
+farms around Salisbury and the rural edges, need taming, feed, water, shelter and care, carry
+saddlebags, are faster than walking and quieter than an engine, and can panic around zombies.
+Horses can be hurt (they're not memere); a hurt horse is a care-and-rescue problem.
+
+### 7.7 Clothes
+
+Zomboid-style clothing: every character is layered (hair, hat, top, jacket, bottoms, shoes),
+each piece with its own colour. You dress your character at the start, and clothes found in the
+world can be worn. Clothes affect warmth (NB winters), protection from bites and scratches,
+condition (they rip, get bloody, get wet) and how much you can carry. Zombies wear random
+outfits, so no two look the same.
 
 ## 8. Modern-day flavour
 

@@ -30,6 +30,7 @@ dotnet test                                        # unit tests + memere protect
 dotnet run --project tools/ZTown.Tools -- validate # check game data
 dotnet run --project tools/ZTown.Tools -- release-check   # what still needs approval
 python tools/dialogue_review/serve.py              # review dialogue in the browser
+python tools/art/generate.py                       # regenerate the procedural art (needs numpy, Pillow)
 godot --path game                                  # run the game (or open game/ in the Godot editor)
 ```
 

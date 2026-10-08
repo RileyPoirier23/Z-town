@@ -39,6 +39,8 @@ Memere is Riley's grandmother on his dad's side. She passed away on October 7, 2
 - Stories she told (the game can only retell real ones)
 - How she talked about Dad
 - What she'd say when you brought her something
+- What she usually wore and how she wore her hair (her in-game look is a placeholder)
+- Over the 5–7 years of the story, should she visibly age?
 
 ## Dad
 

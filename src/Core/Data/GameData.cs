@@ -90,6 +90,7 @@ public sealed class GameData
     public ComfortConfig Comfort { get; private set; } = new();
     public SimConfig Sim { get; private set; } = new();
     public AnimationRules Animations { get; private set; } = new();
+    public Entities.ClothingData Clothing { get; private set; } = new();
 
     /// <summary>Problems found while loading (duplicate ids etc.). The validator fails on any.</summary>
     public List<string> Problems { get; } = new();
@@ -118,6 +119,7 @@ public sealed class GameData
         d.Comfort = ReadOpt<ComfortConfig>(src, $"{root}/memere/comfort.json", d) ?? new();
         d.Sim = ReadOpt<SimConfig>(src, $"{root}/sim.json", d) ?? new();
         d.Animations = ReadOpt<AnimationRules>(src, $"{root}/memere/animations.json", d) ?? new();
+        d.Clothing = ReadOpt<Entities.ClothingData>(src, $"{root}/clothing.json", d) ?? new();
         return d;
     }
 

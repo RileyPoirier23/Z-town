@@ -17,8 +17,8 @@ overgrown as eras pass.
 | Projection | 2:1 dimetric ("isometric") |
 | Floor tile footprint | **128 × 64 px** (the diamond) |
 | Tile sprite canvas | **128 × 256 px**, floor diamond sits at the bottom, origin = bottom-centre of the diamond |
-| Floor (storey) height | **192 px** (one level up = 192 px screen offset) |
-| World scale | 1 tile ≈ 1 m |
+| Floor (storey) height | **192 px** (one level up = 192 px screen offset) = 2.45 m |
+| World scale | 1 tile ≈ 1 m; camera 45° azimuth, 30° elevation; 1 m vertical = 78.4 px |
 | Pixel density | Authored at the sizes above; scaled in-engine. No mixed densities. |
 
 ## 3. Tiles
@@ -56,7 +56,7 @@ sound (0–1), flammable, climbable, container (loot table id), light emitter, e
 
 ## 4. Characters
 
-### 4.1 Rig: layered paper-doll sprites
+### 4.1 Rig: layered paper-doll sprites (built: see tools/art/chars.py)
 
 Every character (player, memere, Dad, survivors, zombies) is built from **layers** that share
 exactly the same frame grid, so clothing is swappable (like Zomboid):
@@ -68,9 +68,9 @@ draw order: shadow → body (skin tone) → underwear → bottom → shoes → t
 
 | Thing | Value |
 |---|---|
-| Frame size | **256 × 256 px** |
-| Character height | ~**170 px** for an adult (matches 1.7–1.8 m at our tile scale) |
-| Anchor | feet, bottom-centre at (128, 236) |
+| Frame size | **192 × 224 px** |
+| Character height | ~**137 px** for a 1.75 m adult (from the projection above) |
+| Anchor | feet at (96, 196) |
 | Directions | **8** (N, NE, E, SE, S, SW, W, NW) |
 | Frame rate | authored at 12 fps; engine blends between states |
 
@@ -144,12 +144,22 @@ Naming `item_<name>.png`, `moodle_<name>_<level>.png`, `ui_<widget>_<state>.png`
 
 ## 9. Placeholders now, and where real art matters most
 
-### Placeholders (Phase 0–1)
+### Procedural stand-in art (now)
 
-`tools/placeholder_art` generates **flat-shaded, correctly sized** sprites for every tile,
-character layer, item and moodle in the data files, labelled with their id, so everything is
-playable and every slot is the right size for the real art. Audio placeholders are short
-synthesized tones/noise bursts per category. All are listed in `assets/PLACEHOLDERS.md`.
+`tools/art/generate.py` paints every sprite the game uses into `game/assets/gen/` with a
+`manifest.json` the game reads:
+
+- **Tiles**: flat painted textures (vinyl siding, brick, wallpaper, shingles, hardwood,
+  linoleum, carpet, seamless grass/asphalt painted 4×4 tiles at a time) projected onto the iso
+  faces, with face shading, soft contact shadows and outlines. Walls come in full and cutaway
+  heights, with doors and windows in every state.
+- **People, trees, bushes**: built from 3D shapes and rendered with the game's exact camera,
+  lighting and a soft outline. Characters are **layered** (body + one sheet per garment +
+  held items), neutral grey, tinted in game. Memere's rig only has her calm animations.
+- **Icons**: moodles and every item.
+
+All of it is stand-in quality and will be swapped for commissioned art piece by piece; sizes,
+origins and names already match, so swaps are drop-in. Audio is still to come.
 
 ### Where commissioned or licensed art makes the biggest difference (in order)
 

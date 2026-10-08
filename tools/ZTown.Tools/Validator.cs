@@ -56,6 +56,16 @@ public static class Validator
         foreach (var l in dlg.Lines.Values)
             if (l.StatusText is not ("draft" or "approved" or "rejected")) p.Add($"{l.File}: {l.Id} has status '{l.StatusText}' (use draft, approved or rejected)");
 
+        var cl = data.Clothing;
+        foreach (var g in cl.Garments)
+        {
+            if (!cl.SlotOrder.Contains(g.Slot)) p.Add($"garment {g.Id}: unknown slot '{g.Slot}'");
+            if (!cl.Palettes.ContainsKey(g.Palette)) p.Add($"garment {g.Id}: unknown palette '{g.Palette}'");
+        }
+        foreach (var (name, o) in cl.Presets)
+            foreach (var (slot, worn) in o.Slots)
+                if (cl.Garment(worn.Id)?.Slot != slot) p.Add($"outfit preset {name}: '{worn.Id}' isn't a {slot} garment");
+
         p.AddRange(MemereProtectionDataProblems(gameDir, data));
         return p;
     }

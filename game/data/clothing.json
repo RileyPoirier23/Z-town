@@ -1,0 +1,46 @@
+{
+  "slotOrder": ["bottom", "shoes", "top", "outer", "hair", "hat"],
+  "garments": [
+    { "id": "pants", "name": "Jeans / pants", "slot": "bottom", "palette": "pants", "warmth": 0.2 },
+    { "id": "shorts", "name": "Shorts", "slot": "bottom", "palette": "pants", "warmth": 0.05 },
+    { "id": "sneakers", "name": "Sneakers", "slot": "shoes", "palette": "shoes", "warmth": 0.05 },
+    { "id": "boots", "name": "Boots", "slot": "shoes", "palette": "boots", "warmth": 0.15 },
+    { "id": "tshirt", "name": "T-shirt", "slot": "top", "palette": "casual", "warmth": 0.05 },
+    { "id": "sweater", "name": "Sweater", "slot": "top", "palette": "casual", "warmth": 0.25 },
+    { "id": "hoodie", "name": "Hoodie", "slot": "top", "palette": "casual", "warmth": 0.3 },
+    { "id": "jacket", "name": "Jacket", "slot": "outer", "palette": "outer", "warmth": 0.4 },
+    { "id": "hair_short", "name": "Short hair", "slot": "hair", "palette": "hair" },
+    { "id": "hair_long", "name": "Long hair", "slot": "hair", "palette": "hair" },
+    { "id": "hair_bun", "name": "Bun", "slot": "hair", "palette": "hair" },
+    { "id": "hair_buzz", "name": "Buzz cut", "slot": "hair", "palette": "hair" },
+    { "id": "toque", "name": "Toque", "slot": "hat", "palette": "casual", "warmth": 0.15 },
+    { "id": "ballcap", "name": "Ball cap", "slot": "hat", "palette": "casual", "warmth": 0.02 }
+  ],
+  "palettes": {
+    "skin": ["#f0cdb4", "#e3b796", "#d9a888", "#c08a68", "#9a6a4c", "#6e4a34", "#4a3224"],
+    "zombieSkin": ["#9aa088", "#a3a58e", "#949a84", "#8e9480", "#a8a08a"],
+    "hair": ["#1e1a18", "#3a2a20", "#5a4030", "#7a5a3a", "#a07850", "#c9a46a", "#8a3a22", "#9a9690", "#d8d4cc"],
+    "casual": ["#3e5568", "#6a7a4e", "#8a3a34", "#2f3a4a", "#a08a5a", "#5a4a6a", "#c8c2b4", "#2a2a2a", "#4a6a7a", "#b06a3a", "#7a8a90"],
+    "outer": ["#3a4a3a", "#5a4a36", "#2a2e36", "#6a2a26", "#3a4a5e", "#7a6a4a"],
+    "pants": ["#3b4a66", "#2e3a52", "#555a60", "#6a5e4a", "#3a3a3e", "#4a5a4a", "#7a7466"],
+    "shoes": ["#e8e8e4", "#2a2a2a", "#5a5a6a", "#8a2a2a", "#3a4a6a"],
+    "boots": ["#4a3424", "#2a2420", "#6a5034"]
+  },
+  "presets": {
+    "player_default": { "skin": "#d9a888", "height": 1.0, "slots": {
+      "bottom": { "id": "pants", "color": "#3b4a66" }, "shoes": { "id": "sneakers", "color": "#e8e8e4" },
+      "top": { "id": "hoodie", "color": "#4a5e58" }, "hair": { "id": "hair_short", "color": "#5a4030" } } },
+    "dad": { "skin": "#c99a7c", "height": 1.02, "slots": {
+      "bottom": { "id": "pants", "color": "#555a60" }, "shoes": { "id": "boots", "color": "#3a2c22" },
+      "top": { "id": "tshirt", "color": "#7a7466" }, "outer": { "id": "jacket", "color": "#5a4a36" }, "hair": { "id": "hair_short", "color": "#5a4a3c" } } },
+    "memere": { "skin": "#e2b9a2", "height": 0.92, "slots": {
+      "bottom": { "id": "pants", "color": "#6d6a72" }, "shoes": { "id": "sneakers", "color": "#ecebe6" },
+      "top": { "id": "sweater", "color": "#9a7f9e" }, "hair": { "id": "hair_short", "color": "#d6d1c8" } },
+      "notes": "PLACEHOLDER: ask Riley what memere usually wore and how she wore her hair." }
+  },
+  "zombie": {
+    "slotChance": { "bottom": 0.97, "shoes": 0.85, "top": 0.95, "outer": 0.3, "hair": 0.85, "hat": 0.12 },
+    "skinPalette": "zombieSkin",
+    "grime": 0.25
+  }
+}

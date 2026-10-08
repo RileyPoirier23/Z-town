@@ -334,3 +334,33 @@ public class MapTests
         Assert.Equal(Edge.DoorBroken, w.Map.At(12, 14).North);
     }
 }
+
+public class ClothingTests
+{
+    [Fact]
+    public void Zombie_outfits_are_varied_valid_and_repeatable()
+    {
+        var c = TestData.Data.Clothing;
+        var looks = new HashSet<string>();
+        for (int seed = 1; seed < 200; seed++)
+        {
+            var a = Entities.Wardrobe.ForZombie(c, seed);
+            var b = Entities.Wardrobe.ForZombie(c, seed);
+            Assert.Equal(System.Text.Json.JsonSerializer.Serialize(a), System.Text.Json.JsonSerializer.Serialize(b));
+            foreach (var (slot, worn) in a.Slots) Assert.Equal(slot, c.Garment(worn.Id)!.Slot);
+            looks.Add(System.Text.Json.JsonSerializer.Serialize(a));
+        }
+        Assert.True(looks.Count > 150, "zombies should rarely look identical");
+    }
+
+    [Fact]
+    public void Player_outfit_survives_save_and_load()
+    {
+        var w = TestData.World();
+        w.Player.Outfit = TestData.Data.Clothing.Presets["player_default"].Clone();
+        w.Player.Outfit.Slots["hat"] = new Entities.Worn { Id = "toque", Color = "#aa3322" };
+        var back = Save.SaveSystem.Restore(Save.SaveSystem.FromJson(Save.SaveSystem.ToJson(Save.SaveSystem.Capture(w, "t"))), s => TestData.World(s));
+        Assert.Equal("toque", back.Player.Outfit.In("hat")!.Id);
+        Assert.Equal("#aa3322", back.Player.Outfit.In("hat")!.Color);
+    }
+}

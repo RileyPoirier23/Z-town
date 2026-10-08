@@ -98,5 +98,25 @@ close the game, and on F5.
 `GODOT_VERSION` in the workflow; upgrade both together.
 
 ### D-014 — Phase 0 renders with flat placeholder shapes
-**Superseded** by the art pass that followed: Riley asked for Zomboid-level quality, so the
-renderer moves to proper sprites (see `ART_SPEC.md`) instead of flat shapes.
+**Superseded** by D-015: Riley asked for Zomboid-level quality.
+
+### D-015 — Procedural painted art pipeline (until commissioned art)
+**Proposed.** `tools/art` (Python) paints the stand-in art: textures (siding, brick, shingles,
+grass, asphalt…) projected onto the isometric shapes, and people/trees built from 3D shapes
+rendered to sprites with Zomboid's camera angle, shading and outlines. Every sprite has its
+final size, origin and name, so commissioned art can replace any piece without code changes.
+Riley can't be sent clips from here (the build environment can't reach image sites), so
+screenshots pasted into chat are the way to steer the look.
+
+### D-016 — Layered, tinted clothing (paper doll)
+**Proposed.** Characters are drawn as layers (body, bottoms, shoes, top, jacket, hair, hat, held
+item); each garment sheet is neutral grey and tinted in-game. Each layer is rendered with the
+body as an invisible occluder so layers stack correctly in any combination. This is how
+Zomboid-style customisation and varied zombies work without drawing every combination.
+Cost: ~40 MB of character sheets for 14 garments × 14 animations; more garments add ~3 MB each.
+
+### D-017 — The story spans 5–7 years
+**Accepted** (Riley). Eras: Collapse, Lights out, First winter, Thaw, Scarcity, Long after.
+
+### D-018 — Horses for travel
+**Accepted** (Riley). Ride horses when cars can't be found or fixed. Planned for Phase 5 (P2).

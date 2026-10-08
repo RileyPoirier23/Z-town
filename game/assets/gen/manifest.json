@@ -1,0 +1,896 @@
+{
+ "characters": {
+  "anims": {
+   "attack": 8,
+   "dead": 1,
+   "drink_mepsi": 8,
+   "idle": 8,
+   "idle_chair": 8,
+   "nap_chair": 8,
+   "run": 8,
+   "shamble": 8,
+   "smoke": 8,
+   "sneak": 8,
+   "swing": 8,
+   "walk": 8,
+   "watch_tv": 8,
+   "z_idle": 8
+  },
+  "frame": {
+   "feet": [
+    96,
+    196
+   ],
+   "h": 224,
+   "w": 192
+  },
+  "layers": {
+   "ballcap": {
+    "anims": {
+     "attack": "res://assets/gen/characters/ballcap_attack.png",
+     "dead": "res://assets/gen/characters/ballcap_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/ballcap_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/ballcap_idle.png",
+     "idle_chair": "res://assets/gen/characters/ballcap_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/ballcap_nap_chair.png",
+     "run": "res://assets/gen/characters/ballcap_run.png",
+     "shamble": "res://assets/gen/characters/ballcap_shamble.png",
+     "smoke": "res://assets/gen/characters/ballcap_smoke.png",
+     "sneak": "res://assets/gen/characters/ballcap_sneak.png",
+     "swing": "res://assets/gen/characters/ballcap_swing.png",
+     "walk": "res://assets/gen/characters/ballcap_walk.png",
+     "watch_tv": "res://assets/gen/characters/ballcap_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/ballcap_z_idle.png"
+    },
+    "slot": "hat"
+   },
+   "bat": {
+    "anims": {
+     "swing": "res://assets/gen/characters/bat_swing.png"
+    },
+    "slot": "held"
+   },
+   "body": {
+    "anims": {
+     "attack": "res://assets/gen/characters/body_attack.png",
+     "dead": "res://assets/gen/characters/body_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/body_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/body_idle.png",
+     "idle_chair": "res://assets/gen/characters/body_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/body_nap_chair.png",
+     "run": "res://assets/gen/characters/body_run.png",
+     "shamble": "res://assets/gen/characters/body_shamble.png",
+     "smoke": "res://assets/gen/characters/body_smoke.png",
+     "sneak": "res://assets/gen/characters/body_sneak.png",
+     "swing": "res://assets/gen/characters/body_swing.png",
+     "walk": "res://assets/gen/characters/body_walk.png",
+     "watch_tv": "res://assets/gen/characters/body_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/body_z_idle.png"
+    },
+    "slot": "body"
+   },
+   "boots": {
+    "anims": {
+     "attack": "res://assets/gen/characters/boots_attack.png",
+     "dead": "res://assets/gen/characters/boots_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/boots_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/boots_idle.png",
+     "idle_chair": "res://assets/gen/characters/boots_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/boots_nap_chair.png",
+     "run": "res://assets/gen/characters/boots_run.png",
+     "shamble": "res://assets/gen/characters/boots_shamble.png",
+     "smoke": "res://assets/gen/characters/boots_smoke.png",
+     "sneak": "res://assets/gen/characters/boots_sneak.png",
+     "swing": "res://assets/gen/characters/boots_swing.png",
+     "walk": "res://assets/gen/characters/boots_walk.png",
+     "watch_tv": "res://assets/gen/characters/boots_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/boots_z_idle.png"
+    },
+    "slot": "shoes"
+   },
+   "can": {
+    "anims": {
+     "drink_mepsi": "res://assets/gen/characters/can_drink_mepsi.png"
+    },
+    "slot": "held"
+   },
+   "cigarette": {
+    "anims": {
+     "smoke": "res://assets/gen/characters/cigarette_smoke.png"
+    },
+    "slot": "held"
+   },
+   "hair_bun": {
+    "anims": {
+     "attack": "res://assets/gen/characters/hair_bun_attack.png",
+     "dead": "res://assets/gen/characters/hair_bun_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/hair_bun_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/hair_bun_idle.png",
+     "idle_chair": "res://assets/gen/characters/hair_bun_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/hair_bun_nap_chair.png",
+     "run": "res://assets/gen/characters/hair_bun_run.png",
+     "shamble": "res://assets/gen/characters/hair_bun_shamble.png",
+     "smoke": "res://assets/gen/characters/hair_bun_smoke.png",
+     "sneak": "res://assets/gen/characters/hair_bun_sneak.png",
+     "swing": "res://assets/gen/characters/hair_bun_swing.png",
+     "walk": "res://assets/gen/characters/hair_bun_walk.png",
+     "watch_tv": "res://assets/gen/characters/hair_bun_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/hair_bun_z_idle.png"
+    },
+    "slot": "hair"
+   },
+   "hair_buzz": {
+    "anims": {
+     "attack": "res://assets/gen/characters/hair_buzz_attack.png",
+     "dead": "res://assets/gen/characters/hair_buzz_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/hair_buzz_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/hair_buzz_idle.png",
+     "idle_chair": "res://assets/gen/characters/hair_buzz_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/hair_buzz_nap_chair.png",
+     "run": "res://assets/gen/characters/hair_buzz_run.png",
+     "shamble": "res://assets/gen/characters/hair_buzz_shamble.png",
+     "smoke": "res://assets/gen/characters/hair_buzz_smoke.png",
+     "sneak": "res://assets/gen/characters/hair_buzz_sneak.png",
+     "swing": "res://assets/gen/characters/hair_buzz_swing.png",
+     "walk": "res://assets/gen/characters/hair_buzz_walk.png",
+     "watch_tv": "res://assets/gen/characters/hair_buzz_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/hair_buzz_z_idle.png"
+    },
+    "slot": "hair"
+   },
+   "hair_long": {
+    "anims": {
+     "attack": "res://assets/gen/characters/hair_long_attack.png",
+     "dead": "res://assets/gen/characters/hair_long_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/hair_long_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/hair_long_idle.png",
+     "idle_chair": "res://assets/gen/characters/hair_long_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/hair_long_nap_chair.png",
+     "run": "res://assets/gen/characters/hair_long_run.png",
+     "shamble": "res://assets/gen/characters/hair_long_shamble.png",
+     "smoke": "res://assets/gen/characters/hair_long_smoke.png",
+     "sneak": "res://assets/gen/characters/hair_long_sneak.png",
+     "swing": "res://assets/gen/characters/hair_long_swing.png",
+     "walk": "res://assets/gen/characters/hair_long_walk.png",
+     "watch_tv": "res://assets/gen/characters/hair_long_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/hair_long_z_idle.png"
+    },
+    "slot": "hair"
+   },
+   "hair_short": {
+    "anims": {
+     "attack": "res://assets/gen/characters/hair_short_attack.png",
+     "dead": "res://assets/gen/characters/hair_short_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/hair_short_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/hair_short_idle.png",
+     "idle_chair": "res://assets/gen/characters/hair_short_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/hair_short_nap_chair.png",
+     "run": "res://assets/gen/characters/hair_short_run.png",
+     "shamble": "res://assets/gen/characters/hair_short_shamble.png",
+     "smoke": "res://assets/gen/characters/hair_short_smoke.png",
+     "sneak": "res://assets/gen/characters/hair_short_sneak.png",
+     "swing": "res://assets/gen/characters/hair_short_swing.png",
+     "walk": "res://assets/gen/characters/hair_short_walk.png",
+     "watch_tv": "res://assets/gen/characters/hair_short_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/hair_short_z_idle.png"
+    },
+    "slot": "hair"
+   },
+   "hoodie": {
+    "anims": {
+     "attack": "res://assets/gen/characters/hoodie_attack.png",
+     "dead": "res://assets/gen/characters/hoodie_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/hoodie_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/hoodie_idle.png",
+     "idle_chair": "res://assets/gen/characters/hoodie_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/hoodie_nap_chair.png",
+     "run": "res://assets/gen/characters/hoodie_run.png",
+     "shamble": "res://assets/gen/characters/hoodie_shamble.png",
+     "smoke": "res://assets/gen/characters/hoodie_smoke.png",
+     "sneak": "res://assets/gen/characters/hoodie_sneak.png",
+     "swing": "res://assets/gen/characters/hoodie_swing.png",
+     "walk": "res://assets/gen/characters/hoodie_walk.png",
+     "watch_tv": "res://assets/gen/characters/hoodie_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/hoodie_z_idle.png"
+    },
+    "slot": "top"
+   },
+   "jacket": {
+    "anims": {
+     "attack": "res://assets/gen/characters/jacket_attack.png",
+     "dead": "res://assets/gen/characters/jacket_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/jacket_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/jacket_idle.png",
+     "idle_chair": "res://assets/gen/characters/jacket_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/jacket_nap_chair.png",
+     "run": "res://assets/gen/characters/jacket_run.png",
+     "shamble": "res://assets/gen/characters/jacket_shamble.png",
+     "smoke": "res://assets/gen/characters/jacket_smoke.png",
+     "sneak": "res://assets/gen/characters/jacket_sneak.png",
+     "swing": "res://assets/gen/characters/jacket_swing.png",
+     "walk": "res://assets/gen/characters/jacket_walk.png",
+     "watch_tv": "res://assets/gen/characters/jacket_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/jacket_z_idle.png"
+    },
+    "slot": "outer"
+   },
+   "pants": {
+    "anims": {
+     "attack": "res://assets/gen/characters/pants_attack.png",
+     "dead": "res://assets/gen/characters/pants_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/pants_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/pants_idle.png",
+     "idle_chair": "res://assets/gen/characters/pants_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/pants_nap_chair.png",
+     "run": "res://assets/gen/characters/pants_run.png",
+     "shamble": "res://assets/gen/characters/pants_shamble.png",
+     "smoke": "res://assets/gen/characters/pants_smoke.png",
+     "sneak": "res://assets/gen/characters/pants_sneak.png",
+     "swing": "res://assets/gen/characters/pants_swing.png",
+     "walk": "res://assets/gen/characters/pants_walk.png",
+     "watch_tv": "res://assets/gen/characters/pants_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/pants_z_idle.png"
+    },
+    "slot": "bottom"
+   },
+   "shorts": {
+    "anims": {
+     "attack": "res://assets/gen/characters/shorts_attack.png",
+     "dead": "res://assets/gen/characters/shorts_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/shorts_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/shorts_idle.png",
+     "idle_chair": "res://assets/gen/characters/shorts_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/shorts_nap_chair.png",
+     "run": "res://assets/gen/characters/shorts_run.png",
+     "shamble": "res://assets/gen/characters/shorts_shamble.png",
+     "smoke": "res://assets/gen/characters/shorts_smoke.png",
+     "sneak": "res://assets/gen/characters/shorts_sneak.png",
+     "swing": "res://assets/gen/characters/shorts_swing.png",
+     "walk": "res://assets/gen/characters/shorts_walk.png",
+     "watch_tv": "res://assets/gen/characters/shorts_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/shorts_z_idle.png"
+    },
+    "slot": "bottom"
+   },
+   "sneakers": {
+    "anims": {
+     "attack": "res://assets/gen/characters/sneakers_attack.png",
+     "dead": "res://assets/gen/characters/sneakers_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/sneakers_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/sneakers_idle.png",
+     "idle_chair": "res://assets/gen/characters/sneakers_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/sneakers_nap_chair.png",
+     "run": "res://assets/gen/characters/sneakers_run.png",
+     "shamble": "res://assets/gen/characters/sneakers_shamble.png",
+     "smoke": "res://assets/gen/characters/sneakers_smoke.png",
+     "sneak": "res://assets/gen/characters/sneakers_sneak.png",
+     "swing": "res://assets/gen/characters/sneakers_swing.png",
+     "walk": "res://assets/gen/characters/sneakers_walk.png",
+     "watch_tv": "res://assets/gen/characters/sneakers_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/sneakers_z_idle.png"
+    },
+    "slot": "shoes"
+   },
+   "sweater": {
+    "anims": {
+     "attack": "res://assets/gen/characters/sweater_attack.png",
+     "dead": "res://assets/gen/characters/sweater_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/sweater_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/sweater_idle.png",
+     "idle_chair": "res://assets/gen/characters/sweater_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/sweater_nap_chair.png",
+     "run": "res://assets/gen/characters/sweater_run.png",
+     "shamble": "res://assets/gen/characters/sweater_shamble.png",
+     "smoke": "res://assets/gen/characters/sweater_smoke.png",
+     "sneak": "res://assets/gen/characters/sweater_sneak.png",
+     "swing": "res://assets/gen/characters/sweater_swing.png",
+     "walk": "res://assets/gen/characters/sweater_walk.png",
+     "watch_tv": "res://assets/gen/characters/sweater_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/sweater_z_idle.png"
+    },
+    "slot": "top"
+   },
+   "toque": {
+    "anims": {
+     "attack": "res://assets/gen/characters/toque_attack.png",
+     "dead": "res://assets/gen/characters/toque_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/toque_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/toque_idle.png",
+     "idle_chair": "res://assets/gen/characters/toque_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/toque_nap_chair.png",
+     "run": "res://assets/gen/characters/toque_run.png",
+     "shamble": "res://assets/gen/characters/toque_shamble.png",
+     "smoke": "res://assets/gen/characters/toque_smoke.png",
+     "sneak": "res://assets/gen/characters/toque_sneak.png",
+     "swing": "res://assets/gen/characters/toque_swing.png",
+     "walk": "res://assets/gen/characters/toque_walk.png",
+     "watch_tv": "res://assets/gen/characters/toque_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/toque_z_idle.png"
+    },
+    "slot": "hat"
+   },
+   "tshirt": {
+    "anims": {
+     "attack": "res://assets/gen/characters/tshirt_attack.png",
+     "dead": "res://assets/gen/characters/tshirt_dead.png",
+     "drink_mepsi": "res://assets/gen/characters/tshirt_drink_mepsi.png",
+     "idle": "res://assets/gen/characters/tshirt_idle.png",
+     "idle_chair": "res://assets/gen/characters/tshirt_idle_chair.png",
+     "nap_chair": "res://assets/gen/characters/tshirt_nap_chair.png",
+     "run": "res://assets/gen/characters/tshirt_run.png",
+     "shamble": "res://assets/gen/characters/tshirt_shamble.png",
+     "smoke": "res://assets/gen/characters/tshirt_smoke.png",
+     "sneak": "res://assets/gen/characters/tshirt_sneak.png",
+     "swing": "res://assets/gen/characters/tshirt_swing.png",
+     "walk": "res://assets/gen/characters/tshirt_walk.png",
+     "watch_tv": "res://assets/gen/characters/tshirt_watch_tv.png",
+     "z_idle": "res://assets/gen/characters/tshirt_z_idle.png"
+    },
+    "slot": "top"
+   }
+  },
+  "slots": {
+   "bottom": [
+    "pants",
+    "shorts"
+   ],
+   "hair": [
+    "hair_short",
+    "hair_long",
+    "hair_bun",
+    "hair_buzz"
+   ],
+   "hat": [
+    "toque",
+    "ballcap"
+   ],
+   "held": [
+    "bat",
+    "cigarette",
+    "can"
+   ],
+   "outer": [
+    "jacket"
+   ],
+   "shoes": [
+    "sneakers",
+    "boots"
+   ],
+   "top": [
+    "tshirt",
+    "sweater",
+    "hoodie"
+   ]
+  }
+ },
+ "floorGrid": {
+  "asphalt": 4,
+  "carpet": 4,
+  "driveway": 4,
+  "grass": 4,
+  "road_line": 4
+ },
+ "floors": {
+  "asphalt": [
+   "res://assets/gen/floors/asphalt_0.png",
+   "res://assets/gen/floors/asphalt_1.png",
+   "res://assets/gen/floors/asphalt_2.png",
+   "res://assets/gen/floors/asphalt_3.png",
+   "res://assets/gen/floors/asphalt_4.png",
+   "res://assets/gen/floors/asphalt_5.png",
+   "res://assets/gen/floors/asphalt_6.png",
+   "res://assets/gen/floors/asphalt_7.png",
+   "res://assets/gen/floors/asphalt_8.png",
+   "res://assets/gen/floors/asphalt_9.png",
+   "res://assets/gen/floors/asphalt_10.png",
+   "res://assets/gen/floors/asphalt_11.png",
+   "res://assets/gen/floors/asphalt_12.png",
+   "res://assets/gen/floors/asphalt_13.png",
+   "res://assets/gen/floors/asphalt_14.png",
+   "res://assets/gen/floors/asphalt_15.png"
+  ],
+  "carpet": [
+   "res://assets/gen/floors/carpet_0.png",
+   "res://assets/gen/floors/carpet_1.png",
+   "res://assets/gen/floors/carpet_2.png",
+   "res://assets/gen/floors/carpet_3.png",
+   "res://assets/gen/floors/carpet_4.png",
+   "res://assets/gen/floors/carpet_5.png",
+   "res://assets/gen/floors/carpet_6.png",
+   "res://assets/gen/floors/carpet_7.png",
+   "res://assets/gen/floors/carpet_8.png",
+   "res://assets/gen/floors/carpet_9.png",
+   "res://assets/gen/floors/carpet_10.png",
+   "res://assets/gen/floors/carpet_11.png",
+   "res://assets/gen/floors/carpet_12.png",
+   "res://assets/gen/floors/carpet_13.png",
+   "res://assets/gen/floors/carpet_14.png",
+   "res://assets/gen/floors/carpet_15.png"
+  ],
+  "driveway": [
+   "res://assets/gen/floors/driveway_0.png",
+   "res://assets/gen/floors/driveway_1.png",
+   "res://assets/gen/floors/driveway_2.png",
+   "res://assets/gen/floors/driveway_3.png",
+   "res://assets/gen/floors/driveway_4.png",
+   "res://assets/gen/floors/driveway_5.png",
+   "res://assets/gen/floors/driveway_6.png",
+   "res://assets/gen/floors/driveway_7.png",
+   "res://assets/gen/floors/driveway_8.png",
+   "res://assets/gen/floors/driveway_9.png",
+   "res://assets/gen/floors/driveway_10.png",
+   "res://assets/gen/floors/driveway_11.png",
+   "res://assets/gen/floors/driveway_12.png",
+   "res://assets/gen/floors/driveway_13.png",
+   "res://assets/gen/floors/driveway_14.png",
+   "res://assets/gen/floors/driveway_15.png"
+  ],
+  "grass": [
+   "res://assets/gen/floors/grass_0.png",
+   "res://assets/gen/floors/grass_1.png",
+   "res://assets/gen/floors/grass_2.png",
+   "res://assets/gen/floors/grass_3.png",
+   "res://assets/gen/floors/grass_4.png",
+   "res://assets/gen/floors/grass_5.png",
+   "res://assets/gen/floors/grass_6.png",
+   "res://assets/gen/floors/grass_7.png",
+   "res://assets/gen/floors/grass_8.png",
+   "res://assets/gen/floors/grass_9.png",
+   "res://assets/gen/floors/grass_10.png",
+   "res://assets/gen/floors/grass_11.png",
+   "res://assets/gen/floors/grass_12.png",
+   "res://assets/gen/floors/grass_13.png",
+   "res://assets/gen/floors/grass_14.png",
+   "res://assets/gen/floors/grass_15.png"
+  ],
+  "hardwood": [
+   "res://assets/gen/floors/hardwood_0.png",
+   "res://assets/gen/floors/hardwood_1.png",
+   "res://assets/gen/floors/hardwood_2.png"
+  ],
+  "linoleum": [
+   "res://assets/gen/floors/linoleum_0.png",
+   "res://assets/gen/floors/linoleum_1.png"
+  ],
+  "road_line": [
+   "res://assets/gen/floors/road_line_0.png",
+   "res://assets/gen/floors/road_line_1.png",
+   "res://assets/gen/floors/road_line_2.png",
+   "res://assets/gen/floors/road_line_3.png",
+   "res://assets/gen/floors/road_line_4.png",
+   "res://assets/gen/floors/road_line_5.png",
+   "res://assets/gen/floors/road_line_6.png",
+   "res://assets/gen/floors/road_line_7.png",
+   "res://assets/gen/floors/road_line_8.png",
+   "res://assets/gen/floors/road_line_9.png",
+   "res://assets/gen/floors/road_line_10.png",
+   "res://assets/gen/floors/road_line_11.png",
+   "res://assets/gen/floors/road_line_12.png",
+   "res://assets/gen/floors/road_line_13.png",
+   "res://assets/gen/floors/road_line_14.png",
+   "res://assets/gen/floors/road_line_15.png"
+  ],
+  "sidewalk": [
+   "res://assets/gen/floors/sidewalk_0.png",
+   "res://assets/gen/floors/sidewalk_1.png",
+   "res://assets/gen/floors/sidewalk_2.png"
+  ],
+  "tile_store": [
+   "res://assets/gen/floors/tile_store_0.png",
+   "res://assets/gen/floors/tile_store_1.png"
+  ]
+ },
+ "items": {
+  "bandage": "res://assets/gen/items/bandage.png",
+  "baseball_bat": "res://assets/gen/items/baseball_bat.png",
+  "bread": "res://assets/gen/items/bread.png",
+  "canned_beans": "res://assets/gen/items/canned_beans.png",
+  "canned_soup": "res://assets/gen/items/canned_soup.png",
+  "chips_bag": "res://assets/gen/items/chips_bag.png",
+  "chocolate_bar": "res://assets/gen/items/chocolate_bar.png",
+  "cigarettes_carton": "res://assets/gen/items/cigarettes_carton.png",
+  "cigarettes_pack": "res://assets/gen/items/cigarettes_pack.png",
+  "crowbar": "res://assets/gen/items/crowbar.png",
+  "disinfectant": "res://assets/gen/items/disinfectant.png",
+  "donair": "res://assets/gen/items/donair.png",
+  "donair_meat_frozen": "res://assets/gen/items/donair_meat_frozen.png",
+  "flashlight": "res://assets/gen/items/flashlight.png",
+  "frying_pan": "res://assets/gen/items/frying_pan.png",
+  "gas_can": "res://assets/gen/items/gas_can.png",
+  "hammer": "res://assets/gen/items/hammer.png",
+  "kitchen_knife": "res://assets/gen/items/kitchen_knife.png",
+  "mepsi_2l": "res://assets/gen/items/mepsi_2l.png",
+  "mepsi_can": "res://assets/gen/items/mepsi_can.png",
+  "mepsi_case": "res://assets/gen/items/mepsi_case.png",
+  "milk": "res://assets/gen/items/milk.png",
+  "nails_box": "res://assets/gen/items/nails_box.png",
+  "planks": "res://assets/gen/items/planks.png",
+  "puffer": "res://assets/gen/items/puffer.png",
+  "reruns_box": "res://assets/gen/items/reruns_box.png",
+  "water_bottle": "res://assets/gen/items/water_bottle.png"
+ },
+ "moodles": {
+  "bored": "res://assets/gen/ui/moodle_bored.png",
+  "hungry": "res://assets/gen/ui/moodle_hungry.png",
+  "infected": "res://assets/gen/ui/moodle_infected.png",
+  "injured": "res://assets/gen/ui/moodle_injured.png",
+  "stressed": "res://assets/gen/ui/moodle_stressed.png",
+  "thirsty": "res://assets/gen/ui/moodle_thirsty.png",
+  "tired": "res://assets/gen/ui/moodle_tired.png",
+  "unhappy": "res://assets/gen/ui/moodle_unhappy.png"
+ },
+ "objects": {
+  "bush_0": {
+   "file": "res://assets/gen/objects/bush_0.png",
+   "origin": [
+    80,
+    160
+   ]
+  },
+  "bush_1": {
+   "file": "res://assets/gen/objects/bush_1.png",
+   "origin": [
+    80,
+    160
+   ]
+  },
+  "cooler": {
+   "file": "res://assets/gen/objects/cooler.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "couch": {
+   "file": "res://assets/gen/objects/couch.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "counter": {
+   "file": "res://assets/gen/objects/counter.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "crate": {
+   "file": "res://assets/gen/objects/crate.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "cupboard": {
+   "file": "res://assets/gen/objects/cupboard.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "fridge": {
+   "file": "res://assets/gen/objects/fridge.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "generator": {
+   "file": "res://assets/gen/objects/generator.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "kitchen_counter": {
+   "file": "res://assets/gen/objects/kitchen_counter.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "lamp": {
+   "file": "res://assets/gen/objects/lamp.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "mailbox": {
+   "file": "res://assets/gen/objects/mailbox.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "memere_chair": {
+   "file": "res://assets/gen/objects/memere_chair.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "rug": {
+   "file": "res://assets/gen/objects/rug.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "shelf": {
+   "file": "res://assets/gen/objects/shelf.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "streetlight": {
+   "file": "res://assets/gen/objects/streetlight.png",
+   "origin": [
+    64.0,
+    320.0
+   ]
+  },
+  "tree_maple_0": {
+   "file": "res://assets/gen/objects/tree_maple_0.png",
+   "origin": [
+    176,
+    448
+   ]
+  },
+  "tree_maple_1": {
+   "file": "res://assets/gen/objects/tree_maple_1.png",
+   "origin": [
+    176,
+    448
+   ]
+  },
+  "tree_maple_autumn": {
+   "file": "res://assets/gen/objects/tree_maple_autumn.png",
+   "origin": [
+    176,
+    448
+   ]
+  },
+  "tree_spruce_0": {
+   "file": "res://assets/gen/objects/tree_spruce_0.png",
+   "origin": [
+    176,
+    448
+   ]
+  },
+  "tree_spruce_1": {
+   "file": "res://assets/gen/objects/tree_spruce_1.png",
+   "origin": [
+    176,
+    448
+   ]
+  },
+  "tv": {
+   "file": "res://assets/gen/objects/tv.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "tv_on": {
+   "file": "res://assets/gen/objects/tv_on.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  }
+ },
+ "roofs": {
+  "flat_tar": "res://assets/gen/roofs/flat_tar.png",
+  "shingle_brown": "res://assets/gen/roofs/shingle_brown.png",
+  "shingle_grey": "res://assets/gen/roofs/shingle_grey.png"
+ },
+ "tileOrigin": [
+  64.0,
+  192.0
+ ],
+ "walls": {
+  "brick_red/door_broken_N": "res://assets/gen/walls/brick_red_door_broken_N.png",
+  "brick_red/door_broken_N_cut": "res://assets/gen/walls/brick_red_door_broken_N_cut.png",
+  "brick_red/door_broken_W": "res://assets/gen/walls/brick_red_door_broken_W.png",
+  "brick_red/door_broken_W_cut": "res://assets/gen/walls/brick_red_door_broken_W_cut.png",
+  "brick_red/door_closed_N": "res://assets/gen/walls/brick_red_door_closed_N.png",
+  "brick_red/door_closed_N_cut": "res://assets/gen/walls/brick_red_door_closed_N_cut.png",
+  "brick_red/door_closed_W": "res://assets/gen/walls/brick_red_door_closed_W.png",
+  "brick_red/door_closed_W_cut": "res://assets/gen/walls/brick_red_door_closed_W_cut.png",
+  "brick_red/door_open_N": "res://assets/gen/walls/brick_red_door_open_N.png",
+  "brick_red/door_open_N_cut": "res://assets/gen/walls/brick_red_door_open_N_cut.png",
+  "brick_red/door_open_W": "res://assets/gen/walls/brick_red_door_open_W.png",
+  "brick_red/door_open_W_cut": "res://assets/gen/walls/brick_red_door_open_W_cut.png",
+  "brick_red/wall_closed_N": "res://assets/gen/walls/brick_red_wall_closed_N.png",
+  "brick_red/wall_closed_N_cut": "res://assets/gen/walls/brick_red_wall_closed_N_cut.png",
+  "brick_red/wall_closed_W": "res://assets/gen/walls/brick_red_wall_closed_W.png",
+  "brick_red/wall_closed_W_cut": "res://assets/gen/walls/brick_red_wall_closed_W_cut.png",
+  "brick_red/window_broken_N": "res://assets/gen/walls/brick_red_window_broken_N.png",
+  "brick_red/window_broken_N_cut": "res://assets/gen/walls/brick_red_window_broken_N_cut.png",
+  "brick_red/window_broken_W": "res://assets/gen/walls/brick_red_window_broken_W.png",
+  "brick_red/window_broken_W_cut": "res://assets/gen/walls/brick_red_window_broken_W_cut.png",
+  "brick_red/window_closed_N": "res://assets/gen/walls/brick_red_window_closed_N.png",
+  "brick_red/window_closed_N_cut": "res://assets/gen/walls/brick_red_window_closed_N_cut.png",
+  "brick_red/window_closed_W": "res://assets/gen/walls/brick_red_window_closed_W.png",
+  "brick_red/window_closed_W_cut": "res://assets/gen/walls/brick_red_window_closed_W_cut.png",
+  "brick_red/window_open_N": "res://assets/gen/walls/brick_red_window_open_N.png",
+  "brick_red/window_open_N_cut": "res://assets/gen/walls/brick_red_window_open_N_cut.png",
+  "brick_red/window_open_W": "res://assets/gen/walls/brick_red_window_open_W.png",
+  "brick_red/window_open_W_cut": "res://assets/gen/walls/brick_red_window_open_W_cut.png",
+  "fence_wood/wall_closed_N": "res://assets/gen/walls/fence_wood_wall_closed_N.png",
+  "fence_wood/wall_closed_N_cut": "res://assets/gen/walls/fence_wood_wall_closed_N_cut.png",
+  "fence_wood/wall_closed_W": "res://assets/gen/walls/fence_wood_wall_closed_W.png",
+  "fence_wood/wall_closed_W_cut": "res://assets/gen/walls/fence_wood_wall_closed_W_cut.png",
+  "siding_blue/door_broken_N": "res://assets/gen/walls/siding_blue_door_broken_N.png",
+  "siding_blue/door_broken_N_cut": "res://assets/gen/walls/siding_blue_door_broken_N_cut.png",
+  "siding_blue/door_broken_W": "res://assets/gen/walls/siding_blue_door_broken_W.png",
+  "siding_blue/door_broken_W_cut": "res://assets/gen/walls/siding_blue_door_broken_W_cut.png",
+  "siding_blue/door_closed_N": "res://assets/gen/walls/siding_blue_door_closed_N.png",
+  "siding_blue/door_closed_N_cut": "res://assets/gen/walls/siding_blue_door_closed_N_cut.png",
+  "siding_blue/door_closed_W": "res://assets/gen/walls/siding_blue_door_closed_W.png",
+  "siding_blue/door_closed_W_cut": "res://assets/gen/walls/siding_blue_door_closed_W_cut.png",
+  "siding_blue/door_open_N": "res://assets/gen/walls/siding_blue_door_open_N.png",
+  "siding_blue/door_open_N_cut": "res://assets/gen/walls/siding_blue_door_open_N_cut.png",
+  "siding_blue/door_open_W": "res://assets/gen/walls/siding_blue_door_open_W.png",
+  "siding_blue/door_open_W_cut": "res://assets/gen/walls/siding_blue_door_open_W_cut.png",
+  "siding_blue/wall_closed_N": "res://assets/gen/walls/siding_blue_wall_closed_N.png",
+  "siding_blue/wall_closed_N_cut": "res://assets/gen/walls/siding_blue_wall_closed_N_cut.png",
+  "siding_blue/wall_closed_W": "res://assets/gen/walls/siding_blue_wall_closed_W.png",
+  "siding_blue/wall_closed_W_cut": "res://assets/gen/walls/siding_blue_wall_closed_W_cut.png",
+  "siding_blue/window_broken_N": "res://assets/gen/walls/siding_blue_window_broken_N.png",
+  "siding_blue/window_broken_N_cut": "res://assets/gen/walls/siding_blue_window_broken_N_cut.png",
+  "siding_blue/window_broken_W": "res://assets/gen/walls/siding_blue_window_broken_W.png",
+  "siding_blue/window_broken_W_cut": "res://assets/gen/walls/siding_blue_window_broken_W_cut.png",
+  "siding_blue/window_closed_N": "res://assets/gen/walls/siding_blue_window_closed_N.png",
+  "siding_blue/window_closed_N_cut": "res://assets/gen/walls/siding_blue_window_closed_N_cut.png",
+  "siding_blue/window_closed_W": "res://assets/gen/walls/siding_blue_window_closed_W.png",
+  "siding_blue/window_closed_W_cut": "res://assets/gen/walls/siding_blue_window_closed_W_cut.png",
+  "siding_blue/window_open_N": "res://assets/gen/walls/siding_blue_window_open_N.png",
+  "siding_blue/window_open_N_cut": "res://assets/gen/walls/siding_blue_window_open_N_cut.png",
+  "siding_blue/window_open_W": "res://assets/gen/walls/siding_blue_window_open_W.png",
+  "siding_blue/window_open_W_cut": "res://assets/gen/walls/siding_blue_window_open_W_cut.png",
+  "siding_white/door_broken_N": "res://assets/gen/walls/siding_white_door_broken_N.png",
+  "siding_white/door_broken_N_cut": "res://assets/gen/walls/siding_white_door_broken_N_cut.png",
+  "siding_white/door_broken_W": "res://assets/gen/walls/siding_white_door_broken_W.png",
+  "siding_white/door_broken_W_cut": "res://assets/gen/walls/siding_white_door_broken_W_cut.png",
+  "siding_white/door_closed_N": "res://assets/gen/walls/siding_white_door_closed_N.png",
+  "siding_white/door_closed_N_cut": "res://assets/gen/walls/siding_white_door_closed_N_cut.png",
+  "siding_white/door_closed_W": "res://assets/gen/walls/siding_white_door_closed_W.png",
+  "siding_white/door_closed_W_cut": "res://assets/gen/walls/siding_white_door_closed_W_cut.png",
+  "siding_white/door_open_N": "res://assets/gen/walls/siding_white_door_open_N.png",
+  "siding_white/door_open_N_cut": "res://assets/gen/walls/siding_white_door_open_N_cut.png",
+  "siding_white/door_open_W": "res://assets/gen/walls/siding_white_door_open_W.png",
+  "siding_white/door_open_W_cut": "res://assets/gen/walls/siding_white_door_open_W_cut.png",
+  "siding_white/wall_closed_N": "res://assets/gen/walls/siding_white_wall_closed_N.png",
+  "siding_white/wall_closed_N_cut": "res://assets/gen/walls/siding_white_wall_closed_N_cut.png",
+  "siding_white/wall_closed_W": "res://assets/gen/walls/siding_white_wall_closed_W.png",
+  "siding_white/wall_closed_W_cut": "res://assets/gen/walls/siding_white_wall_closed_W_cut.png",
+  "siding_white/window_broken_N": "res://assets/gen/walls/siding_white_window_broken_N.png",
+  "siding_white/window_broken_N_cut": "res://assets/gen/walls/siding_white_window_broken_N_cut.png",
+  "siding_white/window_broken_W": "res://assets/gen/walls/siding_white_window_broken_W.png",
+  "siding_white/window_broken_W_cut": "res://assets/gen/walls/siding_white_window_broken_W_cut.png",
+  "siding_white/window_closed_N": "res://assets/gen/walls/siding_white_window_closed_N.png",
+  "siding_white/window_closed_N_cut": "res://assets/gen/walls/siding_white_window_closed_N_cut.png",
+  "siding_white/window_closed_W": "res://assets/gen/walls/siding_white_window_closed_W.png",
+  "siding_white/window_closed_W_cut": "res://assets/gen/walls/siding_white_window_closed_W_cut.png",
+  "siding_white/window_open_N": "res://assets/gen/walls/siding_white_window_open_N.png",
+  "siding_white/window_open_N_cut": "res://assets/gen/walls/siding_white_window_open_N_cut.png",
+  "siding_white/window_open_W": "res://assets/gen/walls/siding_white_window_open_W.png",
+  "siding_white/window_open_W_cut": "res://assets/gen/walls/siding_white_window_open_W_cut.png",
+  "siding_yellow/door_broken_N": "res://assets/gen/walls/siding_yellow_door_broken_N.png",
+  "siding_yellow/door_broken_N_cut": "res://assets/gen/walls/siding_yellow_door_broken_N_cut.png",
+  "siding_yellow/door_broken_W": "res://assets/gen/walls/siding_yellow_door_broken_W.png",
+  "siding_yellow/door_broken_W_cut": "res://assets/gen/walls/siding_yellow_door_broken_W_cut.png",
+  "siding_yellow/door_closed_N": "res://assets/gen/walls/siding_yellow_door_closed_N.png",
+  "siding_yellow/door_closed_N_cut": "res://assets/gen/walls/siding_yellow_door_closed_N_cut.png",
+  "siding_yellow/door_closed_W": "res://assets/gen/walls/siding_yellow_door_closed_W.png",
+  "siding_yellow/door_closed_W_cut": "res://assets/gen/walls/siding_yellow_door_closed_W_cut.png",
+  "siding_yellow/door_open_N": "res://assets/gen/walls/siding_yellow_door_open_N.png",
+  "siding_yellow/door_open_N_cut": "res://assets/gen/walls/siding_yellow_door_open_N_cut.png",
+  "siding_yellow/door_open_W": "res://assets/gen/walls/siding_yellow_door_open_W.png",
+  "siding_yellow/door_open_W_cut": "res://assets/gen/walls/siding_yellow_door_open_W_cut.png",
+  "siding_yellow/wall_closed_N": "res://assets/gen/walls/siding_yellow_wall_closed_N.png",
+  "siding_yellow/wall_closed_N_cut": "res://assets/gen/walls/siding_yellow_wall_closed_N_cut.png",
+  "siding_yellow/wall_closed_W": "res://assets/gen/walls/siding_yellow_wall_closed_W.png",
+  "siding_yellow/wall_closed_W_cut": "res://assets/gen/walls/siding_yellow_wall_closed_W_cut.png",
+  "siding_yellow/window_broken_N": "res://assets/gen/walls/siding_yellow_window_broken_N.png",
+  "siding_yellow/window_broken_N_cut": "res://assets/gen/walls/siding_yellow_window_broken_N_cut.png",
+  "siding_yellow/window_broken_W": "res://assets/gen/walls/siding_yellow_window_broken_W.png",
+  "siding_yellow/window_broken_W_cut": "res://assets/gen/walls/siding_yellow_window_broken_W_cut.png",
+  "siding_yellow/window_closed_N": "res://assets/gen/walls/siding_yellow_window_closed_N.png",
+  "siding_yellow/window_closed_N_cut": "res://assets/gen/walls/siding_yellow_window_closed_N_cut.png",
+  "siding_yellow/window_closed_W": "res://assets/gen/walls/siding_yellow_window_closed_W.png",
+  "siding_yellow/window_closed_W_cut": "res://assets/gen/walls/siding_yellow_window_closed_W_cut.png",
+  "siding_yellow/window_open_N": "res://assets/gen/walls/siding_yellow_window_open_N.png",
+  "siding_yellow/window_open_N_cut": "res://assets/gen/walls/siding_yellow_window_open_N_cut.png",
+  "siding_yellow/window_open_W": "res://assets/gen/walls/siding_yellow_window_open_W.png",
+  "siding_yellow/window_open_W_cut": "res://assets/gen/walls/siding_yellow_window_open_W_cut.png",
+  "store_white/door_broken_N": "res://assets/gen/walls/store_white_door_broken_N.png",
+  "store_white/door_broken_N_cut": "res://assets/gen/walls/store_white_door_broken_N_cut.png",
+  "store_white/door_broken_W": "res://assets/gen/walls/store_white_door_broken_W.png",
+  "store_white/door_broken_W_cut": "res://assets/gen/walls/store_white_door_broken_W_cut.png",
+  "store_white/door_closed_N": "res://assets/gen/walls/store_white_door_closed_N.png",
+  "store_white/door_closed_N_cut": "res://assets/gen/walls/store_white_door_closed_N_cut.png",
+  "store_white/door_closed_W": "res://assets/gen/walls/store_white_door_closed_W.png",
+  "store_white/door_closed_W_cut": "res://assets/gen/walls/store_white_door_closed_W_cut.png",
+  "store_white/door_open_N": "res://assets/gen/walls/store_white_door_open_N.png",
+  "store_white/door_open_N_cut": "res://assets/gen/walls/store_white_door_open_N_cut.png",
+  "store_white/door_open_W": "res://assets/gen/walls/store_white_door_open_W.png",
+  "store_white/door_open_W_cut": "res://assets/gen/walls/store_white_door_open_W_cut.png",
+  "store_white/wall_closed_N": "res://assets/gen/walls/store_white_wall_closed_N.png",
+  "store_white/wall_closed_N_cut": "res://assets/gen/walls/store_white_wall_closed_N_cut.png",
+  "store_white/wall_closed_W": "res://assets/gen/walls/store_white_wall_closed_W.png",
+  "store_white/wall_closed_W_cut": "res://assets/gen/walls/store_white_wall_closed_W_cut.png",
+  "store_white/window_broken_N": "res://assets/gen/walls/store_white_window_broken_N.png",
+  "store_white/window_broken_N_cut": "res://assets/gen/walls/store_white_window_broken_N_cut.png",
+  "store_white/window_broken_W": "res://assets/gen/walls/store_white_window_broken_W.png",
+  "store_white/window_broken_W_cut": "res://assets/gen/walls/store_white_window_broken_W_cut.png",
+  "store_white/window_closed_N": "res://assets/gen/walls/store_white_window_closed_N.png",
+  "store_white/window_closed_N_cut": "res://assets/gen/walls/store_white_window_closed_N_cut.png",
+  "store_white/window_closed_W": "res://assets/gen/walls/store_white_window_closed_W.png",
+  "store_white/window_closed_W_cut": "res://assets/gen/walls/store_white_window_closed_W_cut.png",
+  "store_white/window_open_N": "res://assets/gen/walls/store_white_window_open_N.png",
+  "store_white/window_open_N_cut": "res://assets/gen/walls/store_white_window_open_N_cut.png",
+  "store_white/window_open_W": "res://assets/gen/walls/store_white_window_open_W.png",
+  "store_white/window_open_W_cut": "res://assets/gen/walls/store_white_window_open_W_cut.png",
+  "wallpaper_kitchen/door_broken_N": "res://assets/gen/walls/wallpaper_kitchen_door_broken_N.png",
+  "wallpaper_kitchen/door_broken_N_cut": "res://assets/gen/walls/wallpaper_kitchen_door_broken_N_cut.png",
+  "wallpaper_kitchen/door_broken_W": "res://assets/gen/walls/wallpaper_kitchen_door_broken_W.png",
+  "wallpaper_kitchen/door_broken_W_cut": "res://assets/gen/walls/wallpaper_kitchen_door_broken_W_cut.png",
+  "wallpaper_kitchen/door_closed_N": "res://assets/gen/walls/wallpaper_kitchen_door_closed_N.png",
+  "wallpaper_kitchen/door_closed_N_cut": "res://assets/gen/walls/wallpaper_kitchen_door_closed_N_cut.png",
+  "wallpaper_kitchen/door_closed_W": "res://assets/gen/walls/wallpaper_kitchen_door_closed_W.png",
+  "wallpaper_kitchen/door_closed_W_cut": "res://assets/gen/walls/wallpaper_kitchen_door_closed_W_cut.png",
+  "wallpaper_kitchen/door_open_N": "res://assets/gen/walls/wallpaper_kitchen_door_open_N.png",
+  "wallpaper_kitchen/door_open_N_cut": "res://assets/gen/walls/wallpaper_kitchen_door_open_N_cut.png",
+  "wallpaper_kitchen/door_open_W": "res://assets/gen/walls/wallpaper_kitchen_door_open_W.png",
+  "wallpaper_kitchen/door_open_W_cut": "res://assets/gen/walls/wallpaper_kitchen_door_open_W_cut.png",
+  "wallpaper_kitchen/wall_closed_N": "res://assets/gen/walls/wallpaper_kitchen_wall_closed_N.png",
+  "wallpaper_kitchen/wall_closed_N_cut": "res://assets/gen/walls/wallpaper_kitchen_wall_closed_N_cut.png",
+  "wallpaper_kitchen/wall_closed_W": "res://assets/gen/walls/wallpaper_kitchen_wall_closed_W.png",
+  "wallpaper_kitchen/wall_closed_W_cut": "res://assets/gen/walls/wallpaper_kitchen_wall_closed_W_cut.png",
+  "wallpaper_kitchen/window_broken_N": "res://assets/gen/walls/wallpaper_kitchen_window_broken_N.png",
+  "wallpaper_kitchen/window_broken_N_cut": "res://assets/gen/walls/wallpaper_kitchen_window_broken_N_cut.png",
+  "wallpaper_kitchen/window_broken_W": "res://assets/gen/walls/wallpaper_kitchen_window_broken_W.png",
+  "wallpaper_kitchen/window_broken_W_cut": "res://assets/gen/walls/wallpaper_kitchen_window_broken_W_cut.png",
+  "wallpaper_kitchen/window_closed_N": "res://assets/gen/walls/wallpaper_kitchen_window_closed_N.png",
+  "wallpaper_kitchen/window_closed_N_cut": "res://assets/gen/walls/wallpaper_kitchen_window_closed_N_cut.png",
+  "wallpaper_kitchen/window_closed_W": "res://assets/gen/walls/wallpaper_kitchen_window_closed_W.png",
+  "wallpaper_kitchen/window_closed_W_cut": "res://assets/gen/walls/wallpaper_kitchen_window_closed_W_cut.png",
+  "wallpaper_kitchen/window_open_N": "res://assets/gen/walls/wallpaper_kitchen_window_open_N.png",
+  "wallpaper_kitchen/window_open_N_cut": "res://assets/gen/walls/wallpaper_kitchen_window_open_N_cut.png",
+  "wallpaper_kitchen/window_open_W": "res://assets/gen/walls/wallpaper_kitchen_window_open_W.png",
+  "wallpaper_kitchen/window_open_W_cut": "res://assets/gen/walls/wallpaper_kitchen_window_open_W_cut.png",
+  "wallpaper_living/door_broken_N": "res://assets/gen/walls/wallpaper_living_door_broken_N.png",
+  "wallpaper_living/door_broken_N_cut": "res://assets/gen/walls/wallpaper_living_door_broken_N_cut.png",
+  "wallpaper_living/door_broken_W": "res://assets/gen/walls/wallpaper_living_door_broken_W.png",
+  "wallpaper_living/door_broken_W_cut": "res://assets/gen/walls/wallpaper_living_door_broken_W_cut.png",
+  "wallpaper_living/door_closed_N": "res://assets/gen/walls/wallpaper_living_door_closed_N.png",
+  "wallpaper_living/door_closed_N_cut": "res://assets/gen/walls/wallpaper_living_door_closed_N_cut.png",
+  "wallpaper_living/door_closed_W": "res://assets/gen/walls/wallpaper_living_door_closed_W.png",
+  "wallpaper_living/door_closed_W_cut": "res://assets/gen/walls/wallpaper_living_door_closed_W_cut.png",
+  "wallpaper_living/door_open_N": "res://assets/gen/walls/wallpaper_living_door_open_N.png",
+  "wallpaper_living/door_open_N_cut": "res://assets/gen/walls/wallpaper_living_door_open_N_cut.png",
+  "wallpaper_living/door_open_W": "res://assets/gen/walls/wallpaper_living_door_open_W.png",
+  "wallpaper_living/door_open_W_cut": "res://assets/gen/walls/wallpaper_living_door_open_W_cut.png",
+  "wallpaper_living/wall_closed_N": "res://assets/gen/walls/wallpaper_living_wall_closed_N.png",
+  "wallpaper_living/wall_closed_N_cut": "res://assets/gen/walls/wallpaper_living_wall_closed_N_cut.png",
+  "wallpaper_living/wall_closed_W": "res://assets/gen/walls/wallpaper_living_wall_closed_W.png",
+  "wallpaper_living/wall_closed_W_cut": "res://assets/gen/walls/wallpaper_living_wall_closed_W_cut.png",
+  "wallpaper_living/window_broken_N": "res://assets/gen/walls/wallpaper_living_window_broken_N.png",
+  "wallpaper_living/window_broken_N_cut": "res://assets/gen/walls/wallpaper_living_window_broken_N_cut.png",
+  "wallpaper_living/window_broken_W": "res://assets/gen/walls/wallpaper_living_window_broken_W.png",
+  "wallpaper_living/window_broken_W_cut": "res://assets/gen/walls/wallpaper_living_window_broken_W_cut.png",
+  "wallpaper_living/window_closed_N": "res://assets/gen/walls/wallpaper_living_window_closed_N.png",
+  "wallpaper_living/window_closed_N_cut": "res://assets/gen/walls/wallpaper_living_window_closed_N_cut.png",
+  "wallpaper_living/window_closed_W": "res://assets/gen/walls/wallpaper_living_window_closed_W.png",
+  "wallpaper_living/window_closed_W_cut": "res://assets/gen/walls/wallpaper_living_window_closed_W_cut.png",
+  "wallpaper_living/window_open_N": "res://assets/gen/walls/wallpaper_living_window_open_N.png",
+  "wallpaper_living/window_open_N_cut": "res://assets/gen/walls/wallpaper_living_window_open_N_cut.png",
+  "wallpaper_living/window_open_W": "res://assets/gen/walls/wallpaper_living_window_open_W.png",
+  "wallpaper_living/window_open_W_cut": "res://assets/gen/walls/wallpaper_living_window_open_W_cut.png"
+ }
+}

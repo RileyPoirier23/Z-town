@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Added (art pass)
+- Zomboid-style look: painted siding, brick, shingles, grass, roads and sidewalks; hip roofs
+  that hide when you're inside; wall cutaway; see-through trees; smooth lighting; fog of war
+  (what you can't see is darkened and zombies there are hidden); night and indoor light.
+- Layered, tinted clothing for everyone; zombies get random outfits.
+- Character creator (name, skin, hair, clothes, colours) and a title screen.
+- Zomboid-style HUD: moodle badges, clock, memere's card, equipped item, speech over heads.
+- Item and moodle icons; inventory shows icons.
+- Story timeline set to 5–7 years; horses and clothing added to the plan.
+
 ### Added (Phase 0)
 - Simulation core (`src/Core`): clock, deterministic RNG, tile map with doors/windows, A*
   pathing, needs and moodles, inventory and loot, power (grid shutoff + generator), memere's

@@ -12,6 +12,8 @@ using ZTown.Core.Zombies;
 
 namespace ZTown.Core;
 
+public sealed record Building(string Id, TileRect Footprint, string Roof = "shingle_grey", float Pitch = 0.5f);
+
 public enum MoveMode
 {
     Walk,
@@ -32,6 +34,8 @@ public sealed partial class GameWorld
     public HarmGate Harm { get; }
     public NoiseBus Noise { get; } = new();
     public ProtectedZones ProtectedZones { get; } = new();
+    /// <summary>Building footprints (for roofs and "am I inside").</summary>
+    public List<Building> Buildings { get; } = new();
     /// <summary>Memere's house: being inside counts as "home".</summary>
     public List<TileRect> HomeArea { get; } = new();
     public HousePower Power { get; } = new();
@@ -91,7 +95,7 @@ public sealed partial class GameWorld
     public Zombie? TrySpawnZombie(TilePos p)
     {
         if (!Map.InBounds(p) || Map.At(p).Solid || ProtectedZones.Contains(p)) return null;
-        var z = new Zombie { Speed = Data.Zombies.ShamblerSpeed };
+        var z = new Zombie { Speed = Data.Zombies.ShamblerSpeed, Look = Rng.Range(0, int.MaxValue) };
         z.PlaceAt(p);
         z.Facing = Rng.Range(0f, MathF.Tau);
         z.Health.Restore(Data.Zombies.Health);

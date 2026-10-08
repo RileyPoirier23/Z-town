@@ -69,6 +69,7 @@ public static class SaveSystem
                     Boredom = w.Player.Needs.Boredom, Unhappiness = w.Player.Needs.Unhappiness, Stress = w.Player.Needs.Stress,
                 },
                 Inventory = w.Player.Inventory.Stacks.Select(Copy).ToList(),
+                Outfit = w.Player.Outfit.Clone(),
             },
             Memere = new MemereSave
             {
@@ -76,7 +77,7 @@ public static class SaveSystem
                 Comfort = w.Memere.Comfort.Value,
                 Supplies = new Dictionary<string, float>(w.Memere.Supplies.Amounts),
             },
-            Zombies = w.Zombies.Select(z => new ZombieSave { X = z.X, Y = z.Y, Z = z.Z, Facing = z.Facing, Health = z.Health.Value, Speed = z.Speed }).ToList(),
+            Zombies = w.Zombies.Select(z => new ZombieSave { X = z.X, Y = z.Y, Z = z.Z, Facing = z.Facing, Health = z.Health.Value, Speed = z.Speed, Look = z.Look }).ToList(),
             Power = new PowerSave
             {
                 GridShutoffDay = w.Power.GridShutoffDay,
@@ -135,6 +136,7 @@ public static class SaveSystem
         p.Needs.Boredom = n.Boredom; p.Needs.Unhappiness = n.Unhappiness; p.Needs.Stress = n.Stress;
         p.Inventory.Stacks.Clear();
         p.Inventory.Stacks.AddRange(s.Player.Inventory.Select(Copy));
+        if (s.Player.Outfit != null) p.Outfit = s.Player.Outfit.Clone();
 
         var m = w.Memere;
         m.X = s.Memere.X; m.Y = s.Memere.Y; m.Z = s.Memere.Z;
@@ -147,6 +149,7 @@ public static class SaveSystem
             var z = w.TrySpawnZombie(new TilePos((int)MathF.Floor(zs.X), (int)MathF.Floor(zs.Y), zs.Z));
             if (z == null) continue;
             z.X = zs.X; z.Y = zs.Y; z.Facing = zs.Facing; z.Speed = zs.Speed;
+            if (zs.Look != 0) z.Look = zs.Look;
             z.Health.Restore(zs.Health);
         }
 
@@ -227,6 +230,8 @@ public sealed class PlayerSave
     public bool Asleep { get; set; }
     public NeedsSave Needs { get; set; } = new();
     public List<ItemStack> Inventory { get; set; } = new();
+    /// <summary>Added after v1 shipped as a fixture; older saves just lack it (default outfit).</summary>
+    public Outfit? Outfit { get; set; }
 }
 
 public sealed class NeedsSave
@@ -257,6 +262,7 @@ public sealed class ZombieSave
     public float Facing { get; set; }
     public float Health { get; set; }
     public float Speed { get; set; }
+    public int Look { get; set; }
 }
 
 public sealed class PowerSave
