@@ -1,0 +1,33 @@
+name: Fetch OpenStreetMap data
+
+# The dev container can't reach OSM servers, so map data is fetched here and committed.
+# Add an area to tools/osm_import/areas.json and push; this fetches anything not cached yet
+# into game/data/osm/ and commits it back ([skip ci] so it doesn't rebuild the game).
+on:
+  workflow_dispatch:
+  push:
+    paths: ['tools/osm_import/areas.json', 'tools/osm_import/fetch.py']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: osm-fetch-${{ github.ref }}
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/osm_import/fetch.py
+      - name: Commit new map data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add game/data/osm
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "Map data from OpenStreetMap [skip ci]" -m "© OpenStreetMap contributors, ODbL 1.0"
+          git push

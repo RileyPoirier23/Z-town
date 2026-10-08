@@ -1,0 +1,8 @@
+{
+  "_note": "Areas to fetch from OpenStreetMap (Overpass). Adding one here and pushing makes CI fetch it into game/data/osm/<name>.json. bbox = [south, west, north, east]. Map data © OpenStreetMap contributors, ODbL.",
+  "areas": [
+    { "name": "riverview_centre", "bbox": [46.0560, -64.8130, 46.0668, -64.7975], "note": "Starting area until Riley picks memere's street" },
+    { "name": "moncton_downtown", "bbox": [46.0830, -64.7860, 46.0935, -64.7700] },
+    { "name": "salisbury_centre", "bbox": [46.0335, -65.0560, 46.0435, -65.0400] }
+  ]
+}
