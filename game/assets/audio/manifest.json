@@ -1,0 +1,69 @@
+{
+ "sfx": {
+  "step_grass": [
+   "res://assets/audio/step_grass_0.wav",
+   "res://assets/audio/step_grass_1.wav",
+   "res://assets/audio/step_grass_2.wav"
+  ],
+  "step_hard": [
+   "res://assets/audio/step_hard_0.wav",
+   "res://assets/audio/step_hard_1.wav",
+   "res://assets/audio/step_hard_2.wav"
+  ],
+  "groan": [
+   "res://assets/audio/zombie_groan_0.wav",
+   "res://assets/audio/zombie_groan_1.wav",
+   "res://assets/audio/zombie_groan_2.wav",
+   "res://assets/audio/zombie_groan_3.wav"
+  ],
+  "thump": [
+   "res://assets/audio/thump_0.wav",
+   "res://assets/audio/thump_1.wav",
+   "res://assets/audio/thump_2.wav"
+  ],
+  "glass": [
+   "res://assets/audio/glass_break.wav"
+  ],
+  "door_open": [
+   "res://assets/audio/door_open.wav"
+  ],
+  "door_close": [
+   "res://assets/audio/door_close.wav"
+  ],
+  "swing": [
+   "res://assets/audio/swing.wav"
+  ],
+  "hit": [
+   "res://assets/audio/hit_flesh.wav",
+   "res://assets/audio/hit_wood.wav"
+  ],
+  "hammer": [
+   "res://assets/audio/hammer.wav"
+  ],
+  "phone": [
+   "res://assets/audio/phone_buzz.wav"
+  ],
+  "pickup": [
+   "res://assets/audio/pickup.wav"
+  ],
+  "drink": [
+   "res://assets/audio/drink.wav"
+  ],
+  "eat": [
+   "res://assets/audio/eat.wav"
+  ]
+ },
+ "loops": {
+  "generator": "res://assets/audio/loop_generator.wav",
+  "tv": "res://assets/audio/loop_tv.wav",
+  "amb_day": "res://assets/audio/amb_day.wav",
+  "amb_night": "res://assets/audio/amb_night.wav",
+  "amb_indoor": "res://assets/audio/amb_indoor.wav",
+  "rain": "res://assets/audio/amb_rain.wav"
+ },
+ "music": {
+  "home": "res://assets/audio/mus_home.wav",
+  "out": "res://assets/audio/mus_out.wav",
+  "danger": "res://assets/audio/mus_danger.wav"
+ }
+}

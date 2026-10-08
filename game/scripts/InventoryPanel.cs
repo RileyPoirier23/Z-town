@@ -18,6 +18,7 @@ public partial class InventoryPanel : CanvasLayer
     public ItemStack? Equipped { get; set; }
     public Action<string>? Toast { get; set; }
     public Art? Art { get; set; }
+    public Action<string>? Sound { get; set; }
 
     PanelContainer _root = null!;
     ItemList _mine = null!, _theirs = null!;
@@ -42,7 +43,13 @@ public partial class InventoryPanel : CanvasLayer
         var buttons = new VBoxContainer { CustomMinimumSize = new Vector2(170, 0) };
         h.AddChild(buttons);
         Button(buttons, "Take →  /  ← Put", Transfer);
-        Button(buttons, "Eat / drink", () => Act(s => World.Consume(s), "Can't eat or drink that."));
+        Button(buttons, "Eat / drink", () => Act(s =>
+        {
+            bool drink = World.Data.Item(s.ItemId)?.Thirst > World.Data.Item(s.ItemId)?.Hunger;
+            bool ok = World.Consume(s);
+            if (ok) Sound?.Invoke(drink ? "drink" : "eat");
+            return ok;
+        }, "Can't eat or drink that."));
         Button(buttons, "Give to memere", () => Act(s => World.GiveToMemere(s), "Get closer to memere, or that's not for her."));
         Button(buttons, "Equip / unequip", Equip);
         Button(buttons, "Pour into generator", () => Act(s => World.Refuel(s), "Needs a gas can, next to the generator."));
@@ -143,6 +150,7 @@ public partial class InventoryPanel : CanvasLayer
         if (Open != null && Selected(_theirs, Open.Inventory) is { } take)
         {
             if (!World.TakeFrom(Open, take)) Toast?.Invoke("Too heavy to carry.");
+            else Sound?.Invoke("pickup");
             _theirs.DeselectAll();
             return;
         }

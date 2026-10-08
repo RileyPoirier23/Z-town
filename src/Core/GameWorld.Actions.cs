@@ -100,6 +100,7 @@ public sealed partial class GameWorld
         };
         if (next == e || Map.BarricadeBetween(a, b) > 0) return false; // boarded up: take planks off first
         Map.SetEdgeBetween(a, b, next);
+        Noise.Emit(a, 3, next is Edge.DoorOpen or Edge.WindowOpen ? "door_open" : "door_close");
         return true;
     }
 
@@ -179,7 +180,7 @@ public sealed partial class GameWorld
             weapon.Condition -= 1f / MathF.Max(1, w.Durability);
             if (weapon.Condition <= 0) p.Inventory.RemoveStack(weapon);
         }
-        Noise.Emit(p.Tile, w?.NoiseRadius ?? 2, "melee");
+        Noise.Emit(p.Tile, w?.NoiseRadius ?? 2, hits > 0 ? "hit" : "melee");
         return hits;
     }
 }

@@ -228,6 +228,7 @@ public sealed partial class GameWorld
 
         TickPlayer(hours);
         TickMemere(hours);
+        TickMemereLife();
         TickStory(hours);
     }
 
@@ -550,7 +551,11 @@ public sealed partial class GameWorld
         {
             EdgeDamage.Remove(key);
             if (planks > 0) Map.SetBarricadeBetween(from, to, planks - 1); // planks go one at a time
-            else if (edge.IsBreakable()) Map.SetEdgeBetween(from, to, edge == Edge.DoorClosed ? Edge.DoorBroken : Edge.WindowBroken);
+            else if (edge.IsBreakable())
+            {
+                Map.SetEdgeBetween(from, to, edge == Edge.DoorClosed ? Edge.DoorBroken : Edge.WindowBroken);
+                Noise.Emit(from, 14, edge == Edge.DoorClosed ? "door_break" : "glass");
+            }
             if (Map.Passable(from, to)) { b.Mode = ZombieMode.Chase; b.ThumpEdge = null; }
         }
     }

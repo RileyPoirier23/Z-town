@@ -29,6 +29,7 @@ public partial class Main : Node2D
     Hud _hud = null!;
     InventoryPanel _inventory = null!;
     WorldMap _map = null!;
+    AudioManager _audio = null!;
     PhonePanel _phone = null!;
     float _speed = 1f;
     bool _wasHome = true;
@@ -58,6 +59,9 @@ public partial class Main : Node2D
         AddChild(_inventory);
         _map = new WorldMap();
         AddChild(_map);
+        _audio = new AudioManager();
+        AddChild(_audio);
+        _inventory.Sound = k => _audio.Play(k, Iso.ToScreen(_world.Player.X, _world.Player.Y), -4);
         _phone = new PhonePanel { Dialogue = _dialogue };
         AddChild(_phone);
 
@@ -215,6 +219,8 @@ public partial class Main : Node2D
         _inventory.Close();
         _map.World = w;
         _map.Close();
+        _audio.World = w;
+        _audio.ResetWorld();
         _phone.World = w;
         _phone.Close();
         _hud.ResetNotifications(w.Notifications.Count);
@@ -382,9 +388,11 @@ public partial class Main : Node2D
             var m = w.Messages[_messagesSeen];
             var line = _dialogue.Lines.GetValueOrDefault(m.DialogueId);
             var text = _dialogue.Text(m.DialogueId);
+            if (m.Channel == "phone") _audio.PhoneBuzz();
             if (m.Channel == "phone")
                 _hud.Toast($"📱 {(line?.Speaker == "memere" ? "Memere" : "Phone")}: {text}");
             else if (line?.Speaker == "memere") _view.Speak(w.Memere.Id, text, 6);
+            else if (m.Channel == "tv") _hud.Say("TV", text);
             else if (line?.Speaker == "dad" && w.Dad != null) _view.Speak(w.Dad.Id, text, 6);
             else _hud.Say(line?.Speaker ?? "", text);
         }

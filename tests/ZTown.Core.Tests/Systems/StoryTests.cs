@@ -140,3 +140,29 @@ public class StoryTests
         Assert.Equal(w.StoryEvents, back.StoryEvents);
     }
 }
+
+public class MemereLifeTests
+{
+    [Fact]
+    public void She_asks_about_low_supplies_when_youre_near()
+    {
+        var w = TestData.World();
+        w.Memere.Supplies.Amounts["cigarettes"] = 1;
+        w.Player.PlaceAt(new TilePos(7, 10));
+        w.Clock.Advance(3600 * 2); // mid-morning, not nap time
+        for (int i = 0; i < 40; i++) w.Tick(0.25f);
+        Assert.Contains(w.Messages, m => m.DialogueId == "memere.asking.cigarettes");
+    }
+
+    [Fact]
+    public void She_misses_you_after_a_long_time_away()
+    {
+        var w = TestData.World();
+        w.Player.PlaceAt(new TilePos(30, 22));
+        w.HoursSincePlayerHome = 30;
+        for (int i = 0; i < 20; i++) w.Tick(0.25f);
+        w.Player.PlaceAt(new TilePos(7, 10));
+        for (int i = 0; i < 40; i++) w.Tick(0.25f);
+        Assert.Single(w.Messages, m => m.DialogueId == "memere.miss_you");
+    }
+}

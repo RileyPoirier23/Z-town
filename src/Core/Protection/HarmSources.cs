@@ -25,6 +25,7 @@ public sealed class ZombieAttack : IHarmSource
     {
         var cfg = world.Data.Zombies;
         bool bite = world.Rng.Chance(0.35);
+        world.Noise.Emit(target.Tile, 5, "zombie_attack");
         world.Harm.Apply(target, new HarmEvent(bite ? HarmKind.Bite : HarmKind.Scratch, cfg.AttackDamage, Id, Attacker)
         {
             InfectionChance = bite ? cfg.BiteInfectionChance : cfg.BiteInfectionChance * 0.3f,

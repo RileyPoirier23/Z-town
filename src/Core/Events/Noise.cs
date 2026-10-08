@@ -10,7 +10,15 @@ public sealed class NoiseBus
     readonly List<Noise> _noises = new();
     public IReadOnlyList<Noise> Current => _noises;
 
-    public void Emit(TilePos at, float radius, string cause) => _noises.Add(new Noise(at, radius, cause));
+    /// <summary>Everything that made a sound since the game layer last drained it (for audio).</summary>
+    public List<Noise> Log { get; } = new();
+
+    public void Emit(TilePos at, float radius, string cause)
+    {
+        var n = new Noise(at, radius, cause);
+        _noises.Add(n);
+        if (cause != "footsteps" && Log.Count < 256) Log.Add(n);
+    }
 
     public void Clear() => _noises.Clear();
 }
