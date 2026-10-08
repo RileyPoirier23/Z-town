@@ -105,6 +105,11 @@ public static class SaveSystem
                 Condition = v.Condition, HasKeys = v.HasKeys, Length = v.Length, Width = v.Width,
             }).ToList(),
             Driving = w.Driving?.Id,
+            Profile = new Character.Profile
+            {
+                Occupation = w.Profile.Occupation, Traits = new HashSet<string>(w.Profile.Traits),
+                Xp = new Dictionary<string, float>(w.Profile.Xp), StartLevels = new Dictionary<string, int>(w.Profile.StartLevels),
+            },
             Weather = new WeatherSave { Sky = w.Weather.Sky.ToString(), NextChangeHour = w.Weather.NextChangeHour, SnowCover = w.Weather.SnowCover },
             Dad = w.Dad is { } dad ? new DadSave { X = dad.X, Y = dad.Y, Z = dad.Z, Facing = dad.Facing, Health = dad.Health.Value, State = dad.State.ToString(), Withdrawal = dad.Withdrawal } : null,
             EdgeDamage = w.EdgeDamage.Select(kv => new EdgeDamageSave { X = kv.Key.tile.X, Y = kv.Key.tile.Y, Z = kv.Key.tile.Z, Side = kv.Key.side.ToString(), Damage = kv.Value }).ToList(),
@@ -207,6 +212,7 @@ public static class SaveSystem
             w.Vehicles.Add(v);
         }
         w.RestoreDriving(w.Vehicles.FirstOrDefault(v => v.Id == s.Driving));
+        if (s.Profile != null) w.Profile = s.Profile;
 
         foreach (var (id, cs) in s.Containers)
         {
@@ -301,6 +307,7 @@ public sealed class SaveData
     public List<VehicleSave> Vehicles { get; set; } = new();
     public string? Driving { get; set; }
     public WeatherSave? Weather { get; set; }
+    public Character.Profile? Profile { get; set; }
 }
 
 public sealed class VehicleSave

@@ -165,7 +165,7 @@ public partial class Hud : CanvasLayer
 
         _help = new Label
         {
-            Text = "WASD move · Shift run · Ctrl sneak · E use · Space swing · Tab inventory · B/X board up · Q bandage · H health · M map · P phone · J quest · Z sleep · F5/F9 save/load · F1 hide",
+            Text = "WASD move · Shift run · Ctrl sneak · E use · Space swing · Tab inventory · B/X board up · Q bandage · C craft · K skills · H health · M map · P phone · J quest · Z sleep · F5/F9 save/load · F1 hide",
             Modulate = new Color(1, 1, 1, 0.5f),
         };
         _help.AddThemeFontSizeOverride("font_size", 12);

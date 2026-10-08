@@ -82,6 +82,20 @@ public static class Validator
             foreach (var line in new[] { q.OnStartLine, q.OnDoneLine })
                 if (line != null && !dlg.Lines.ContainsKey(line)) p.Add($"quest {q.Id}: line '{line}' not in dialogue");
         }
+        var cd = data.Character;
+        foreach (var r in data.Recipes.Values)
+        {
+            foreach (var i in r.Inputs) if (!data.Items.ContainsKey(i.Item)) p.Add($"recipe {r.Id}: unknown input '{i.Item}'");
+            foreach (var t in r.Tools) if (!data.Items.ContainsKey(t)) p.Add($"recipe {r.Id}: unknown tool '{t}'");
+            if (!data.Items.ContainsKey(r.Output.Item)) p.Add($"recipe {r.Id}: unknown output '{r.Output.Item}'");
+            if (!cd.Skills.Contains(r.Skill)) p.Add($"recipe {r.Id}: unknown skill '{r.Skill}'");
+        }
+        foreach (var o in cd.Occupations)
+        {
+            foreach (var s in o.Skills.Keys) if (!cd.Skills.Contains(s)) p.Add($"occupation {o.Id}: unknown skill '{s}'");
+            foreach (var t in o.FreeTraits) if (cd.Trait(t) == null) p.Add($"occupation {o.Id}: unknown trait '{t}'");
+        }
+        foreach (var t in cd.Traits) foreach (var x in t.Excludes) if (cd.Trait(x) == null) p.Add($"trait {t.Id}: excludes unknown '{x}'");
         foreach (var t in data.Phone.Scripted)
             if (!dlg.Lines.ContainsKey(t.Line)) p.Add($"phone: line '{t.Line}' not in dialogue");
         if (!dlg.Lines.ContainsKey(data.Phone.HeartLine)) p.Add($"phone: heart line '{data.Phone.HeartLine}' not in dialogue");

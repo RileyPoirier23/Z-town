@@ -31,6 +31,8 @@ public partial class Main : Node2D
     WorldMap _map = null!;
     AudioManager _audio = null!;
     WeatherFx _weatherFx = null!;
+    PauseMenu _pause = null!;
+    CraftingPanel _craft = null!;
     PhonePanel _phone = null!;
     float _speed = 1f;
     bool _wasHome = true;
@@ -64,6 +66,18 @@ public partial class Main : Node2D
         AddChild(_audio);
         _weatherFx = new WeatherFx();
         AddChild(_weatherFx);
+        _craft = new CraftingPanel { Art = _view.Art, Toast = t => _hud.Say("", t) };
+        AddChild(_craft);
+        _pause = new PauseMenu
+        {
+            ProcessMode = ProcessModeEnum.Always,
+            OnSave = () => { if (_world != null) { Save(); _hud.Say("", "Saved."); } },
+            OnQuitToTitle = () => { if (_world != null) Save(); ShowTitle(); },
+            OnVolume = (music, sfx) => { _audio.MusicVolume = music; _audio.SfxVolume = sfx; },
+            OnUiScale = scale => GetTree().Root.ContentScaleFactor = scale,
+        };
+        AddChild(_pause);
+        _pause.Apply();
         _inventory.Sound = k => _audio.Play(k, Iso.ToScreen(_world.Player.X, _world.Player.Y), -4);
         _phone = new PhonePanel { Dialogue = _dialogue };
         AddChild(_phone);
@@ -212,16 +226,17 @@ public partial class Main : Node2D
     {
         CloseMenu();
         var cc = new CharacterCreator { Data = _data, Art = _view.Art!, Layer = 10 };
-        cc.OnStart = (name, outfit) => { CloseMenu(); NewGame((ulong)DateTime.UtcNow.Ticks, name, outfit); };
+        cc.OnStart = (name, outfit, profile) => { CloseMenu(); NewGame((ulong)DateTime.UtcNow.Ticks, name, outfit, profile); };
         AddChild(cc);
         _menu = cc;
     }
 
-    void NewGame(ulong seed, string name, ZTown.Core.Entities.Outfit? outfit)
+    void NewGame(ulong seed, string name, ZTown.Core.Entities.Outfit? outfit, ZTown.Core.Character.Profile? profile = null)
     {
         Attach(BuildWorld(seed));
         _world.Player.Name = name;
         _world.Player.Outfit = outfit ?? (_data.Clothing.Presets.GetValueOrDefault("player_default")?.Clone() ?? new());
+        _world.Profile = profile ?? ZTown.Core.Character.Profile.Create(_data.Character, "unemployed", System.Array.Empty<string>());
         _world.Player.Inventory.TryAdd(_data.Item("baseball_bat")!, 1, _data.Item);
         _inventory.Equipped = _world.Player.Inventory.Stacks.FirstOrDefault();
         Save();
@@ -238,6 +253,8 @@ public partial class Main : Node2D
         _map.World = w;
         _map.Close();
         _audio.World = w;
+        _craft.World = w;
+        _craft.Close();
         _weatherFx.World = w;
         _audio.ResetWorld();
         _phone.World = w;
@@ -301,13 +318,15 @@ public partial class Main : Node2D
         Key("use", Godot.Key.E);
         Key("attack", Godot.Key.Space);
         Key("inventory", Godot.Key.Tab, Godot.Key.I);
-        Key("channel", Godot.Key.C);
+        Key("channel", Godot.Key.V);
         Key("sleep", Godot.Key.Z);
         Key("quicksave", Godot.Key.F5);
         Key("quickload", Godot.Key.F9);
         Key("faster", Godot.Key.Equal, Godot.Key.KpAdd);
         Key("map", Godot.Key.M);
         Key("bandage", Godot.Key.Q);
+        Key("craft", Godot.Key.C);
+        Key("skills", Godot.Key.K);
         Key("phone", Godot.Key.P);
         Key("quest_next", Godot.Key.J);
         Key("barricade", Godot.Key.B);
@@ -332,7 +351,12 @@ public partial class Main : Node2D
         }
         if (e.IsActionPressed("map")) { _map.Toggle(); _phone.Close(); }
         if (e.IsActionPressed("phone")) { _phone.Toggle(); _map.Close(); }
-        if (e.IsActionPressed("close")) { _map.Close(); _phone.Close(); _inventory.Close(); }
+        if (e.IsActionPressed("close"))
+        {
+            if (_map.IsOpen || _phone.IsOpen || _inventory.IsOpen || _craft.IsOpen) { _map.Close(); _phone.Close(); _inventory.Close(); _craft.Close(); }
+            else _pause.Toggle();
+            return;
+        }
         if (e.IsActionPressed("quest_next"))
         {
             var act = _world.Quests.Active.Select(q => q.Id).ToList();
@@ -349,6 +373,8 @@ public partial class Main : Node2D
         }
         if (e.IsActionPressed("unbarricade") && FacingEdge(includeBroken: true) is { } ue && !_world.RemoveBarricade(ue.a, ue.b))
             _hud.Say("", "Need a hammer or crowbar to pry planks off.");
+        if (e.IsActionPressed("craft")) _craft.Show(false);
+        if (e.IsActionPressed("skills")) _craft.Show(true);
         if (e.IsActionPressed("bandage"))
         {
             var bw = _world.BandageSelf();
@@ -437,7 +463,7 @@ public partial class Main : Node2D
         if (w.PlayerDied || w.DadDied)
         {
             bool dad = w.DadDied && !w.PlayerDied;
-            if (!LoadLastSave()) NewGame((ulong)DateTime.UtcNow.Ticks, _world.Player.Name, _world.Player.Outfit);
+            if (!LoadLastSave()) NewGame((ulong)DateTime.UtcNow.Ticks, _world.Player.Name, _world.Player.Outfit, _world.Profile);
             _hud.Say("", dad ? "Dad didn't make it. Back to your last save." : "You died. Back to your last save.");
             return;
         }
@@ -503,7 +529,7 @@ public partial class Main : Node2D
             };
         if (_world.PlayerNearMemere) return "E: give memere something";
         if (_world.PlayerNearGenerator && _world.Power.Generator.Present) return "E: generator (on/off, connect)";
-        if (NearTv()) return "E: TV on/off   C: change channel";
+        if (NearTv()) return "E: TV on/off   V: change channel";
         if (NearestContainer() is { } c) return $"E: search {(c.Kind == "trunk" ? "the trunk" : c.Kind)}";
         if (_world.VehicleNearPlayer() is { } v) return $"E: get in the {v.Model}{(v.HasKeys ? " (keys inside)" : " (no keys)")}";
         if (FacingEdge(includeBroken: true) is { } edge)

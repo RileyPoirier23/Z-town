@@ -120,3 +120,7 @@ Cost: ~40 MB of character sheets for 14 garments × 14 animations; more garments
 
 ### D-018 — Horses for travel
 **Accepted** (Riley). Ride horses when cars can't be found or fixed. Planned for Phase 5 (P2).
+
+### D-019 — Memere doesn't age
+**Accepted** (Riley: "stay the way i remember her"). Over the 5–7 years the world ages around
+her (eras, overgrowth, the player and Dad can change), but memere's look stays the same.

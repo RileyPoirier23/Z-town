@@ -1,0 +1,34 @@
+{
+  "skills": ["cooking", "carpentry", "firstaid", "mechanics", "electrical", "blunt", "blade", "maintenance", "sneaking", "fitness"],
+  "levelXp": [50, 100, 200, 350, 550, 800, 1100, 1450, 1850, 2300],
+  "occupations": [
+    { "id": "unemployed", "name": "Unemployed", "points": 8, "skills": {} },
+    { "id": "cashier", "name": "Cashier", "points": 6, "skills": { "fitness": 1 } },
+    { "id": "cook", "name": "Cook", "points": 2, "skills": { "cooking": 3, "blade": 1 } },
+    { "id": "nurse", "name": "Nurse", "points": 2, "skills": { "firstaid": 3 } },
+    { "id": "mechanic", "name": "Mechanic", "points": 0, "skills": { "mechanics": 3, "electrical": 1 }, "freeTraits": ["mechanic"] },
+    { "id": "construction", "name": "Construction worker", "points": 0, "skills": { "carpentry": 3, "blunt": 1 } },
+    { "id": "electrician", "name": "Electrician", "points": 2, "skills": { "electrical": 3 } },
+    { "id": "trucker", "name": "Truck driver", "points": 4, "skills": { "mechanics": 1 } }
+  ],
+  "traits": [
+    { "id": "strong", "name": "Strong", "cost": 4, "description": "Hits harder.", "mods": { "meleeDamageMult": 1.3 }, "excludes": ["weak"] },
+    { "id": "fit", "name": "Fit", "cost": 4, "description": "Runs faster, tires slower.", "mods": { "runSpeedMult": 1.12, "fatigueMult": 0.85 }, "excludes": ["out_of_shape"] },
+    { "id": "light_eater", "name": "Light eater", "cost": 3, "description": "Gets hungry slower.", "mods": { "hungerMult": 0.75 }, "excludes": ["hearty_appetite"] },
+    { "id": "handy", "name": "Handy", "cost": 3, "description": "Barricades hold longer.", "mods": { "barricadeMult": 1.5 } },
+    { "id": "good_cook", "name": "Good cook", "cost": 2, "description": "Gets more out of a recipe.", "mods": { "cookingBonus": 2 } },
+    { "id": "fast_healer", "name": "Fast healer", "cost": 3, "description": "Heals faster.", "mods": { "healMult": 1.5 }, "excludes": ["slow_healer"] },
+    { "id": "light_footed", "name": "Light-footed", "cost": 2, "description": "Quieter on your feet.", "mods": { "noiseMult": 0.7 }, "excludes": ["clumsy"] },
+    { "id": "mechanic", "name": "Knows cars", "cost": 3, "description": "Can hotwire a car.", "mods": { "canHotwire": 1 } },
+    { "id": "thrifty", "name": "Thrifty with gas", "cost": 2, "description": "Gets more out of the generator's fuel.", "mods": { "generatorFuelMult": 1.25 } },
+    { "id": "calm", "name": "Calm", "cost": 2, "description": "Stress builds slower.", "mods": { "stressMult": 0.7 } },
+
+    { "id": "weak", "name": "Weak", "cost": -3, "description": "Hits softer.", "mods": { "meleeDamageMult": 0.75 } },
+    { "id": "out_of_shape", "name": "Out of shape", "cost": -3, "description": "Slower, tires faster.", "mods": { "runSpeedMult": 0.9, "fatigueMult": 1.2 } },
+    { "id": "hearty_appetite", "name": "Hearty appetite", "cost": -2, "description": "Gets hungry faster.", "mods": { "hungerMult": 1.3 } },
+    { "id": "slow_healer", "name": "Slow healer", "cost": -3, "description": "Heals slower.", "mods": { "healMult": 0.65 } },
+    { "id": "clumsy", "name": "Clumsy", "cost": -2, "description": "Louder on your feet.", "mods": { "noiseMult": 1.35 } },
+    { "id": "smoker", "name": "Smoker", "cost": -2, "description": "Gets stressed without smokes on you.", "mods": { "smoker": 1 } },
+    { "id": "anxious", "name": "Anxious", "cost": -2, "description": "Stress builds faster.", "mods": { "stressMult": 1.4 }, "excludes": ["calm"] }
+  ]
+}

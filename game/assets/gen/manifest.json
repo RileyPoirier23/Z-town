@@ -618,6 +618,7 @@
   "frying_pan": "res://assets/gen/items/frying_pan.png",
   "gas_can": "res://assets/gen/items/gas_can.png",
   "hammer": "res://assets/gen/items/hammer.png",
+  "hot_soup": "res://assets/gen/items/hot_soup.png",
   "kitchen_knife": "res://assets/gen/items/kitchen_knife.png",
   "mepsi_2l": "res://assets/gen/items/mepsi_2l.png",
   "mepsi_can": "res://assets/gen/items/mepsi_can.png",
@@ -626,8 +627,11 @@
   "nails_box": "res://assets/gen/items/nails_box.png",
   "planks": "res://assets/gen/items/planks.png",
   "puffer": "res://assets/gen/items/puffer.png",
+  "rag": "res://assets/gen/items/rag.png",
   "reruns_box": "res://assets/gen/items/reruns_box.png",
-  "water_bottle": "res://assets/gen/items/water_bottle.png"
+  "spiked_bat": "res://assets/gen/items/spiked_bat.png",
+  "water_bottle": "res://assets/gen/items/water_bottle.png",
+  "wood_scrap": "res://assets/gen/items/wood_scrap.png"
  },
  "moodles": {
   "bleeding": "res://assets/gen/ui/moodle_bleeding.png",

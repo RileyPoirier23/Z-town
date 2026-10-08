@@ -169,6 +169,22 @@ def item_icon(item_id):
         d.rectangle([14 * k, 20 * k, 50 * k, 52 * k], fill=(170, 140, 90, 255))
         for x in (20, 30, 40):
             d.line([(x * k, 10 * k), (x * k, 24 * k)], fill=(150, 150, 155, 255), width=2 * k)
+    elif item_id == "hot_soup":
+        d.ellipse([10 * k, 26 * k, 54 * k, 46 * k], fill=(230, 226, 214, 255))
+        d.ellipse([14 * k, 28 * k, 50 * k, 40 * k], fill=(200, 110, 60, 255))
+        for x in (24, 32, 40):
+            d.arc([(x - 4) * k, 8 * k, (x + 4) * k, 24 * k], 90, 270, fill=(230, 230, 230, 200), width=2 * k)
+    elif item_id == "spiked_bat":
+        d.line([(14 * k, 54 * k), (50 * k, 10 * k)], fill=(170, 128, 82, 255), width=8 * k)
+        for i in range(5):
+            x, y = 34 + i * 3.5, 30 - i * 4.2
+            d.line([(x * k, y * k), ((x + 6) * k, (y + 2) * k)], fill=(170, 170, 175, 255), width=2 * k)
+    elif item_id == "rag":
+        d.polygon([(14 * k, 20 * k), (50 * k, 16 * k), (54 * k, 44 * k), (18 * k, 50 * k)], fill=(170, 160, 140, 255))
+        d.line([(20 * k, 30 * k), (46 * k, 26 * k)], fill=(140, 130, 112, 255), width=2 * k)
+    elif item_id == "wood_scrap":
+        d.polygon([(10 * k, 30 * k), (50 * k, 20 * k), (54 * k, 30 * k), (14 * k, 40 * k)], fill=(150, 112, 74, 255))
+        d.polygon([(16 * k, 44 * k), (46 * k, 38 * k), (48 * k, 46 * k), (18 * k, 52 * k)], fill=(130, 96, 62, 255))
     elif item_id == "reruns_box":
         d.rectangle([8 * k, 24 * k, 56 * k, 44 * k], fill=(40, 40, 44, 255))
         d.rectangle([12 * k, 30 * k, 30 * k, 34 * k], fill=(90, 200, 120, 255))

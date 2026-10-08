@@ -258,7 +258,8 @@ public sealed partial class GameWorld
         var n = p.Needs;
         var cfg = Data.Needs;
         float mult = p.Asleep ? cfg.SleepNeedsMultiplier : 1f;
-        n.Hunger += (float)(cfg.HungerPerHour * hours * mult);
+        var cd = Data.Character;
+        n.Hunger += (float)(cfg.HungerPerHour * hours * mult * Profile.Mult("hungerMult", cd));
         n.Thirst += (float)(cfg.ThirstPerHour * hours * mult);
         if (p.Asleep)
         {
@@ -267,7 +268,7 @@ public sealed partial class GameWorld
         }
         else
         {
-            n.Fatigue += (float)(cfg.FatiguePerHourAwake * hours);
+            n.Fatigue += (float)(cfg.FatiguePerHourAwake * hours * Profile.Mult("fatigueMult", cd));
             n.Boredom += (float)(cfg.BoredomPerHour * hours);
         }
 
@@ -293,15 +294,18 @@ public sealed partial class GameWorld
         else
         {
             HoursSincePlayerHome += hours;
-            n.Stress += (float)(cfg.AwayFromHomeStressPerHour * hours);
+            n.Stress += (float)(cfg.AwayFromHomeStressPerHour * hours * Profile.Mult("stressMult", cd));
         }
+        // smokers get stressed without a smoke; having smokes on you takes the edge off
+        if (Profile.Has("smoker", cd) && !HasItem("cigarettes_pack") && !HasItem("cigarettes_carton"))
+            n.Stress += (float)(0.02 * hours);
         n.ClampAll();
 
         // wounds: bleed until bandaged, heal with time; the body recovers when fed and rested
         if (p.Wounds.Bleeding) new Bleeding { Hours = (float)hours }.ApplyTo(this, p);
         p.Wounds.Heal((float)hours * (p.Asleep ? 1.5f : 1f));
         if (!p.Wounds.Bleeding && !p.Infection.Infected && n.Hunger < 0.7f && n.Thirst < 0.7f)
-            p.Health.Heal((float)hours * (p.Asleep ? 4f : 1.5f));
+            p.Health.Heal((float)hours * (p.Asleep ? 4f : 1.5f) * Profile.Mult("healMult", cd) * (1 + Skill("firstaid") * 0.05f));
         // sleeping through danger: something close wakes you
         if (p.Asleep && Zombies.Any(z => !z.IsDead && z.DistanceTo(p) < 7)) p.Asleep = false;
 
@@ -378,7 +382,7 @@ public sealed partial class GameWorld
         dy /= len;
         float speed = mode switch
         {
-            MoveMode.Run => Data.Sim.PlayerRunSpeed,
+            MoveMode.Run => Data.Sim.PlayerRunSpeed * Profile.Mult("runSpeedMult", Data.Character),
             MoveMode.Sneak => Data.Sim.PlayerSneakSpeed,
             _ => Data.Sim.PlayerWalkSpeed,
         };
@@ -386,8 +390,11 @@ public sealed partial class GameWorld
         float step = speed * realSeconds;
         p.Facing = MathF.Atan2(dy, dx);
         TryMove(p, dx * step, dy * step, PlayerMayEnter);
-        if (mode == MoveMode.Run) Noise.Emit(p.Tile, Data.Sim.RunNoiseRadius, "footsteps");
-        else if (mode == MoveMode.Walk) Noise.Emit(p.Tile, Data.Sim.WalkNoiseRadius, "footsteps");
+        float noisy = Profile.Mult("noiseMult", Data.Character) * (1 - Skill("sneaking") * 0.05f);
+        if (mode == MoveMode.Run) Noise.Emit(p.Tile, Data.Sim.RunNoiseRadius * noisy, "footsteps");
+        else if (mode == MoveMode.Walk) Noise.Emit(p.Tile, Data.Sim.WalkNoiseRadius * noisy, "footsteps");
+        else if (Rng.Chance(0.01)) Practice("sneaking", 1);
+        if (mode == MoveMode.Run && Rng.Chance(0.01)) Practice("fitness", 1);
     }
 
     bool PlayerMayEnter(TilePos t) => true;
@@ -597,6 +604,9 @@ public sealed partial class GameWorld
             if (Map.Passable(from, to)) { b.Mode = ZombieMode.Chase; b.ThumpEdge = null; }
         }
     }
+
+    /// <summary>How much harder planks are to break (Handy trait, carpentry skill).</summary>
+    public float PlankStrength => Profile.Mult("barricadeMult", Data.Character) * (1 + Skill("carpentry") * 0.1f);
 
     public static (TilePos, char) EdgeKey(TilePos a, TilePos b)
     {

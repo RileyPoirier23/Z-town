@@ -40,7 +40,16 @@ public sealed partial class GameWorld
         var v = VehicleNearPlayer();
         if (v == null) return "";
         Driving = v;
-        if (!v.HasKeys) return "No keys. You can sit in it, but it won't start.";
+        if (!v.HasKeys)
+        {
+            // hotwiring: Mechanic job/trait or mechanics + electrical skill
+            bool canHotwire = Profile.Has("canHotwire", Data.Character) || Skill("mechanics") >= 2 && Skill("electrical") >= 1;
+            if (!canHotwire) return "No keys. It won't start. (A mechanic could hotwire it.)";
+            PassTime(5);
+            v.HasKeys = true;
+            Practice("electrical", 5);
+            if (Driving == null) return "";
+        }
         if (v.Fuel <= 0) return "Out of gas.";
         if (v.Condition <= 0) return "It won't turn over.";
         v.EngineOn = true;
@@ -86,6 +95,7 @@ public sealed partial class GameWorld
             if (v.EngineOn)
             {
                 v.Fuel = MathF.Max(0, v.Fuel - MathF.Abs(v.Speed) * dt / 1000f * Data.Vehicles.LitresPerKm); // tiles are metres
+                if (Rng.Chance(0.002)) Practice("mechanics", 1);
                 if (v.Fuel <= 0) v.EngineOn = false;
             }
             // people and zombies in the way get hit (through the harm gate, like everything else)

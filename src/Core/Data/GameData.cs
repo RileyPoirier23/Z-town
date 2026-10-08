@@ -95,6 +95,8 @@ public sealed class GameData
     public Story.PhoneConfig Phone { get; private set; } = new();
     public Vehicles.VehicleConfig Vehicles { get; private set; } = new();
     public Weather.WeatherConfig Weather { get; private set; } = new();
+    public Character.CharacterData Character { get; private set; } = new();
+    public Dictionary<string, Character.RecipeDef> Recipes { get; } = new();
 
     /// <summary>Problems found while loading (duplicate ids etc.). The validator fails on any.</summary>
     public List<string> Problems { get; } = new();
@@ -130,6 +132,9 @@ public sealed class GameData
         d.Phone = ReadOpt<Story.PhoneConfig>(src, $"{root}/phone.json", d) ?? new();
         d.Vehicles = ReadOpt<Vehicles.VehicleConfig>(src, $"{root}/vehicles.json", d) ?? new();
         d.Weather = ReadOpt<Weather.WeatherConfig>(src, $"{root}/weather.json", d) ?? new();
+        d.Character = ReadOpt<Character.CharacterData>(src, $"{root}/character.json", d) ?? new();
+        foreach (var r in ReadOpt<List<Character.RecipeDef>>(src, $"{root}/recipes.json", d) ?? new())
+            AddUnique(d.Recipes, r.Id, r, "recipes.json", d);
         return d;
     }
 

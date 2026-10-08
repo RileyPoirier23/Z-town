@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+### Added (Chapter 1 systems)
+- Quests and quest log, Chapter 1 objectives incl. **Find Dad**; world map with markers.
+- Dad: states, follows you, can be brought home.
+- Phone: battery, texts (memere's heart texts), service dying over time.
+- Barricading doors and windows with planks.
+- Sound: procedural SFX, ambience and music; zombies hear what you hear.
+- Memere's everyday life: asks for supplies when low, "I love and miss you" after time away,
+  reacts to her shows.
+- Injuries, bleeding, bandaging, healing; sleep screen.
+- Cars parked on the real streets: keys, hotwiring, fuel, crashes, trunks.
+- Weather and seasons with Moncton temperatures; wet and cold.
+- Character creation: a job (before all this) and traits with a point budget.
+- Skills that level by doing; crafting and cooking panel (C), skills panel (K):
+  donairs, hot soup, bandages, spiked bat, planks.
+- Pause menu with settings.
+
 ### Added (art pass)
 - Zomboid-style look: painted siding, brick, shingles, grass, roads and sidewalks; hip roofs
   that hide when you're inside; wall cutaway; see-through trees; smooth lighting; fog of war

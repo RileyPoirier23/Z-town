@@ -1,0 +1,12 @@
+[
+  { "id": "donair", "name": "Make donairs", "station": "stove", "needsPower": true, "minutes": 25, "skill": "cooking", "xp": 18,
+    "inputs": [ { "item": "donair_meat_frozen", "count": 1 }, { "item": "bread", "count": 1 } ], "output": { "item": "donair", "count": 2 } },
+  { "id": "hot_soup", "name": "Heat up soup", "station": "stove", "needsPower": true, "minutes": 10, "skill": "cooking", "xp": 8,
+    "inputs": [ { "item": "canned_soup", "count": 1 } ], "output": { "item": "hot_soup", "count": 1 } },
+  { "id": "bandage", "name": "Tear rags into a bandage", "minutes": 3, "skill": "firstaid", "xp": 4,
+    "inputs": [ { "item": "rag", "count": 2 } ], "output": { "item": "bandage", "count": 1 } },
+  { "id": "spiked_bat", "name": "Nail up a bat", "minutes": 20, "skill": "carpentry", "xp": 15, "tools": ["hammer"],
+    "inputs": [ { "item": "baseball_bat", "count": 1 }, { "item": "nails_box", "count": 5 } ], "output": { "item": "spiked_bat", "count": 1 } },
+  { "id": "planks", "name": "Break down a crate for planks", "minutes": 15, "skill": "carpentry", "xp": 6, "tools": ["hammer"],
+    "inputs": [ { "item": "wood_scrap", "count": 3 } ], "output": { "item": "planks", "count": 1 } }
+]

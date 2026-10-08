@@ -4,7 +4,7 @@ Everything the game says or shows about memere, Dad, or the family comes from th
 If something isn't written here, **it isn't known**. Anyone working on this project (human
 or Claude) asks Riley before adding to it. Never fill a gap with a guess.
 
-Last updated: 2026-10-08 (donairs; no knitting)
+Last updated: 2026-10-08 (donairs; no knitting; she doesn't age)
 
 Riley finds it hard to list everything at once, so questions get asked as the work reaches
 them, a few at a time.
@@ -28,6 +28,7 @@ Memere is Riley's grandmother on his dad's side. She passed away on October 7, 2
 | Sent text messages that were just a heart, because she didn't really know how to use a phone | Riley |
 | Ambient-life ideas Riley listed: napping in her chair, commenting on the player, telling stories, reacting to what you bring her | Riley (game brief) |
 | Did **not** knit or do crafts like that | Riley |
+| Over the 5–7 years of the story she **doesn't visibly age**: she stays the way Riley remembers her | Riley |
 
 ### Unknown — ask Riley
 
@@ -40,7 +41,6 @@ Memere is Riley's grandmother on his dad's side. She passed away on October 7, 2
 - How she talked about Dad
 - What she'd say when you brought her something
 - What she usually wore and how she wore her hair (her in-game look is a placeholder)
-- Over the 5–7 years of the story, should she visibly age?
 
 ## Dad
 

@@ -15,7 +15,11 @@ public partial class CharacterCreator : CanvasLayer
 {
     public GameData Data { get; set; } = null!;
     public Art Art { get; set; } = null!;
-    public Action<string, Outfit>? OnStart { get; set; }
+    public Action<string, Outfit, ZTown.Core.Character.Profile>? OnStart { get; set; }
+    string _occupation = "unemployed";
+    readonly HashSet<string> _traits = new();
+    Label _points = null!;
+    VBoxContainer _traitList = null!;
 
     Outfit _outfit = new();
     LineEdit _name = null!;
@@ -92,6 +96,8 @@ public partial class CharacterCreator : CanvasLayer
             _swatches[slot] = sw;
         }
 
+        BuildJobColumn(root);
+
         var buttons = new HBoxContainer();
         buttons.AddThemeConstantOverride("separation", 16);
         form.AddChild(new Control { CustomMinimumSize = new Vector2(0, 12) });
@@ -100,10 +106,69 @@ public partial class CharacterCreator : CanvasLayer
         rnd.Pressed += Randomize;
         buttons.AddChild(rnd);
         var start = new Button { Text = "Start  ▶", CustomMinimumSize = new Vector2(160, 40) };
-        start.Pressed += () => OnStart?.Invoke(string.IsNullOrWhiteSpace(_name.Text) ? "Riley" : _name.Text.Trim(), _outfit.Clone());
+        start.Pressed += () =>
+        {
+            var cd = Data.Character;
+            if (ZTown.Core.Character.Profile.PointsLeft(cd, _occupation, _traits) < 0) { _points.Modulate = new Color(1, 0.4f, 0.4f); return; }
+            OnStart?.Invoke(string.IsNullOrWhiteSpace(_name.Text) ? "Riley" : _name.Text.Trim(), _outfit.Clone(),
+                ZTown.Core.Character.Profile.Create(cd, _occupation, _traits));
+        };
         buttons.AddChild(start);
 
         SyncPickers();
+    }
+
+    void BuildJobColumn(HBoxContainer root)
+    {
+        var cd = Data.Character;
+        var col = new VBoxContainer { CustomMinimumSize = new Vector2(330, 0) };
+        col.AddThemeConstantOverride("separation", 8);
+        root.AddChild(col);
+        col.AddChild(Caption("Job (before all this)"));
+        var job = new OptionButton();
+        for (int i = 0; i < cd.Occupations.Count; i++)
+        {
+            var o = cd.Occupations[i];
+            var skills = string.Join(", ", o.Skills.Select(k => $"{k.Key} {k.Value}"));
+            job.AddItem($"{o.Name}  ({o.Points} pts{(skills.Length > 0 ? "; " + skills : "")})");
+            job.SetItemMetadata(i, o.Id);
+        }
+        job.ItemSelected += i => { _occupation = (string)job.GetItemMetadata((int)i); RefreshPoints(); };
+        col.AddChild(job);
+        _points = new Label();
+        col.AddChild(_points);
+        col.AddChild(Caption("Traits"));
+        var scroll = new ScrollContainer { CustomMinimumSize = new Vector2(330, 420), HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
+        col.AddChild(scroll);
+        _traitList = new VBoxContainer();
+        scroll.AddChild(_traitList);
+        foreach (var t in cd.Traits)
+        {
+            var cb = new CheckBox { Text = $"{t.Name} ({(t.Cost > 0 ? "-" : "+")}{Math.Abs(t.Cost)})  {t.Description}", TooltipText = t.Description };
+            cb.AddThemeColorOverride("font_color", t.Cost > 0 ? new Color(0.75f, 0.9f, 0.7f) : new Color(0.95f, 0.75f, 0.65f));
+            var id = t.Id;
+            cb.Toggled += on =>
+            {
+                if (on) { _traits.Add(id); foreach (var x in t.Excludes) _traits.Remove(x); }
+                else _traits.Remove(id);
+                RefreshPoints();
+            };
+            _traitList.AddChild(cb);
+        }
+        RefreshPoints();
+    }
+
+    void RefreshPoints()
+    {
+        var cd = Data.Character;
+        int left = ZTown.Core.Character.Profile.PointsLeft(cd, _occupation, _traits);
+        _points.Text = $"Points left: {left}";
+        _points.Modulate = left < 0 ? new Color(1, 0.45f, 0.45f) : Colors.White;
+        foreach (var c in _traitList.GetChildren().OfType<CheckBox>())
+        {
+            var t = cd.Traits[c.GetIndex()];
+            c.SetPressedNoSignal(_traits.Contains(t.Id));
+        }
     }
 
     static Label Caption(string text)

@@ -148,6 +148,7 @@ public sealed partial class GameWorld
         Player.Inventory.Remove("planks", 1);
         Map.SetBarricadeBetween(a, b, planks + 1);
         Noise.Emit(a, 12, "hammering");
+        Practice("carpentry", 6);
         Story("barricade");
         return true;
     }

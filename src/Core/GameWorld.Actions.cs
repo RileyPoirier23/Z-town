@@ -133,7 +133,7 @@ public sealed partial class GameWorld
         if (room <= 0.01f) return false;
         float have = def.Fuel * can.Condition; // condition doubles as "how full" for cans
         float pour = MathF.Min(room, have);
-        g.Fuel += pour;
+        g.Fuel += pour * Profile.Mult("generatorFuelMult", Data.Character) * (1 + Skill("electrical") * 0.03f);
         can.Condition = (have - pour) / def.Fuel;
         if (can.Condition <= 0.001f) Player.Inventory.RemoveStack(can);
         return true;
@@ -163,6 +163,7 @@ public sealed partial class GameWorld
         var dis = Player.Inventory.Stacks.FirstOrDefault(s => s.ItemId == "disinfectant" && s.UsesLeft > 0);
         var w = Player.Wounds.Bandage(dis != null);
         if (w == null) return null;
+        Practice("firstaid", 5);
         Player.Inventory.Remove("bandage", 1);
         if (dis != null && --dis.UsesLeft <= 0) Player.Inventory.RemoveStack(dis);
         return w;
@@ -174,7 +175,8 @@ public sealed partial class GameWorld
         var p = Player;
         if (p == null || p.IsDead) return 0;
         var w = weapon != null ? Data.Item(weapon.ItemId)?.Weapon : null;
-        float range = w?.Range ?? 0.9f, damage = w?.Damage ?? 3f;
+        float range = w?.Range ?? 0.9f;
+        float damage = (w?.Damage ?? 3f) * Profile.Mult("meleeDamageMult", Data.Character) * (1 + Skill(w?.Kind == "blade" ? "blade" : "blunt") * 0.06f);
         int hits = 0;
         foreach (var e in _entities.ToList())
         {
@@ -187,9 +189,11 @@ public sealed partial class GameWorld
             new MeleeHit { Attacker = p, Damage = damage, Kind = w?.Kind == "blade" ? HarmKind.Sharp : HarmKind.Blunt }.ApplyTo(this, e);
             hits++;
         }
+        if (hits > 0) Practice(w?.Kind == "blade" ? "blade" : "blunt", 2 * hits);
         if (weapon != null && w != null && hits > 0)
         {
-            weapon.Condition -= 1f / MathF.Max(1, w.Durability);
+            weapon.Condition -= 1f / MathF.Max(1, w.Durability) / (1 + Skill("maintenance") * 0.1f);
+            if (Rng.Chance(0.3)) Practice("maintenance", 1);
             if (weapon.Condition <= 0) p.Inventory.RemoveStack(weapon);
         }
         Noise.Emit(p.Tile, w?.NoiseRadius ?? 2, hits > 0 ? "hit" : "melee");

@@ -1,13 +1,127 @@
 [
-  { "id": "donair", "name": "Donair", "category": "food", "weight": 0.5, "hunger": 0.35, "unhappiness": -0.1,
-    "freshHours": 24, "freshHoursFridge": 96, "tags": ["food", "memere_likes"] },
-  { "id": "donair_meat_frozen", "name": "Frozen donair meat", "category": "food", "weight": 1.0, "hunger": 0.4,
-    "freshHours": 12, "freshHoursFridge": 240, "tags": ["food", "ingredient"] },
-  { "id": "chips_bag", "name": "Bag of chips", "category": "food", "brand": "chips", "weight": 0.2, "hunger": 0.1, "unhappiness": -0.05, "tags": ["food", "snack"] },
-  { "id": "chocolate_bar", "name": "Chocolate bar", "category": "food", "weight": 0.1, "hunger": 0.08, "unhappiness": -0.08, "tags": ["food", "snack"] },
-  { "id": "canned_soup", "name": "Can of soup", "category": "food", "weight": 0.4, "hunger": 0.25, "tags": ["food", "canned"] },
-  { "id": "canned_beans", "name": "Can of beans", "category": "food", "weight": 0.45, "hunger": 0.3, "tags": ["food", "canned"] },
-  { "id": "bread", "name": "Loaf of bread", "category": "food", "weight": 0.5, "hunger": 0.15, "uses": 6, "freshHours": 96, "freshHoursFridge": 168, "tags": ["food"] },
-  { "id": "milk", "name": "Carton of milk", "category": "drink", "weight": 1.0, "thirst": 0.15, "hunger": 0.05, "uses": 4, "freshHours": 12, "freshHoursFridge": 168, "tags": ["drink"] },
-  { "id": "water_bottle", "name": "Bottle of water", "category": "drink", "weight": 0.55, "thirst": 0.3, "tags": ["drink"] }
+ {
+  "id": "donair",
+  "name": "Donair",
+  "category": "food",
+  "weight": 0.5,
+  "hunger": 0.35,
+  "unhappiness": -0.1,
+  "freshHours": 24,
+  "freshHoursFridge": 96,
+  "tags": [
+   "food",
+   "memere_likes"
+  ]
+ },
+ {
+  "id": "donair_meat_frozen",
+  "name": "Frozen donair meat",
+  "category": "food",
+  "weight": 1.0,
+  "hunger": 0.4,
+  "freshHours": 12,
+  "freshHoursFridge": 240,
+  "tags": [
+   "food",
+   "ingredient"
+  ]
+ },
+ {
+  "id": "chips_bag",
+  "name": "Bag of chips",
+  "category": "food",
+  "brand": "chips",
+  "weight": 0.2,
+  "hunger": 0.1,
+  "unhappiness": -0.05,
+  "tags": [
+   "food",
+   "snack"
+  ]
+ },
+ {
+  "id": "chocolate_bar",
+  "name": "Chocolate bar",
+  "category": "food",
+  "weight": 0.1,
+  "hunger": 0.08,
+  "unhappiness": -0.08,
+  "tags": [
+   "food",
+   "snack"
+  ]
+ },
+ {
+  "id": "canned_soup",
+  "name": "Can of soup",
+  "category": "food",
+  "weight": 0.4,
+  "hunger": 0.25,
+  "tags": [
+   "food",
+   "canned"
+  ]
+ },
+ {
+  "id": "canned_beans",
+  "name": "Can of beans",
+  "category": "food",
+  "weight": 0.45,
+  "hunger": 0.3,
+  "tags": [
+   "food",
+   "canned"
+  ]
+ },
+ {
+  "id": "bread",
+  "name": "Loaf of bread",
+  "category": "food",
+  "weight": 0.5,
+  "hunger": 0.15,
+  "uses": 6,
+  "freshHours": 96,
+  "freshHoursFridge": 168,
+  "tags": [
+   "food"
+  ]
+ },
+ {
+  "id": "milk",
+  "name": "Carton of milk",
+  "category": "drink",
+  "weight": 1.0,
+  "thirst": 0.15,
+  "hunger": 0.05,
+  "uses": 4,
+  "freshHours": 12,
+  "freshHoursFridge": 168,
+  "tags": [
+   "drink"
+  ]
+ },
+ {
+  "id": "water_bottle",
+  "name": "Bottle of water",
+  "category": "drink",
+  "weight": 0.55,
+  "thirst": 0.3,
+  "tags": [
+   "drink"
+  ]
+ },
+ {
+  "id": "hot_soup",
+  "name": "Bowl of hot soup",
+  "category": "food",
+  "weight": 0.4,
+  "hunger": 0.35,
+  "unhappiness": -0.15,
+  "freshHours": 8,
+  "freshHoursFridge": 48,
+  "tags": [
+   "food",
+   "cooked"
+  ]
+ }
 ]
