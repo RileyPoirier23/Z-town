@@ -80,8 +80,8 @@ public static class TestMaps
 
         var w = new GameWorld(data, map, seed);
         w.HomeArea.Add(house);
-        w.Buildings.Add(new Building("memere_house", house, "shingle_grey", 0.55f));
-        w.Buildings.Add(new Building("corner_store", store, "flat_tar", 0f));
+        w.AddBuilding(new Building("memere_house", house, "shingle_grey", 0.55f) { Kind = "house", Exterior = "siding_white" });
+        w.AddBuilding(new Building("corner_store", store, "flat_tar", 0f) { Kind = "convenience", Exterior = "brick_red" });
         // memere's room is the safe room: zombies can never path into it
         w.ProtectedZones.Add(new TileRect(4, 4, 9, 14));
 

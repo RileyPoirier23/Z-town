@@ -22,7 +22,7 @@ public partial class IsoView : Node2D
     /// <summary>Set by Main while the player is swinging.</summary>
     public float PlayerSwing { get; set; }
 
-    const int ViewRadius = 26;
+    const int ViewRadius = 38;
     bool[] _visible = System.Array.Empty<bool>();
     bool[] _seen = System.Array.Empty<bool>();
     double _visTimer;
@@ -126,7 +126,7 @@ public partial class IsoView : Node2D
         var player = w.Player;
         float playerDepth = player.X + player.Y;
         var c = player.Tile;
-        int r = 28;
+        int r = 36;
         int x0 = Mathf.Max(0, c.X - r), x1 = Mathf.Min(map.Width - 1, c.X + r);
         int y0 = Mathf.Max(0, c.Y - r), y1 = Mathf.Min(map.Height - 1, c.Y + r);
 
@@ -157,6 +157,7 @@ public partial class IsoView : Node2D
             {
                 ref var t = ref map.At(x, y);
                 var floor = t.Floor ?? "grass";
+                if (floor == "void") continue;
                 if (!art.Floors.TryGetValue(floor, out var vars)) vars = art.Floors[floor = "grass"];
                 var tex = art.FloorGrid.TryGetValue(floor, out int g)
                     ? vars[x % g + y % g * g]
@@ -205,20 +206,18 @@ public partial class IsoView : Node2D
                     });
                 }
             }
-        var pt = player.Tile;
-        foreach (var b in w.Buildings)
-        {
-            if (b.Footprint.Contains(pt)) continue; // inside: roof off, like Zomboid
-            if (!art.Roofs.TryGetValue(b.Roof, out var roofTex)) continue;
-            var fp = b.Footprint;
-            for (int y = fp.MinY; y < fp.MaxY; y++)
-                for (int x = fp.MinX; x < fp.MaxX; x++)
-                {
-                    if (x < x0 || x > x1 || y < y0 || y > y1) continue;
-                    int xx = x, yy = y;
-                    Add(x + y + 1.95f, 3, () => DrawRoofTile(b, roofTex, xx, yy));
-                }
-        }
+        // roofs: every building tile except the building you're in (Zomboid takes the roof off)
+        int inside = map.At(player.Tile).Building;
+        for (int y = y0; y <= y1; y++)
+            for (int x = x0; x <= x1; x++)
+            {
+                int bi = map.At(x, y).Building;
+                if (bi == 0 || bi == inside) continue;
+                var b = w.Buildings[bi - 1];
+                if (!art.Roofs.TryGetValue(b.Roof, out var roofTex)) continue;
+                int xx = x, yy = y;
+                Add(x + y + 1.95f, 3, () => DrawRoofTile(b, roofTex, xx, yy));
+            }
         foreach (var e in w.Entities)
         {
             if (Mathf.Abs(e.X - player.X) > r || Mathf.Abs(e.Y - player.Y) > r) continue;
@@ -230,18 +229,28 @@ public partial class IsoView : Node2D
         }
         _order.Sort((a, b) => a.depth != b.depth ? a.depth.CompareTo(b.depth) : a.order.CompareTo(b.order));
         foreach (var o in _order) _draws[o.index]();
+        // Zomboid-style silhouette: you can always see yourself, even behind walls and roofs
+        _silhouette = true;
+        DrawEntity(player);
+        _silhouette = false;
         DrawSpeech();
     }
 
     const float WallM = 2.45f;       // storey height in metres (192 px)
     const float UpPx = 78.4f;        // px per vertical metre
 
-    /// <summary>Roof height (m above the floor) at a tile-space point: a hip roof rising from the walls.</summary>
-    static float RoofHeight(ZTown.Core.Building b, float x, float y)
+    /// <summary>Roof height (m) at a tile corner: a hip roof rising from the outside walls,
+    /// worked out from how far in each touching tile is.</summary>
+    static float RoofHeight(ZTown.Core.Building b, int cx, int cy)
     {
-        var f = b.Footprint;
-        float d = Mathf.Min(Mathf.Min(x - f.MinX, f.MaxX - x), Mathf.Min(y - f.MinY, f.MaxY - y));
-        return WallM + Mathf.Max(0, d) * b.Pitch;
+        float d = float.MaxValue;
+        for (int ty = cy - 1; ty <= cy; ty++)
+            for (int tx = cx - 1; tx <= cx; tx++)
+            {
+                if (!b.RoofDist.TryGetValue((tx, ty), out var td)) return WallM; // corner on the outside edge
+                d = Mathf.Min(d, td);
+            }
+        return WallM + Mathf.Max(0, d - 0.5f) * b.Pitch;
     }
 
     void DrawRoofTile(ZTown.Core.Building b, Texture2D tex, int x, int y)
@@ -266,10 +275,10 @@ public partial class IsoView : Node2D
         c.A = 1;
         var uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
         DrawPolygon(pts, new[] { c, c, c, c }, uv, tex);
-        // eave line along the building edge
-        var f = b.Footprint;
-        if (y == f.MaxY - 1) DrawLine(pts[3], pts[2], new Color(0.12f, 0.1f, 0.09f, 0.8f), 2);
-        if (x == f.MaxX - 1) DrawLine(pts[1], pts[2], new Color(0.12f, 0.1f, 0.09f, 0.8f), 2);
+        // eave line along the outside edges you can see
+        var eave = new Color(0.12f, 0.1f, 0.09f, 0.8f);
+        if (!b.RoofDist.ContainsKey((x, y + 1))) DrawLine(pts[3], pts[2], eave, 2);
+        if (!b.RoofDist.ContainsKey((x + 1, y))) DrawLine(pts[1], pts[2], eave, 2);
     }
 
     string ObjectSprite(string obj, int x, int y)
@@ -290,6 +299,7 @@ public partial class IsoView : Node2D
         string style;
         if (to.Room != 0) style = InteriorStyle(to.Floor);
         else if (map.InBounds(other) && map.At(other).Room != 0) style = map.At(other).WallStyle ?? "siding_white";
+        else if (map.InBounds(other) && map.At(other).Building != 0) style = w.Buildings[map.At(other).Building - 1].Exterior;
         else style = "fence_wood";
         string kind = edge switch
         {
@@ -306,7 +316,7 @@ public partial class IsoView : Node2D
         var p = w.Player;
         // Zomboid-style cutaway: walls between the camera and the player drop to a stub
         bool cut = style != "fence_wood" && depth > playerDepth - 0.2f && depth - playerDepth < 9
-            && Mathf.Abs((x - y) - (p.X - p.Y)) < 9 && (w.Map.At(p.Tile).Room != 0 || depth - playerDepth < 2.5f);
+            && Mathf.Abs((x - y) - (p.X - p.Y)) < 9 && (w.Map.At(p.Tile).Building != 0 && (to.Building == w.Map.At(p.Tile).Building || (map.InBounds(other) && map.At(other).Building == w.Map.At(p.Tile).Building)) || depth - playerDepth < 2.5f);
         var key = $"{style}/{kind}_{side}{(cut ? "_cut" : "")}";
         if (!art.Walls.TryGetValue(key, out var tex)) return;
         // light the wall from the side you're looking at
@@ -317,7 +327,7 @@ public partial class IsoView : Node2D
     static string InteriorStyle(string? floor) => floor switch
     {
         "linoleum" => "wallpaper_kitchen",
-        "tile_store" => "store_white",
+        "tile_store" or "driveway" => "store_white",
         _ => "wallpaper_living",
     };
 
@@ -348,6 +358,7 @@ public partial class IsoView : Node2D
     /// <summary>Set by Main: the equipped weapon shows in the swing animation.</summary>
     public bool PlayerHasWeapon { get; set; }
     readonly Dictionary<int, Outfit> _zombieLooks = new();
+    bool _silhouette;
 
     void DrawEntity(Entity e)
     {
@@ -398,6 +409,11 @@ public partial class IsoView : Node2D
             ? Mathf.Clamp((int)((1 - PlayerSwing / 0.45f) * frames), 0, frames - 1)
             : (int)(a.time * fps) % frames;
         var feet = Screen(e.X, e.Y);
+        if (_silhouette)
+        {
+            CharacterPainter.Draw(this, art, outfit, anim, frame, row, feet, new Color(0.75f, 0.85f, 1f, 0.28f), 1f, held, clothing.SlotOrder);
+            return;
+        }
         if (anim != "dead")
         {
             DrawSetTransform(feet, 0, new Vector2(1, 0.5f));

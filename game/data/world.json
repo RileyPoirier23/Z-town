@@ -1,0 +1,11 @@
+{
+  // Which converted OpenStreetMap area to play (game/maps/<map>.map.json).
+  "map": "riverview_centre",
+  // OSM ids of memere's and Dad's houses. null = a house near the middle (memere) and one a
+  // few blocks away (Dad) until Riley picks the real ones.
+  "memereHouse": null,
+  "dadHouse": null,
+  "outdoorZombiesPer1000": 1.2,
+  "buildingZombieChance": 0.35,
+  "safeRadius": 30
+}

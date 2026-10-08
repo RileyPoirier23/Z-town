@@ -271,6 +271,15 @@ def main(name):
         xi, yi = int(x), int(y)
         if 0 <= xi < W and 0 <= yi < H and bid[yi, xi]:
             meta[bid[yi, xi]]["kind"] = kind
+    # buildings cut off by the map edge are dropped; buildings are on land, so keep a strip of
+    # land around each one (wide river lines otherwise swallow riverside yards)
+    from PIL import ImageFilter
+    edge_zone = np.asarray(Image.fromarray((~inside).astype(np.uint8) * 255).filter(ImageFilter.MaxFilter(7)), bool)
+    for idx in list(meta):
+        if (edge_zone & (bid == idx)).any():
+            bid[bid == idx] = 0
+    around = np.asarray(Image.fromarray((bid > 0).astype(np.uint8) * 255).filter(ImageFilter.MaxFilter(7)), bool)
+    floor[around & (floor == F["water"])] = F["grass"]
     for idx, m in meta.items():
         ys, xs = np.nonzero(bid == idx)
         if len(xs) < 12:      # too small to walk into (sheds become solid props later)

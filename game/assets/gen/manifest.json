@@ -366,9 +366,14 @@
  "floorGrid": {
   "asphalt": 4,
   "carpet": 4,
+  "dirt": 4,
   "driveway": 4,
+  "field": 4,
   "grass": 4,
-  "road_line": 4
+  "parking": 4,
+  "road_line": 4,
+  "road_line_y": 4,
+  "water": 4
  },
  "floors": {
   "asphalt": [
@@ -407,6 +412,24 @@
    "res://assets/gen/floors/carpet_14.png",
    "res://assets/gen/floors/carpet_15.png"
   ],
+  "dirt": [
+   "res://assets/gen/floors/dirt_0.png",
+   "res://assets/gen/floors/dirt_1.png",
+   "res://assets/gen/floors/dirt_2.png",
+   "res://assets/gen/floors/dirt_3.png",
+   "res://assets/gen/floors/dirt_4.png",
+   "res://assets/gen/floors/dirt_5.png",
+   "res://assets/gen/floors/dirt_6.png",
+   "res://assets/gen/floors/dirt_7.png",
+   "res://assets/gen/floors/dirt_8.png",
+   "res://assets/gen/floors/dirt_9.png",
+   "res://assets/gen/floors/dirt_10.png",
+   "res://assets/gen/floors/dirt_11.png",
+   "res://assets/gen/floors/dirt_12.png",
+   "res://assets/gen/floors/dirt_13.png",
+   "res://assets/gen/floors/dirt_14.png",
+   "res://assets/gen/floors/dirt_15.png"
+  ],
   "driveway": [
    "res://assets/gen/floors/driveway_0.png",
    "res://assets/gen/floors/driveway_1.png",
@@ -424,6 +447,24 @@
    "res://assets/gen/floors/driveway_13.png",
    "res://assets/gen/floors/driveway_14.png",
    "res://assets/gen/floors/driveway_15.png"
+  ],
+  "field": [
+   "res://assets/gen/floors/field_0.png",
+   "res://assets/gen/floors/field_1.png",
+   "res://assets/gen/floors/field_2.png",
+   "res://assets/gen/floors/field_3.png",
+   "res://assets/gen/floors/field_4.png",
+   "res://assets/gen/floors/field_5.png",
+   "res://assets/gen/floors/field_6.png",
+   "res://assets/gen/floors/field_7.png",
+   "res://assets/gen/floors/field_8.png",
+   "res://assets/gen/floors/field_9.png",
+   "res://assets/gen/floors/field_10.png",
+   "res://assets/gen/floors/field_11.png",
+   "res://assets/gen/floors/field_12.png",
+   "res://assets/gen/floors/field_13.png",
+   "res://assets/gen/floors/field_14.png",
+   "res://assets/gen/floors/field_15.png"
   ],
   "grass": [
    "res://assets/gen/floors/grass_0.png",
@@ -452,6 +493,24 @@
    "res://assets/gen/floors/linoleum_0.png",
    "res://assets/gen/floors/linoleum_1.png"
   ],
+  "parking": [
+   "res://assets/gen/floors/parking_0.png",
+   "res://assets/gen/floors/parking_1.png",
+   "res://assets/gen/floors/parking_2.png",
+   "res://assets/gen/floors/parking_3.png",
+   "res://assets/gen/floors/parking_4.png",
+   "res://assets/gen/floors/parking_5.png",
+   "res://assets/gen/floors/parking_6.png",
+   "res://assets/gen/floors/parking_7.png",
+   "res://assets/gen/floors/parking_8.png",
+   "res://assets/gen/floors/parking_9.png",
+   "res://assets/gen/floors/parking_10.png",
+   "res://assets/gen/floors/parking_11.png",
+   "res://assets/gen/floors/parking_12.png",
+   "res://assets/gen/floors/parking_13.png",
+   "res://assets/gen/floors/parking_14.png",
+   "res://assets/gen/floors/parking_15.png"
+  ],
   "road_line": [
    "res://assets/gen/floors/road_line_0.png",
    "res://assets/gen/floors/road_line_1.png",
@@ -470,6 +529,24 @@
    "res://assets/gen/floors/road_line_14.png",
    "res://assets/gen/floors/road_line_15.png"
   ],
+  "road_line_y": [
+   "res://assets/gen/floors/road_line_y_0.png",
+   "res://assets/gen/floors/road_line_y_1.png",
+   "res://assets/gen/floors/road_line_y_2.png",
+   "res://assets/gen/floors/road_line_y_3.png",
+   "res://assets/gen/floors/road_line_y_4.png",
+   "res://assets/gen/floors/road_line_y_5.png",
+   "res://assets/gen/floors/road_line_y_6.png",
+   "res://assets/gen/floors/road_line_y_7.png",
+   "res://assets/gen/floors/road_line_y_8.png",
+   "res://assets/gen/floors/road_line_y_9.png",
+   "res://assets/gen/floors/road_line_y_10.png",
+   "res://assets/gen/floors/road_line_y_11.png",
+   "res://assets/gen/floors/road_line_y_12.png",
+   "res://assets/gen/floors/road_line_y_13.png",
+   "res://assets/gen/floors/road_line_y_14.png",
+   "res://assets/gen/floors/road_line_y_15.png"
+  ],
   "sidewalk": [
    "res://assets/gen/floors/sidewalk_0.png",
    "res://assets/gen/floors/sidewalk_1.png",
@@ -478,6 +555,24 @@
   "tile_store": [
    "res://assets/gen/floors/tile_store_0.png",
    "res://assets/gen/floors/tile_store_1.png"
+  ],
+  "water": [
+   "res://assets/gen/floors/water_0.png",
+   "res://assets/gen/floors/water_1.png",
+   "res://assets/gen/floors/water_2.png",
+   "res://assets/gen/floors/water_3.png",
+   "res://assets/gen/floors/water_4.png",
+   "res://assets/gen/floors/water_5.png",
+   "res://assets/gen/floors/water_6.png",
+   "res://assets/gen/floors/water_7.png",
+   "res://assets/gen/floors/water_8.png",
+   "res://assets/gen/floors/water_9.png",
+   "res://assets/gen/floors/water_10.png",
+   "res://assets/gen/floors/water_11.png",
+   "res://assets/gen/floors/water_12.png",
+   "res://assets/gen/floors/water_13.png",
+   "res://assets/gen/floors/water_14.png",
+   "res://assets/gen/floors/water_15.png"
   ]
  },
  "items": {
@@ -520,6 +615,13 @@
   "unhappy": "res://assets/gen/ui/moodle_unhappy.png"
  },
  "objects": {
+  "bed": {
+   "file": "res://assets/gen/objects/bed.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
   "bush_0": {
    "file": "res://assets/gen/objects/bush_0.png",
    "origin": [
@@ -569,6 +671,20 @@
     192.0
    ]
   },
+  "desk": {
+   "file": "res://assets/gen/objects/desk.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "dresser": {
+   "file": "res://assets/gen/objects/dresser.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
   "fridge": {
    "file": "res://assets/gen/objects/fridge.png",
    "origin": [
@@ -604,6 +720,13 @@
     192.0
    ]
   },
+  "medicine_cabinet": {
+   "file": "res://assets/gen/objects/medicine_cabinet.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
   "memere_chair": {
    "file": "res://assets/gen/objects/memere_chair.png",
    "origin": [
@@ -625,11 +748,39 @@
     192.0
    ]
   },
+  "shelf_home": {
+   "file": "res://assets/gen/objects/shelf_home.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "stove": {
+   "file": "res://assets/gen/objects/stove.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
   "streetlight": {
    "file": "res://assets/gen/objects/streetlight.png",
    "origin": [
     64.0,
     320.0
+   ]
+  },
+  "table": {
+   "file": "res://assets/gen/objects/table.png",
+   "origin": [
+    64.0,
+    192.0
+   ]
+  },
+  "toilet": {
+   "file": "res://assets/gen/objects/toilet.png",
+   "origin": [
+    64.0,
+    192.0
    ]
   },
   "tree_maple_0": {

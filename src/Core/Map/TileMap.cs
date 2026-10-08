@@ -40,6 +40,8 @@ public struct Tile
     public int Room;
     /// <summary>Sprite id for the wall on the north/west edge, for rendering.</summary>
     public string? WallStyle;
+    /// <summary>1-based index of the building this tile belongs to (0 = outdoors).</summary>
+    public int Building;
 }
 
 /// <summary>The tile grid: Width x Height on each floor from MinZ to MaxZ.</summary>

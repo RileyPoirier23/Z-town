@@ -42,6 +42,7 @@ public partial class Main : Node2D
         foreach (var p in _data.Problems.Concat(_dialogue.Problems)) GD.PushWarning(p);
 
         RegisterInput();
+        _worldCfg = MapBuilder.LoadConfig(src);
 
         _view = new IsoView { Art = Art.Load() };
         AddChild(_view);
@@ -54,9 +55,10 @@ public partial class Main : Node2D
         AddChild(_inventory);
 
         var args = OS.GetCmdlineUserArgs();
-        if (args.Contains("--quickstart") || args.Contains("--demo")) NewGame(42, "Riley", null);
+        if (args.Contains("--quickstart") || args.Contains("--demo") || args.Contains("--demo-inside")) NewGame(42, "Riley", null);
         else ShowTitle();
-        if (args.Contains("--demo")) DemoSetup();
+        if (args.Contains("--demo")) DemoSetup(true);
+        if (args.Contains("--demo-inside")) DemoSetup(false);
         if (args.Contains("--creator")) ShowCreator();
 
         // dev: `godot -- --screenshot=out.png` saves a frame and quits (used to preview builds)
@@ -67,27 +69,64 @@ public partial class Main : Node2D
     string? _screenshotPath;
     int _frames;
 
-    GameWorld CreateBase(ulong seed) => TestMaps.CreateTestWorld(_data, seed, zombies: 0);
+    WorldConfig _worldCfg = new();
+    MapFile? _mapFile;
+
+    /// <summary>The real map (OpenStreetMap) if it's been converted, else the stand-in test street.</summary>
+    GameWorld BuildWorld(ulong seed, string? mapName = null, bool zombies = true)
+    {
+        mapName ??= _worldCfg.Map;
+        if (mapName != "test" && FileAccess.FileExists($"res://maps/{mapName}.map.json"))
+        {
+            if (_mapFile?.Name != mapName) _mapFile = MapFile.Load(new GodotDataSource(), mapName);
+            return MapBuilder.Build(_data, _mapFile, _worldCfg, seed);
+        }
+        return TestMaps.CreateTestWorld(_data, seed, zombies ? 10 : 0);
+    }
+
+    GameWorld CreateBase(SaveData s) => BuildWorld(s.Seed, s.Map, zombies: false);
 
     CanvasLayer? _menu;
 
-    /// <summary>dev: `-- --demo` puts the player outside with a few zombies around, for previews.</summary>
-    void DemoSetup()
+    /// <summary>dev: `-- --demo` puts the player on the street outside memere's with a few zombies
+    /// around; `-- --demo-inside` leaves them in the house. For previews.</summary>
+    void DemoSetup(bool outside)
     {
         var w = _world;
-        foreach (var z in w.Zombies.ToList()) w.Remove(z);
-        w.Player.PlaceAt(new TilePos(17, 17));
-        w.Player.Facing = Mathf.Pi * 0.25f;
-        foreach (var (x, y) in new[] { (22, 21), (25, 19), (20, 24), (27, 23), (15, 22) })
-        {
-            var z = w.TrySpawnZombie(new TilePos(x, y));
-            if (z != null) z.Facing = Mathf.Atan2(17 - y, 17 - x);
-        }
-        _wasHome = false;
         w.Player.Needs.Hunger = 0.5f;
         w.Player.Needs.Fatigue = 0.3f;
         w.Player.Needs.Stress = 0.75f;
         w.Memere.Supplies.Amounts["cigarettes"] = 6;
+        if (outside)
+        {
+            // nearest sidewalk to the house
+            var start = w.Memere.Tile;
+            var seen = new HashSet<TilePos> { start };
+            var q = new Queue<TilePos>();
+            q.Enqueue(start);
+            TilePos spot = start;
+            while (q.Count > 0)
+            {
+                var p = q.Dequeue();
+                if (w.Map.At(p).Floor is "sidewalk" && w.Map.At(p).Building == 0 && !w.Map.At(p).Solid
+                    && Enumerable.Range(1, 3).Any(k => w.Map.InBounds(new TilePos(p.X + k, p.Y)) && w.Map.At(p.X + k, p.Y).Floor is "asphalt" or "road_line" or "road_line_y"
+                                                   || w.Map.InBounds(new TilePos(p.X, p.Y + k)) && w.Map.At(p.X, p.Y + k).Floor is "asphalt" or "road_line" or "road_line_y"))
+                { spot = p; break; }
+                foreach (var (dx, dy) in new[] { (1, 0), (-1, 0), (0, 1), (0, -1) })
+                {
+                    var n = new TilePos(p.X + dx, p.Y + dy);
+                    if (w.Map.InBounds(n) && seen.Add(n) && n.DistanceTo(start) < 90) q.Enqueue(n);
+                }
+            }
+            w.Player.PlaceAt(spot);
+            w.Player.Facing = Mathf.Pi * 0.25f;
+            foreach (var (dx, dy) in new[] { (5, 3), (8, -2), (3, 7), (10, 5), (-4, 6) })
+            {
+                var z = w.TrySpawnZombie(new TilePos(spot.X + dx, spot.Y + dy));
+                if (z != null) z.Facing = Mathf.Atan2(-dy, -dx);
+            }
+            _wasHome = false;
+        }
         _camera.Position = Iso.ToScreen(w.Player.X, w.Player.Y) + new Vector2(0, -80);
         _camera.ResetSmoothing();
     }
@@ -145,7 +184,7 @@ public partial class Main : Node2D
 
     void NewGame(ulong seed, string name, ZTown.Core.Entities.Outfit? outfit)
     {
-        Attach(TestMaps.CreateTestWorld(_data, seed, zombies: 10));
+        Attach(BuildWorld(seed));
         _world.Player.Name = name;
         _world.Player.Outfit = outfit ?? (_data.Clothing.Presets.GetValueOrDefault("player_default")?.Clone() ?? new());
         _world.Player.Inventory.TryAdd(_data.Item("baseball_bat")!, 1, _data.Item);
@@ -189,7 +228,8 @@ public partial class Main : Node2D
         {
             using var f = FileAccess.Open(SavePath, FileAccess.ModeFlags.Read);
             var json = SaveSystem.Decompress(f.GetBuffer((long)f.GetLength()));
-            Attach(SaveSystem.Restore(SaveSystem.FromJson(json), CreateBase));
+            var save = SaveSystem.FromJson(json);
+            Attach(SaveSystem.Restore(save, sd => CreateBase(save)));
             _inventory.Equipped = _world.Player.Inventory.Stacks.FirstOrDefault(s => _data.Item(s.ItemId)?.Weapon != null);
             return true;
         }

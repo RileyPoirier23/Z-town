@@ -82,6 +82,56 @@ def big_asphalt(seed=0, line=None):
             td = ImageDraw.Draw(t)
             if line == "dash_x":
                 td.rectangle([22, 0, 106, 5], fill=(196, 168, 74, 225))
+            elif line == "dash_y":
+                td.rectangle([0, 22, 5, 106], fill=(196, 168, 74, 225))
+    return tiles_
+
+
+def big_dirt(seed=0):
+    S = 128 * GRID
+    n = P.periodic_noise(S, S, 2.0, seed) * 0.6 + P.periodic_noise(S, S, 0.9, seed + 1) * 0.4
+    rgb = P.tint(P.hexc("7a6650"), n, 0.18)
+    g = np.random.default_rng(seed).random((S, S))
+    rgb[g > 0.96] *= 1.25
+    rgb[g < 0.03] *= 0.7
+    return P.slice_tiles(P.brush(P.to_img(rgb), 0.1, seed), GRID)
+
+
+def big_field(seed=0):
+    S = 128 * GRID
+    n = P.periodic_noise(S, S, 2.4, seed)
+    rgb = P.tint(P.hexc("7f8448"), n, 0.2, hue_shift=P.hexc("a09050"))
+    img = P.to_img(rgb)
+    d = ImageDraw.Draw(img)
+    rng = np.random.default_rng(seed)
+    for _ in range(12000):
+        x, y = rng.integers(0, S, 2)
+        c = (int(120 + rng.integers(-25, 25)), int(118 + rng.integers(-25, 20)), int(64 + rng.integers(-15, 15)), 255)
+        d.line([(x, y), (x + int(rng.integers(-2, 3)), y - int(rng.integers(3, 9)))], fill=c, width=1)
+    return P.slice_tiles(P.brush(img, 0.08, seed), GRID)
+
+
+def big_water(seed=0):
+    S = 128 * GRID
+    n = P.periodic_noise(S, S, 2.2, seed) * 0.5 + P.periodic_noise(S, S, 1.0, seed + 1) * 0.5
+    rgb = P.tint(P.hexc("4d6676"), n, 0.12, hue_shift=P.hexc("6a8a8a"))
+    img = P.to_img(rgb)
+    ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    rng = np.random.default_rng(seed)
+    for _ in range(500):  # little highlights on the ripples
+        x, y = rng.integers(0, S, 2)
+        l = int(rng.integers(4, 14))
+        d.line([(x, y), (x + l, y)], fill=(200, 220, 225, 70), width=1)
+    img.alpha_composite(ov)
+    return P.slice_tiles(P.brush(img, 0.04, seed), GRID)
+
+
+def big_parking(seed=0):
+    tiles_ = big_asphalt(seed + 7)
+    for i, t in enumerate(tiles_):
+        if i % GRID in (0, 2):  # a painted bay line every other tile
+            ImageDraw.Draw(t).rectangle([0, 0, 4, 127], fill=(215, 212, 200, 210))
     return tiles_
 
 
@@ -617,6 +667,97 @@ ROOFS = {
 }
 
 
+def obj_bed():
+    c = canvas()
+    shadow(c, 0.05, 0.05, 0.95, 0.95)
+    frame = solid("6a4a32", seed=151)
+    box(c, 0.08, 0.02, 0.92, 0.08, 0.0, 0.9, frame, frame, frame)                                                   # headboard (back, so first)
+    box(c, 0.08, 0.06, 0.92, 0.94, 0.0, 0.3, frame, frame, P.shade(frame, 0.9))
+    sheet = fabric("b8b0a0", 152)
+    box(c, 0.1, 0.25, 0.9, 0.92, 0.3, 0.45, fabric("7a8aa0", 153), fabric("6a7a90", 154), fabric("5a6a80", 155))   # blanket
+    box(c, 0.16, 0.08, 0.84, 0.25, 0.3, 0.5, sheet, sheet, sheet)                                                   # pillow
+    return P.outline(c, alpha=90)
+
+
+def obj_dresser():
+    c = canvas()
+    shadow(c, 0.1, 0.2, 0.9, 0.85)
+    front = Image.new("RGBA", (64, 64), P.hexc("7a5a3e"))
+    d = ImageDraw.Draw(front)
+    for y in (6, 26, 46):
+        d.rectangle([4, y, 59, y + 15], outline=(95, 70, 48, 255), width=2)
+        d.rectangle([29, y + 6, 34, y + 9], fill=(200, 180, 130, 255))
+    box(c, 0.12, 0.25, 0.88, 0.8, 0.0, 1.0, solid("8a6a4a", seed=161), P.brush(front, 0.06, 162), solid("6a4a32", seed=163))
+    return P.outline(c, alpha=90)
+
+
+def obj_stove():
+    c = canvas()
+    shadow(c, 0.1, 0.12, 0.9, 0.9)
+    top = Image.new("RGBA", (64, 64), (220, 218, 212, 255))
+    d = ImageDraw.Draw(top)
+    for (x, y) in ((16, 16), (46, 16), (16, 46), (46, 46)):
+        d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(40, 40, 42, 255))
+    front = Image.new("RGBA", (64, 64), (226, 224, 218, 255))
+    fd = ImageDraw.Draw(front)
+    fd.rectangle([8, 18, 56, 56], fill=(30, 30, 32, 255))
+    fd.rectangle([10, 8, 54, 12], fill=(160, 160, 160, 255))
+    box(c, 0.12, 0.15, 0.88, 0.88, 0.0, 0.9, top, front, solid("cfccc4", seed=171, noise=0.04))
+    return P.outline(c, alpha=90)
+
+
+def obj_toilet():
+    c = canvas()
+    shadow(c, 0.3, 0.2, 0.75, 0.8, 50)
+    w = solid("ecebe6", seed=181, noise=0.03)
+    box(c, 0.35, 0.18, 0.7, 0.32, 0.0, 0.85, w, w, P.shade(w, 0.9))   # tank
+    box(c, 0.38, 0.32, 0.68, 0.72, 0.0, 0.42, w, w, P.shade(w, 0.9))  # bowl
+    return P.outline(c, alpha=90)
+
+
+def obj_cabinet():
+    c = canvas()
+    shadow(c, 0.25, 0.15, 0.8, 0.5, 50)
+    front = Image.new("RGBA", (64, 64), (230, 228, 222, 255))
+    d = ImageDraw.Draw(front)
+    d.rectangle([6, 6, 57, 57], fill=(180, 200, 210, 255))  # mirror
+    d.line([(14, 12), (8, 30)], fill=(255, 255, 255, 255), width=3)
+    box(c, 0.25, 0.1, 0.8, 0.3, 0.0, 0.85, solid("dedcd6", seed=191), solid("e6e4de", seed=192), solid("cac8c2", seed=193))
+    box(c, 0.28, 0.1, 0.78, 0.22, 1.1, 1.6, solid("dedcd6", seed=194), front, solid("cac8c2", seed=195))
+    return P.outline(c, alpha=90)
+
+
+def obj_table():
+    c = canvas()
+    shadow(c, 0.15, 0.15, 0.85, 0.85, 60)
+    wood = solid("8a6a48", seed=201)
+    for (u, v) in ((0.2, 0.2), (0.75, 0.2), (0.2, 0.75), (0.75, 0.75)):
+        box(c, u, v, u + 0.05, v + 0.05, 0.0, 0.72, wood, wood, wood)
+    box(c, 0.12, 0.12, 0.88, 0.88, 0.72, 0.78, solid("9a7a56", seed=202), wood, P.shade(wood, 0.9))
+    return P.outline(c, alpha=90)
+
+
+def obj_desk():
+    c = canvas()
+    shadow(c, 0.08, 0.2, 0.92, 0.85, 60)
+    wood = solid("6e5a48", seed=211)
+    box(c, 0.1, 0.25, 0.3, 0.8, 0.0, 0.72, wood, wood, P.shade(wood, 0.9))
+    box(c, 0.7, 0.25, 0.9, 0.8, 0.0, 0.72, wood, wood, P.shade(wood, 0.9))
+    box(c, 0.08, 0.22, 0.92, 0.82, 0.72, 0.78, solid("7e6a56", seed=212), wood, P.shade(wood, 0.9))
+    box(c, 0.4, 0.35, 0.62, 0.5, 0.78, 1.05, solid("2a2a2e", seed=213), solid("3a4a5a", seed=214), solid("222226", seed=215))  # monitor
+    return P.outline(c, alpha=90)
+
+
+def obj_bookshelf():
+    c = canvas()
+    shadow(c, 0.05, 0.2, 0.95, 0.6)
+    wood = solid("6a4a32", seed=221)
+    front = Image.new("RGBA", (64, 128), P.hexc("5a3e2a"))
+    front.alpha_composite(products(222, rows=4, w=64, h=128))
+    box(c, 0.05, 0.25, 0.95, 0.55, 0.0, 1.8, wood, P.brush(front, 0.05, 223), P.shade(wood, 0.85))
+    return P.outline(c, alpha=90)
+
+
 FURNITURE = {
     "memere_chair": obj_recliner,
     "tv": lambda: obj_tv(False),
@@ -632,6 +773,14 @@ FURNITURE = {
     "couch": obj_couch,
     "rug": obj_rug,
     "lamp": obj_lamp,
+    "bed": obj_bed,
+    "dresser": obj_dresser,
+    "stove": obj_stove,
+    "toilet": obj_toilet,
+    "medicine_cabinet": obj_cabinet,
+    "table": obj_table,
+    "desk": obj_desk,
+    "shelf_home": obj_bookshelf,
     "mailbox": obj_mailbox,
 }
 
@@ -639,6 +788,11 @@ FLOORS = {
     "grass": lambda: big_grass(1),
     "asphalt": lambda: big_asphalt(2),
     "road_line": lambda: big_asphalt(2, "dash_x"),
+    "road_line_y": lambda: big_asphalt(2, "dash_y"),
+    "dirt": lambda: big_dirt(5),
+    "field": lambda: big_field(6),
+    "water": lambda: big_water(7),
+    "parking": lambda: big_parking(8),
     "sidewalk": [lambda s=s: tex_sidewalk(s) for s in range(3)],
     "driveway": lambda: big_driveway(3),
     "carpet": lambda: big_carpet(4),

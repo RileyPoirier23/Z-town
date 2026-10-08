@@ -51,6 +51,7 @@ public static class SaveSystem
             GameVersion = gameVersion,
             SavedAtUtc = DateTime.UtcNow,
             Seed = w.Seed,
+            Map = w.MapName,
             Clock = w.Clock.TotalSeconds,
             Rng = w.Rng.State,
             HoursSincePlayerHome = w.HoursSincePlayerHome,
@@ -203,6 +204,8 @@ public sealed class SaveData
     public string GameVersion { get; set; } = "";
     public DateTime SavedAtUtc { get; set; }
     public ulong Seed { get; set; }
+    /// <summary>Map the world was built from ("test" = the stand-in test map).</summary>
+    public string Map { get; set; } = "test";
     public double Clock { get; set; }
     public ulong Rng { get; set; }
     public double HoursSincePlayerHome { get; set; }

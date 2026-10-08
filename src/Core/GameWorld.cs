@@ -12,7 +12,61 @@ using ZTown.Core.Zombies;
 
 namespace ZTown.Core;
 
-public sealed record Building(string Id, TileRect Footprint, string Roof = "shingle_grey", float Pitch = 0.5f);
+/// <summary>A building: its tiles, what it is, and how its roof sits.</summary>
+public sealed class Building
+{
+    public int Index { get; set; }
+    public string Id { get; set; } = "";
+    /// <summary>house, apartments, convenience, pharmacy, grocery, gas_station, restaurant, school, church...</summary>
+    public string Kind { get; set; } = "house";
+    public List<TilePos> Tiles { get; set; } = new();
+    public TileRect Bounds { get; set; }
+    public string Roof { get; set; } = "shingle_grey";
+    public float Pitch { get; set; } = 0.5f;
+    public string Exterior { get; set; } = "siding_white";
+    /// <summary>Tiles (x,y) -> distance in from the outside wall, for the roof's shape.</summary>
+    public Dictionary<(int x, int y), float> RoofDist { get; } = new();
+
+    public Building() { }
+
+    public Building(string id, TileRect rect, string roof = "shingle_grey", float pitch = 0.5f)
+    {
+        Id = id;
+        Roof = roof;
+        Pitch = pitch;
+        Bounds = rect;
+        for (int y = rect.MinY; y < rect.MaxY; y++)
+            for (int x = rect.MinX; x < rect.MaxX; x++) Tiles.Add(new TilePos(x, y, rect.Z));
+        ComputeRoof();
+    }
+
+    /// <summary>Distance of each tile from the building's edge (BFS), so any footprint gets a hip roof.</summary>
+    public void ComputeRoof()
+    {
+        RoofDist.Clear();
+        var set = Tiles.Select(t => (t.X, t.Y)).ToHashSet();
+        var q = new Queue<(int, int)>();
+        foreach (var t in set)
+            if (!set.Contains((t.X + 1, t.Y)) || !set.Contains((t.X - 1, t.Y)) || !set.Contains((t.X, t.Y + 1)) || !set.Contains((t.X, t.Y - 1)))
+            {
+                RoofDist[t] = 0.5f;
+                q.Enqueue(t);
+            }
+        while (q.Count > 0)
+        {
+            var (x, y) = q.Dequeue();
+            float d = RoofDist[(x, y)];
+            foreach (var n in new[] { (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1) })
+                if (set.Contains(n) && !RoofDist.ContainsKey(n))
+                {
+                    RoofDist[n] = d + 1;
+                    q.Enqueue(n);
+                }
+        }
+        if (Tiles.Count > 0)
+            Bounds = new TileRect(Tiles.Min(t => t.X), Tiles.Min(t => t.Y), Tiles.Max(t => t.X) + 1, Tiles.Max(t => t.Y) + 1, Tiles[0].Z);
+    }
+}
 
 public enum MoveMode
 {
@@ -38,6 +92,14 @@ public sealed partial class GameWorld
     public List<Building> Buildings { get; } = new();
     /// <summary>Memere's house: being inside counts as "home".</summary>
     public List<TileRect> HomeArea { get; } = new();
+    /// <summary>Index into Buildings of memere's house (-1 if the home is given as HomeArea rects).</summary>
+    public int HomeBuilding { get; set; } = -1;
+    /// <summary>Index into Buildings of Dad's place (-1 if none).</summary>
+    public int DadHouse { get; set; } = -1;
+    /// <summary>Which map this world was built from (saves rebuild the same base world).</summary>
+    public string MapName { get; set; } = "test";
+    /// <summary>Zombies further than this from the player sleep (not simulated) to keep big maps fast.</summary>
+    public float ZombieActiveRadius { get; set; } = 70f;
     public HousePower Power { get; } = new();
     public TvState Tv { get; } = new();
     public Dictionary<string, Container> Containers { get; } = new();
@@ -105,7 +167,19 @@ public sealed partial class GameWorld
     public IEnumerable<Entity> EntitiesNear(TilePos at, float radius) =>
         _entities.Where(e => e.Z == at.Z && MathF.Sqrt((e.X - at.X - 0.5f) * (e.X - at.X - 0.5f) + (e.Y - at.Y - 0.5f) * (e.Y - at.Y - 0.5f)) <= radius);
 
-    public bool IsHome(TilePos p) => HomeArea.Any(r => r.Contains(p));
+    public bool IsHome(TilePos p) =>
+        HomeArea.Any(r => r.Contains(p)) || (HomeBuilding >= 0 && Map.InBounds(p) && Map.At(p).Building == HomeBuilding + 1);
+
+    public Building? BuildingAt(TilePos p) =>
+        Map.InBounds(p) && Map.At(p).Building is > 0 and var b && b <= Buildings.Count ? Buildings[b - 1] : null;
+
+    public Building AddBuilding(Building b)
+    {
+        b.Index = Buildings.Count;
+        Buildings.Add(b);
+        foreach (var t in b.Tiles) if (Map.InBounds(t)) Map.At(t).Building = b.Index + 1;
+        return b;
+    }
 
     public bool PlayerIsHome => Player != null && IsHome(Player.Tile);
 
@@ -302,9 +376,12 @@ public sealed partial class GameWorld
     void TickZombies(float dt)
     {
         var cfg = Data.Zombies;
+        var player = Player;
+        float r2 = ZombieActiveRadius * ZombieActiveRadius;
         foreach (var z in Zombies.ToList())
         {
             if (z.IsDead) continue;
+            if (player != null && (z.X - player.X) * (z.X - player.X) + (z.Y - player.Y) * (z.Y - player.Y) > r2) continue;
             var b = z.Brain;
             b.ThinkTimer -= dt;
             b.AttackTimer -= dt;
