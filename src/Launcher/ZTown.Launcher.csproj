@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The installed Z-Town.exe. Runs Velopack's install/update hooks, starts the Godot game,
+    and updates the game from GitHub Releases (same behaviour as CageBoss's electron-updater).
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>ZTown</AssemblyName>
+    <RootNamespace>ZTown.Launcher</RootNamespace>
+    <ApplicationIcon>..\..\game\icon.ico</ApplicationIcon>
+    <Product>Z-Town</Product>
+    <Company>Riley Poirier</Company>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <!-- no trim warnings from Velopack; 35 MB -> 12 MB -->
+    <PublishTrimmed>true</PublishTrimmed>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- keep in step with the vpk version in .github/workflows/desktop.yml -->
+    <PackageReference Include="Velopack" Version="1.2.161" />
+  </ItemGroup>
+</Project>

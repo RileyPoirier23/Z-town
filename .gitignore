@@ -13,3 +13,7 @@ Releases/
 __pycache__/
 *.osm.pbf
 .DS_Store
+build/
+.vs/
+dialogue_review.xlsx
+dialogue_review.csv

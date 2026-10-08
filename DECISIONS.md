@@ -35,8 +35,10 @@ program's start. So the installed `.exe` is a tiny C# launcher (`src/Launcher`) 
 Velopack hook, checks for updates, then starts the Godot game. This is checked end to end in
 Phase 1 (ship v0.1.0, then v0.1.1, confirm the installed copy updates).
 
-The portable `.exe` (Godot exe with the game data embedded) can't update itself; like CageBoss
-it checks the GitHub API and offers to open the download page.
+**Update (Phase 0):** the portable download is `Z-Town-Portable.zip` instead of a single `.exe`.
+A Godot .NET game ships its .NET files next to the exe, so it can't be one file. The upside is
+that Velopack's portable zip updates itself just like the installed copy, which CageBoss's
+portable exe can't do. The launcher is a trimmed single-file exe (~12 MB).
 
 ### D-005 — Releases and hosting mirror CageBoss exactly
 **Proposed.** Same rules as CageBoss's `.github/workflows/desktop.yml`:
@@ -51,7 +53,9 @@ it checks the GitHub API and offers to open the download page.
   `https://github.com/RileyPoirier23/Z-town/releases/latest/download/Z-Town-Setup.exe`
 - 506clicks.ca links to those, same as CageBoss. (The site couldn't be reached from this build
   environment, so how it reads releases is assumed from CageBoss's setup. ❓ Riley to confirm.)
-- Extra for this game: the release job also fails if any dialogue line in use is not `approved`.
+- Extra for this game: if any dialogue line or parody name isn't `approved`, the release is
+  **held back** (the build stays green, uploads the dev build as an artifact, and posts a
+  warning saying what's waiting). It doesn't turn CI red on every push while drafts exist.
 
 ### D-006 — Map data: OpenStreetMap only
 **Accepted** (from the brief). Never Google Maps data. Import from a Geofabrik New Brunswick
@@ -84,3 +88,15 @@ her animation rig has no harm states. See `DESIGN.md` §4.1.
 **Proposed.** Work happens on `claude/nice-pasteur-eqykl2` (the first branch in the empty repo,
 so GitHub made it the default for now). ❓ Riley: once the docs are approved, should this become
 `main`?
+
+### D-012 — Player death returns to the last save
+**Accepted** (Riley, 2026-10-08). Saves happen when you sleep, when you come home, when you
+close the game, and on F5.
+
+### D-013 — Godot 4.7.2 (.NET), pinned
+**Accepted** (follows D-002). Latest stable at setup. Pinned in `game/ZTown.Game.csproj` and
+`GODOT_VERSION` in the workflow; upgrade both together.
+
+### D-014 — Phase 0 renders with flat placeholder shapes
+**Superseded** by the art pass that followed: Riley asked for Zomboid-level quality, so the
+renderer moves to proper sprites (see `ART_SPEC.md`) instead of flat shapes.

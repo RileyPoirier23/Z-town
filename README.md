@@ -9,7 +9,7 @@ Made in memory of memere.
 
 ## Status
 
-Planning. Docs are drafts waiting for review:
+Phase 0 (foundations). Planning docs:
 
 | Doc | What |
 |---|---|
@@ -20,6 +20,21 @@ Planning. Docs are drafts waiting for review:
 | [`ART_SPEC.md`](ART_SPEC.md) | Art, animation and audio spec, placeholder plan |
 | [`DECISIONS.md`](DECISIONS.md) | Decision log |
 | [`CHANGELOG.md`](CHANGELOG.md) | Changes |
+
+## Building and running (dev)
+
+Needs the .NET 8 SDK and Godot 4.7.2 (.NET edition).
+
+```bash
+dotnet test                                        # unit tests + memere protection tests
+dotnet run --project tools/ZTown.Tools -- validate # check game data
+dotnet run --project tools/ZTown.Tools -- release-check   # what still needs approval
+python tools/dialogue_review/serve.py              # review dialogue in the browser
+godot --path game                                  # run the game (or open game/ in the Godot editor)
+```
+
+Pushing to `main` or a `claude/*` branch builds the Windows installer on GitHub (Actions → the
+run → Artifacts). Bumping `version.txt` publishes a release once all dialogue is approved.
 
 ## Credits
 

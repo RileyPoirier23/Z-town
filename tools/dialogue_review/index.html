@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialogue Review</title>
+<style>
+  :root { --bg:#f6f3ee; --card:#fff; --ink:#2a2622; --muted:#7a716a; --line:#e3ddd4;
+          --draft:#c98a14; --ok:#3f7d4a; --no:#a8423b; --ph:#fff3cd; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1d1b19; --card:#282522; --ink:#ece6dd; --muted:#a39a90; --line:#3a3631; --ph:#3d3420; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 system-ui, sans-serif; }
+  header { position:sticky; top:0; z-index:2; background:var(--bg); border-bottom:1px solid var(--line); padding:12px 16px; }
+  h1 { font-size:18px; margin:0 0 8px; }
+  .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .bar button, .bar select, .bar input { font:inherit; padding:5px 10px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--ink); }
+  .bar button.on { border-color:var(--ink); font-weight:600; }
+  .counts { color:var(--muted); font-size:14px; margin-left:auto; }
+  main { max-width:900px; margin:0 auto; padding:16px; }
+  h2 { font-size:15px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:28px 0 8px; }
+  .card { background:var(--card); border:1px solid var(--line); border-left:5px solid var(--draft); border-radius:8px; padding:12px 14px; margin:10px 0; }
+  .card.approved { border-left-color:var(--ok); }
+  .card.rejected { border-left-color:var(--no); opacity:.7; }
+  .meta { display:flex; flex-wrap:wrap; gap:10px; font-size:13px; color:var(--muted); }
+  .meta b { color:var(--ink); }
+  .context { font-size:14px; color:var(--muted); margin:6px 0; }
+  textarea, input.name { width:100%; font:inherit; padding:8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); resize:vertical; }
+  textarea.ph { background:var(--ph); }
+  .notes { font-size:14px; }
+  .actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; align-items:center; }
+  .actions button { font:inherit; font-size:14px; padding:5px 12px; border-radius:6px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; }
+  .actions button.approve { border-color:var(--ok); color:var(--ok); }
+  .actions button.reject { border-color:var(--no); color:var(--no); }
+  .saved { font-size:13px; color:var(--ok); opacity:0; transition:opacity .3s; }
+  .saved.show { opacity:1; }
+  .tag { font-size:12px; padding:1px 7px; border-radius:10px; border:1px solid currentColor; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dialogue &amp; names review</h1>
+  <div class="bar">
+    <button data-f="todo" class="on">Needs review</button>
+    <button data-f="all">All</button>
+    <button data-f="approved">Approved</button>
+    <button data-f="rejected">Rejected</button>
+    <select id="speaker"><option value="">All speakers</option></select>
+    <input id="q" placeholder="Search…" size="14">
+    <span class="counts" id="counts"></span>
+  </div>
+</header>
+<main id="list"></main>
+<script>
+let data = { lines: [], names: [] }, filter = "todo";
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+async function load() {
+  data = await (await fetch("/api/all")).json();
+  const sp = $("#speaker"), cur = sp.value;
+  sp.innerHTML = '<option value="">All speakers</option>' +
+    [...new Set(data.lines.map(l => l.speaker))].sort().map(s => `<option>${esc(s)}</option>`).join("");
+  sp.value = cur;
+  render();
+}
+
+function keep(item) {
+  if (filter === "todo" && item.status === "approved" && !item.placeholder) return false;
+  if (filter === "todo" && item.status === "rejected") return false;
+  if (filter === "approved" && item.status !== "approved") return false;
+  if (filter === "rejected" && item.status !== "rejected") return false;
+  const q = $("#q").value.toLowerCase();
+  if (q && !JSON.stringify(item).toLowerCase().includes(q)) return false;
+  return true;
+}
+
+function render() {
+  const sp = $("#speaker").value;
+  const lines = data.lines.filter(l => (!sp || l.speaker === sp) && keep(l));
+  const names = sp ? [] : data.names.filter(keep);
+  const todo = data.lines.filter(l => l.status === "draft" || l.placeholder).length + data.names.filter(n => n.status === "draft").length;
+  $("#counts").textContent = `${todo} waiting · ${data.lines.length} lines · ${data.names.length} names`;
+  let html = "", file = null;
+  for (const l of lines) {
+    if (l.file !== file) { file = l.file; html += `<h2>${esc(file)}</h2>`; }
+    html += `<div class="card ${l.status}" data-kind="line" data-file="${esc(l.file)}" data-id="${esc(l.id)}">
+      <div class="meta"><b>${esc(l.speaker)}</b><span>${esc(l.id)}</span>${l.placeholder ? '<span class="tag">needs real words</span>' : ""}<span class="tag">${l.status}</span></div>
+      <div class="context">${esc(l.context)}</div>
+      <textarea rows="2" class="${l.placeholder ? "ph" : ""}" data-field="text">${esc(l.text)}</textarea>
+      <div class="actions">
+        <button class="approve" data-status="approved">Approve</button>
+        <button class="reject" data-status="rejected">Reject</button>
+        <button data-status="draft">Back to draft</button>
+        <input class="name notes" data-field="notes" placeholder="Notes" value="${esc(l.notes)}" style="flex:1;min-width:160px">
+        <span class="saved">Saved</span>
+      </div></div>`;
+  }
+  if (names.length) html += `<h2>Parody names (brands &amp; shows)</h2>`;
+  for (const n of names) {
+    html += `<div class="card ${n.status}" data-kind="${n.kind}" data-id="${esc(n.id)}">
+      <div class="meta"><b>${n.kind}</b><span>${esc(n.id)}</span><span class="tag">${n.status}</span></div>
+      <div class="context">${esc(n.context)} ${n.notes ? "· " + esc(n.notes) : ""}</div>
+      <input class="name" data-field="name" value="${esc(n.name)}">
+      <div class="actions">
+        <button class="approve" data-status="approved">Approve</button>
+        <button class="reject" data-status="rejected">Reject</button>
+        <button data-status="draft">Back to draft</button>
+        <span class="saved">Saved</span>
+      </div></div>`;
+  }
+  $("#list").innerHTML = html || "<p>Nothing here. 🎉</p>";
+}
+
+async function save(card, changes) {
+  const kind = card.dataset.kind;
+  const body = kind === "line"
+    ? { file: card.dataset.file, id: card.dataset.id, ...changes }
+    : { kind, id: card.dataset.id, ...changes };
+  const res = await fetch(kind === "line" ? "/api/line" : "/api/name", { method: "POST", body: JSON.stringify(body) });
+  if (!res.ok) { alert((await res.json()).error); return; }
+  const s = $(".saved", card); s.classList.add("show"); setTimeout(() => s.classList.remove("show"), 1200);
+}
+
+document.addEventListener("click", async e => {
+  const f = e.target.dataset.f;
+  if (f) { filter = f; document.querySelectorAll("[data-f]").forEach(b => b.classList.toggle("on", b === e.target)); render(); return; }
+  const st = e.target.dataset.status;
+  if (!st) return;
+  const card = e.target.closest(".card");
+  const changes = { status: st };
+  card.querySelectorAll("[data-field]").forEach(i => changes[i.dataset.field] = i.value);
+  await save(card, changes);
+  await load();
+});
+document.addEventListener("change", e => {
+  const field = e.target.dataset.field;
+  if (field) save(e.target.closest(".card"), { [field]: e.target.value }).then(load);
+});
+$("#speaker").onchange = render;
+$("#q").oninput = render;
+load();
+</script>
+</body>
+</html>

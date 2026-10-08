@@ -1,5 +1,4 @@
 [
-  // Show names are drafts until Riley approves them. Blurbs are for the review tool only.
   { "id": "family_fuss", "name": "Family Fuss", "nameStatus": "draft", "kind": "game_show", "herShow": true,
     "blurb": "Two families guess what 100 people said. Parody of the family survey game show.",
     "segments": ["tv.family_fuss.seg1"] },

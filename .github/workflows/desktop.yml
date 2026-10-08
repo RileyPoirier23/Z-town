@@ -1,0 +1,168 @@
+name: Desktop build
+
+# Same rules as CageBoss's workflow:
+# - Every push to main or a claude/* branch builds the Windows game and uploads it as a
+#   downloadable artifact (Actions tab -> the run -> Artifacts).
+# - When version.txt is bumped and no release for that version exists yet (or a v* tag is
+#   pushed), it publishes a GitHub Release. Installed copies update themselves from it, and
+#   506clicks.ca links to the stable file names (Z-Town-Setup.exe, Z-Town-Portable.zip).
+# - Extra for this game: a release is held back until every dialogue line and parody name
+#   is approved (tools/ZTown.Tools release-check). The build still goes green; it just
+#   doesn't publish, and says why.
+on:
+  workflow_dispatch:
+  push:
+    branches: ['main', 'master', 'claude/**']
+    tags: ['v*']
+    paths-ignore: ['**.md']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.7.2
+  VPK_VERSION: 1.2.161
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Unit tests + memere protection tests
+        run: dotnet test --configuration Release
+      - name: Data validation
+        run: dotnet run --project tools/ZTown.Tools -- validate
+      - name: Dialogue approval status
+        run: dotnet run --project tools/ZTown.Tools -- release-check || true
+
+  windows:
+    needs: test
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Version
+        id: ver
+        run: |
+          v="$(tr -d '[:space:]' < version.txt)"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then v="${GITHUB_REF_NAME#v}"; fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          sed -i "s/^config\/version=.*/config\/version=\"$v\"/" game/project.godot
+
+      - name: Cache Godot
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-${{ env.GODOT_VERSION }}-mono-win64
+
+      - name: Download Godot + export templates
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          base="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable"
+          mkdir -p ~/godot && cd ~/godot
+          curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_mono_win64.zip"
+          curl -fsSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_mono_export_templates.tpz"
+          unzip -q godot.zip && rm godot.zip
+
+      - name: Install export templates
+        run: |
+          dest="$(cygpath -u "$APPDATA")/Godot/export_templates/${GODOT_VERSION}.stable.mono"
+          mkdir -p "$dest"
+          cd ~/godot && unzip -q -o templates.tpz -d tpl && cp -r tpl/templates/* "$dest/"
+          echo "GODOT=$(ls ~/godot/Godot_v${GODOT_VERSION}-stable_mono_win64/Godot_v${GODOT_VERSION}-stable_mono_win64_console.exe)" >> "$GITHUB_ENV"
+
+      - name: Export the game
+        run: |
+          mkdir -p build/win
+          "$GODOT" --headless --path game --import
+          "$GODOT" --headless --path game --export-release "Windows Desktop" ../build/win/ZTown.Game.exe
+          ls -la build/win
+
+      - name: Build the launcher
+        run: dotnet publish src/Launcher -c Release -r win-x64 -o build/win -p:Version=${{ steps.ver.outputs.version }}
+
+      - name: Package installer + portable (Velopack)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          dotnet tool install -g vpk --version "$VPK_VERSION"
+          # previous release, so updates can be small deltas (fine if there isn't one yet)
+          vpk download github --repoUrl "https://github.com/$GITHUB_REPOSITORY" --token "$GH_TOKEN" -o Releases || true
+          vpk pack --packId ZTown --packVersion "${{ steps.ver.outputs.version }}" --packDir build/win \
+            --mainExe ZTown.exe --packTitle "Z-Town" --packAuthors "Riley Poirier" --icon game/icon.ico -o Releases
+          cp Releases/ZTown-win-Setup.exe "Releases/Z-Town-${{ steps.ver.outputs.version }}-setup.exe"
+          cp Releases/ZTown-win-Setup.exe Releases/Z-Town-Setup.exe
+          cp Releases/ZTown-win-Portable.zip Releases/Z-Town-Portable.zip
+          ls -la Releases
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Z-Town-windows
+          path: |
+            Releases/Z-Town-*
+            Releases/*.nupkg
+            Releases/releases.win.json
+          if-no-files-found: error
+
+      # A release goes out for a v* tag, or when version.txt is bumped and no release for
+      # that version exists yet.
+      - name: Release needed?
+        id: rel
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="v${{ steps.ver.outputs.version }}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then echo "needed=false" >> "$GITHUB_OUTPUT"; else echo "needed=true" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Dialogue approved?
+        id: gate
+        if: startsWith(github.ref, 'refs/tags/v') || steps.rel.outputs.needed == 'true'
+        run: |
+          if dotnet run --project tools/ZTown.Tools -- release-check; then echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Release ${{ steps.rel.outputs.tag }} held back: some dialogue lines or parody names still need Riley's approval (see the log above)."
+          fi
+
+      # release notes come from the commit message (the website's "What's new" reads them)
+      - name: Release notes
+        if: steps.gate.outputs.ok == 'true'
+        env:
+          MSG: ${{ github.event.head_commit.message }}
+        run: |
+          printf '%s\n' "${MSG:-New build of Z-Town.}" | grep -viE '^(co-authored-by|claude-session):' > release-notes.md || echo "New build of Z-Town." > release-notes.md
+
+      - name: Publish release
+        if: steps.gate.outputs.ok == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.rel.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: Z-Town ${{ steps.rel.outputs.tag }}
+          body_path: release-notes.md
+          # releases.win.json + the .nupkg files are what installed copies read to update themselves
+          files: |
+            Releases/Z-Town-*
+            Releases/ZTown-win-Setup.exe
+            Releases/ZTown-win-Portable.zip
+            Releases/ZTown-${{ steps.ver.outputs.version }}-*.nupkg
+            Releases/releases.win.json
+            Releases/RELEASES
+            Releases/assets.win.json

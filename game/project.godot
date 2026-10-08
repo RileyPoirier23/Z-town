@@ -1,0 +1,30 @@
+; Engine configuration file.
+; Godot 4.7 .NET. The simulation lives in ../src/Core (plain C#); this project renders it.
+
+config_version=5
+
+[application]
+
+config/name="Z-Town"
+config/description="Memere (working title). An isometric survival game set in Moncton, Riverview and Salisbury."
+config/version="0.1.0"
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.08, 0.07, 0.07, 1)
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[dotnet]
+
+project/assembly_name="ZTown.Game"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0.08, 0.07, 0.07, 1)
