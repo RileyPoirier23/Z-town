@@ -93,6 +93,7 @@ public sealed class GameData
     public Entities.ClothingData Clothing { get; private set; } = new();
     public Dictionary<string, Story.QuestDef> Quests { get; } = new();
     public Story.PhoneConfig Phone { get; private set; } = new();
+    public Vehicles.VehicleConfig Vehicles { get; private set; } = new();
 
     /// <summary>Problems found while loading (duplicate ids etc.). The validator fails on any.</summary>
     public List<string> Problems { get; } = new();
@@ -126,6 +127,7 @@ public sealed class GameData
             foreach (var q in Read<List<Story.QuestDef>>(src, f, d) ?? new())
                 AddUnique(d.Quests, q.Id, q, f, d);
         d.Phone = ReadOpt<Story.PhoneConfig>(src, $"{root}/phone.json", d) ?? new();
+        d.Vehicles = ReadOpt<Vehicles.VehicleConfig>(src, $"{root}/vehicles.json", d) ?? new();
         return d;
     }
 

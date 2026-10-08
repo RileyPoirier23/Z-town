@@ -1,0 +1,13 @@
+{
+  "accel": 6,
+  "brake": 12,
+  "maxSpeed": 16,
+  "maxReverse": 4,
+  "turn": 1.9,
+  "drag": 1.5,
+  "litresPerKm": 0.12,
+  "engineNoise": 24,
+  "carsPer1000RoadTiles": 4.5,
+  "keysInsideChance": 0.35,
+  "colors": ["#7a8a96", "#8a2e2a", "#2e3a52", "#c8c4b8", "#3a3a3e", "#5a6a4a", "#b0a07a"]
+}

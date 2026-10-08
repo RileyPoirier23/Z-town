@@ -16,6 +16,9 @@ public sealed class Art
     public readonly Dictionary<string, Texture2D> Walls = new();
     public readonly Dictionary<string, Texture2D> Roofs = new();
     public readonly Dictionary<string, Texture2D> Moodles = new();
+    public readonly Dictionary<string, (Texture2D body, Texture2D details)> Cars = new();
+    public int CarW = 480, CarH = 360, CarDirs = 16;
+    public Vector2 CarCenter = new(240, 240);
     public readonly Dictionary<string, Texture2D> Items = new();
     public readonly Dictionary<string, Sprite> Objects = new();
     /// <summary>Character layers (body, garments, held items) -> anim -> sheet.</summary>
@@ -45,6 +48,17 @@ public sealed class Art
             art.Floors[fl.Name] = list.ToArray();
         }
         foreach (var w in root.GetProperty("walls").EnumerateObject()) art.Walls[w.Name] = T(w.Value.GetString()!);
+        if (root.TryGetProperty("cars", out var cars))
+        {
+            var cf = cars.GetProperty("frame");
+            art.CarW = cf.GetProperty("w").GetInt32();
+            art.CarH = cf.GetProperty("h").GetInt32();
+            art.CarDirs = cf.GetProperty("dirs").GetInt32();
+            var cc = cf.GetProperty("center");
+            art.CarCenter = new Vector2(cc[0].GetSingle(), cc[1].GetSingle());
+            foreach (var mdl in cars.GetProperty("models").EnumerateObject())
+                art.Cars[mdl.Name] = (T(mdl.Value.GetProperty("body").GetString()!), T(mdl.Value.GetProperty("details").GetString()!));
+        }
         if (root.TryGetProperty("moodles", out var md))
             foreach (var x in md.EnumerateObject()) art.Moodles[x.Name] = T(x.Value.GetString()!);
         if (root.TryGetProperty("items", out var its))

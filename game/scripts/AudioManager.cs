@@ -24,7 +24,7 @@ public partial class AudioManager : Node2D
     readonly Dictionary<string, AudioStream> _loops = new();
     readonly Dictionary<string, AudioStream> _music = new();
     readonly List<AudioStreamPlayer2D> _pool = new();
-    AudioStreamPlayer2D _gen = null!, _tv = null!;
+    AudioStreamPlayer2D _gen = null!, _tv = null!, _engine = null!;
     AudioStreamPlayer _amb = null!, _ambIndoor = null!, _musA = null!, _musB = null!;
     string _musicNow = "", _ambNow = "";
     float _stepTimer, _groanTimer;
@@ -53,7 +53,8 @@ public partial class AudioManager : Node2D
         _ambIndoor = new AudioStreamPlayer { Stream = _loops.GetValueOrDefault("amb_indoor"), VolumeDb = -80 };
         _musA = new AudioStreamPlayer { VolumeDb = -80 };
         _musB = new AudioStreamPlayer { VolumeDb = -80 };
-        foreach (var n in new Node[] { _gen, _tv, _amb, _ambIndoor, _musA, _musB }) AddChild(n);
+        _engine = new AudioStreamPlayer2D { Stream = _loops.GetValueOrDefault("generator"), MaxDistance = 3000, Attenuation = 1.1f };
+        foreach (var n in new Node[] { _gen, _tv, _engine, _amb, _ambIndoor, _musA, _musB }) AddChild(n);
         _ambIndoor.Play();
     }
 
@@ -103,6 +104,8 @@ public partial class AudioManager : Node2D
                 case "hit": PlayAt("swing", n.At, -8); PlayAt("hit", n.At); break;
                 case "zombie_attack": PlayAt("hit", n.At, -2); PlayAt("groan", n.At, 2); break;
                 case "hammering": PlayAt("hammer", n.At); break;
+                case "crash": PlayAt("thump", n.At, 4); PlayAt("glass", n.At, -6); break;
+                case "car_hit": PlayAt("hit", n.At, 4); break;
             }
         }
         w.Noise.Log.Clear();
@@ -141,6 +144,17 @@ public partial class AudioManager : Node2D
         if (tvOn && TvTile(w) is { } tvt) _tv.Position = Iso.ToScreen(tvt.X + 0.5f, tvt.Y + 0.5f);
         if (tvOn && !_tv.Playing) _tv.Play();
         if (!tvOn && _tv.Playing) _tv.Stop();
+
+        // engine: the generator hum, pitched up with speed
+        var car = w.Driving;
+        if (car != null && car.EngineOn)
+        {
+            _engine.Position = Iso.ToScreen(car.X, car.Y);
+            _engine.PitchScale = 1.4f + Mathf.Abs(car.Speed) * 0.08f;
+            if (!_engine.Playing) _engine.Play();
+        }
+        else if (_engine.Playing) _engine.Stop();
+        foreach (var n in w.Noise.Log) { }
 
         // ambience
         bool night = w.Clock.IsNight;

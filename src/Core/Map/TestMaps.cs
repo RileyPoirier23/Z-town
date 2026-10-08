@@ -114,6 +114,11 @@ public static class TestMaps
         AddContainer(w, "store_pharmacy", "shelf", new TilePos(36, 33), "store_pharmacy");
         AddContainer(w, "shed", "crate", new TilePos(14, 2), "house_shed");
 
+        var car = new Vehicles.Vehicle { Id = "car0", X = 20.5f, Y = 21.5f, Angle = 0, Fuel = 20, HasKeys = true, Condition = 0.9f };
+        car.Trunk = new Container { Id = "car0_trunk", Kind = "trunk", LootTable = "car_trunk", Inventory = new Inventory(40f) };
+        w.Containers[car.Trunk.Id] = car.Trunk;
+        w.Vehicles.Add(car);
+
         for (int i = 0; i < zombies; i++)
             w.TrySpawnZombie(new TilePos(w.Rng.Range(18, 46), w.Rng.Range(16, 39)));
         return w;

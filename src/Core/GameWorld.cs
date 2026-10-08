@@ -199,6 +199,7 @@ public sealed partial class GameWorld
 
         TickZombies(realSeconds);
         TickDad(realSeconds);
+        TickVehicles(realSeconds);
 
         _hourAccumulator += hours;
         // slow systems run in ~1 game-minute steps
@@ -342,7 +343,7 @@ public sealed partial class GameWorld
     public void MovePlayer(float dx, float dy, MoveMode mode, float realSeconds)
     {
         var p = Player;
-        if (p == null || p.IsDead) return;
+        if (p == null || p.IsDead || Driving != null) return;
         p.Asleep = false;
         float len = MathF.Sqrt(dx * dx + dy * dy);
         if (len < 0.0001f) return;

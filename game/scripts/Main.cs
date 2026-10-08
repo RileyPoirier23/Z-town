@@ -66,10 +66,18 @@ public partial class Main : Node2D
         AddChild(_phone);
 
         var args = OS.GetCmdlineUserArgs();
-        if (args.Contains("--quickstart") || args.Contains("--demo") || args.Contains("--demo-inside")) NewGame(42, "Riley", null);
+        if (args.Contains("--quickstart") || args.Contains("--demo") || args.Contains("--demo-inside") || args.Contains("--demo-car")) NewGame(42, "Riley", null);
         else ShowTitle();
         if (args.Contains("--demo")) DemoSetup(true);
         if (args.Contains("--demo-inside")) DemoSetup(false);
+        if (args.Contains("--demo-car"))
+        {
+            DemoSetup(true);
+            var car = _world.Vehicles.OrderBy(v => Mathf.Abs(v.X - _world.Player.X) + Mathf.Abs(v.Y - _world.Player.Y)).First();
+            _world.Player.X = car.X; _world.Player.Y = car.Y + 2;
+            _world.EnterOrExitVehicle();
+            _demoDrive = true;
+        }
         if (args.Contains("--creator")) ShowCreator();
 
         // dev: `godot -- --screenshot=out.png` saves a frame and quits (used to preview builds)
@@ -84,7 +92,7 @@ public partial class Main : Node2D
 
     string? _screenshotPath;
     int _frames, _shotFrame = 90, _openMapAt = -1;
-    bool _openPhone;
+    bool _openPhone, _demoDrive;
 
     WorldConfig _worldCfg = new();
     MapFile? _mapFile;
@@ -137,7 +145,7 @@ public partial class Main : Node2D
             }
             w.Player.PlaceAt(spot);
             w.Player.Facing = Mathf.Pi * 0.25f;
-            foreach (var (dx, dy) in new[] { (5, 3), (8, -2), (3, 7), (10, 5), (-4, 6) })
+            foreach (var (dx, dy) in new[] { (12, 6), (14, -3), (6, 13), (16, 8), (-9, 12) })
             {
                 var z = w.TrySpawnZombie(new TilePos(spot.X + dx, spot.Y + dy));
                 if (z != null) z.Facing = Mathf.Atan2(-dy, -dx);
@@ -363,7 +371,14 @@ public partial class Main : Node2D
         var w = _world;
         var p = w.Player;
 
-        if (!_inventory.IsOpen && !_map.IsOpen && !p.Asleep)
+        if (w.Driving != null && !_inventory.IsOpen && !_map.IsOpen)
+        {
+            float throttle = (Input.IsActionPressed("move_up") ? 1 : 0) - (Input.IsActionPressed("move_down") ? 1 : 0);
+            float steer = (Input.IsActionPressed("move_right") ? 1 : 0) - (Input.IsActionPressed("move_left") ? 1 : 0);
+            if (_demoDrive) throttle = 1;
+            w.DriveInput(throttle, steer, Input.IsActionPressed("attack"), dt);
+        }
+        else if (!_inventory.IsOpen && !_map.IsOpen && !p.Asleep)
         {
             // screen directions → tile directions (screen up = tile -x -y)
             var input = Input.GetVector("move_left", "move_right", "move_up", "move_down");
@@ -465,6 +480,8 @@ public partial class Main : Node2D
     string Prompt()
     {
         if (_world.Player.Asleep) return "Sleeping…";
+        if (_world.Driving is { } car)
+            return $"{Mathf.Abs(car.Speed) * 3.6f:0} km/h   ·   gas {car.Fuel:0.0}/{car.FuelMax:0} L   ·   {(car.EngineOn ? "W/S drive, A/D steer, Space brake" : "won't start")}   ·   E: get out";
         if (_world.PlayerNearDad && _world.Dad is { } dad)
             return dad.State switch
             {
@@ -476,7 +493,8 @@ public partial class Main : Node2D
         if (_world.PlayerNearMemere) return "E: give memere something";
         if (_world.PlayerNearGenerator && _world.Power.Generator.Present) return "E: generator (on/off, connect)";
         if (NearTv()) return "E: TV on/off   C: change channel";
-        if (NearestContainer() is { } c) return $"E: search {c.Kind}";
+        if (NearestContainer() is { } c) return $"E: search {(c.Kind == "trunk" ? "the trunk" : c.Kind)}";
+        if (_world.VehicleNearPlayer() is { } v) return $"E: get in the {v.Model}{(v.HasKeys ? " (keys inside)" : " (no keys)")}";
         if (FacingEdge(includeBroken: true) is { } edge)
         {
             var ed = _world.Map.EdgeBetween(edge.a, edge.b);
@@ -492,6 +510,7 @@ public partial class Main : Node2D
     void Use()
     {
         var w = _world;
+        if (w.Driving != null) { _hud.Say("", w.EnterOrExitVehicle()); return; }
         if (w.PlayerNearDad) { w.InteractDad(); return; }
         if (w.PlayerNearMemere) { _inventory.Show(null); _hud.Say("", "Pick something and press \"Give to memere\"."); return; }
         if (w.PlayerNearGenerator && w.Power.Generator.Present)
@@ -502,6 +521,7 @@ public partial class Main : Node2D
         }
         if (NearTv()) { w.ToggleTv(); return; }
         if (NearestContainer() is { } c) { _inventory.Show(w.OpenContainer(c.Id)); return; }
+        if (w.VehicleNearPlayer() != null) { _hud.Say("", w.EnterOrExitVehicle()); return; }
         if (FacingEdge() is { } edge) w.ToggleEdge(edge.a, edge.b);
     }
 }

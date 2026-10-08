@@ -218,8 +218,15 @@ public partial class IsoView : Node2D
                 int xx = x, yy = y;
                 Add(x + y + 1.95f, 3, () => DrawRoofTile(b, roofTex, xx, yy));
             }
+        foreach (var v in w.Vehicles)
+        {
+            if (Mathf.Abs(v.X - player.X) > r || Mathf.Abs(v.Y - player.Y) > r) continue;
+            var veh = v;
+            Add(v.X + v.Y + 0.3f, 2, () => DrawVehicle(veh));
+        }
         foreach (var e in w.Entities)
         {
+            if (e is Player && w.Driving != null) continue; // you're in the car
             if (Mathf.Abs(e.X - player.X) > r || Mathf.Abs(e.Y - player.Y) > r) continue;
             var tile = e.Tile;
             if (!map.InBounds(tile)) continue;
@@ -230,9 +237,12 @@ public partial class IsoView : Node2D
         _order.Sort((a, b) => a.depth != b.depth ? a.depth.CompareTo(b.depth) : a.order.CompareTo(b.order));
         foreach (var o in _order) _draws[o.index]();
         // Zomboid-style silhouette: you can always see yourself, even behind walls and roofs
-        _silhouette = true;
-        DrawEntity(player);
-        _silhouette = false;
+        if (w.Driving == null)
+        {
+            _silhouette = true;
+            DrawEntity(player);
+            _silhouette = false;
+        }
         DrawSpeech();
         DrawQuestMarker();
     }
@@ -325,6 +335,29 @@ public partial class IsoView : Node2D
         DrawTexture(tex, Screen(x, y) - art.TileOrigin, lit);
         int planks = side == 'N' ? to.BarN : to.BarW;
         if (planks > 0) DrawPlanks(x, y, side, planks, cut, lit);
+    }
+
+    void DrawVehicle(ZTown.Core.Vehicles.Vehicle v)
+    {
+        var art = Art!;
+        if (!art.Cars.TryGetValue(v.Model, out var tex)) return;
+        int dir = Mathf.PosMod(Mathf.RoundToInt(v.Angle / (Mathf.Tau / art.CarDirs)), art.CarDirs);
+        var src = new Rect2(dir * art.CarW, 0, art.CarW, art.CarH);
+        var dst = new Rect2(Screen(v.X, v.Y) - art.CarCenter, new Vector2(art.CarW, art.CarH));
+        var light = Light(v.Tile);
+        if (!Visible(v.Tile.X, v.Tile.Y) && World!.Driving != v) light = light * 0.9f;
+        var tint = CharacterPainter.Hex(v.Color) * light;
+        tint.A = 1;
+        var dl = light; dl.A = 1;
+        DrawTextureRectRegion(tex.body, dst, src, tint);
+        DrawTextureRectRegion(tex.details, dst, src, dl);
+        // headlights at night when the engine's running
+        if (v.EngineOn && World!.Clock.IsNight)
+        {
+            var f = Screen(v.X + Mathf.Cos(v.Angle) * 6, v.Y + Mathf.Sin(v.Angle) * 6);
+            DrawCircle(f, 70, new Color(1f, 0.95f, 0.75f, 0.12f));
+            DrawCircle(f, 40, new Color(1f, 0.95f, 0.75f, 0.12f));
+        }
     }
 
     void DrawPlanks(int x, int y, char side, int planks, bool cut, Color light)

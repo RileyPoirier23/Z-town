@@ -15,7 +15,7 @@ public class RealMapTests
         if (!src.Exists($"maps/{cfg.Map}.map.json")) return null;
         var sw = Stopwatch.StartNew();
         var w = MapBuilder.Build(TestData.Data, MapFile.Load(src, cfg.Map), cfg, 7);
-        Console.WriteLine($"built {cfg.Map} in {sw.ElapsedMilliseconds} ms: {w.Buildings.Count} buildings, {w.Zombies.Count()} zombies, {w.Containers.Count} containers");
+        Console.WriteLine($"built {cfg.Map} in {sw.ElapsedMilliseconds} ms: {w.Buildings.Count} buildings, {w.Zombies.Count()} zombies, {w.Containers.Count} containers, {w.Vehicles.Count} cars, {w.Vehicles.Count(v => v.HasKeys)} with keys; nearest car {w.Vehicles.Min(v => MathF.Sqrt((v.X - w.Player.X) * (v.X - w.Player.X) + (v.Y - w.Player.Y) * (v.Y - w.Player.Y))):0} m");
         return w;
     });
 

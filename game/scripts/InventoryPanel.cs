@@ -52,7 +52,8 @@ public partial class InventoryPanel : CanvasLayer
         }, "Can't eat or drink that."));
         Button(buttons, "Give to memere", () => Act(s => World.GiveToMemere(s), "Get closer to memere, or that's not for her."));
         Button(buttons, "Equip / unequip", Equip);
-        Button(buttons, "Pour into generator", () => Act(s => World.Refuel(s), "Needs a gas can, next to the generator."));
+        Button(buttons, "Pour gas (generator / car)", () => Act(s =>
+            World.Refuel(s) || (World.VehicleNearPlayer() is { } car && World.RefuelVehicle(car, s)), "Needs a gas can, next to the generator or a car."));
         Button(buttons, "Close (Tab)", Close);
     }
 

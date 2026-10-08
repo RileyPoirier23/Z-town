@@ -1,21 +1,230 @@
 [
-  { "id": "house_living", "rollsMin": 0, "rollsMax": 2, "emptyChance": 0.3, "entries": [
-    { "item": "flashlight", "weight": 1 }, { "item": "chips_bag", "weight": 1 }, { "item": "reruns_box", "weight": 0.15 },
-    { "item": "cigarettes_pack", "weight": 0.6 } ] },
-  { "id": "bedroom", "rollsMin": 0, "rollsMax": 2, "emptyChance": 0.25, "entries": [
-    { "item": "flashlight", "weight": 1 }, { "item": "bandage", "weight": 1 }, { "item": "chocolate_bar", "weight": 1 },
-    { "item": "baseball_bat", "weight": 0.3 }, { "item": "cigarettes_pack", "weight": 0.4 } ] },
-  { "id": "bathroom", "rollsMin": 1, "rollsMax": 2, "emptyChance": 0.2, "entries": [
-    { "item": "bandage", "weight": 3, "min": 1, "max": 2 }, { "item": "disinfectant", "weight": 2 }, { "item": "puffer", "weight": 0.6 } ] },
-  { "id": "pharmacy_counter", "rollsMin": 1, "rollsMax": 3, "emptyChance": 0.15, "entries": [
-    { "item": "puffer", "weight": 4, "min": 1, "max": 2 }, { "item": "bandage", "weight": 2 }, { "item": "disinfectant", "weight": 1 } ] },
-  { "id": "restaurant_fridge", "rollsMin": 1, "rollsMax": 4, "emptyChance": 0.1, "entries": [
-    { "item": "donair_meat_frozen", "weight": 3, "min": 1, "max": 2 }, { "item": "donair", "weight": 2 },
-    { "item": "mepsi_can", "weight": 3, "min": 1, "max": 6 }, { "item": "mepsi_2l", "weight": 1 }, { "item": "milk", "weight": 1 } ] },
-  { "id": "hardware", "rollsMin": 1, "rollsMax": 3, "emptyChance": 0.2, "entries": [
-    { "item": "hammer", "weight": 2 }, { "item": "nails_box", "weight": 2 }, { "item": "planks", "weight": 3, "min": 1, "max": 4 },
-    { "item": "crowbar", "weight": 1 }, { "item": "gas_can", "weight": 1.5 }, { "item": "flashlight", "weight": 1 } ] },
-  { "id": "office", "rollsMin": 0, "rollsMax": 2, "emptyChance": 0.4, "entries": [
-    { "item": "chocolate_bar", "weight": 2 }, { "item": "water_bottle", "weight": 2 }, { "item": "chips_bag", "weight": 1 },
-    { "item": "flashlight", "weight": 0.5 }, { "item": "mepsi_can", "weight": 1 } ] }
+ {
+  "id": "house_living",
+  "rollsMin": 0,
+  "rollsMax": 2,
+  "emptyChance": 0.3,
+  "entries": [
+   {
+    "item": "flashlight",
+    "weight": 1
+   },
+   {
+    "item": "chips_bag",
+    "weight": 1
+   },
+   {
+    "item": "reruns_box",
+    "weight": 0.15
+   },
+   {
+    "item": "cigarettes_pack",
+    "weight": 0.6
+   }
+  ]
+ },
+ {
+  "id": "bedroom",
+  "rollsMin": 0,
+  "rollsMax": 2,
+  "emptyChance": 0.25,
+  "entries": [
+   {
+    "item": "flashlight",
+    "weight": 1
+   },
+   {
+    "item": "bandage",
+    "weight": 1
+   },
+   {
+    "item": "chocolate_bar",
+    "weight": 1
+   },
+   {
+    "item": "baseball_bat",
+    "weight": 0.3
+   },
+   {
+    "item": "cigarettes_pack",
+    "weight": 0.4
+   }
+  ]
+ },
+ {
+  "id": "bathroom",
+  "rollsMin": 1,
+  "rollsMax": 2,
+  "emptyChance": 0.2,
+  "entries": [
+   {
+    "item": "bandage",
+    "weight": 3,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "disinfectant",
+    "weight": 2
+   },
+   {
+    "item": "puffer",
+    "weight": 0.6
+   }
+  ]
+ },
+ {
+  "id": "pharmacy_counter",
+  "rollsMin": 1,
+  "rollsMax": 3,
+  "emptyChance": 0.15,
+  "entries": [
+   {
+    "item": "puffer",
+    "weight": 4,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "bandage",
+    "weight": 2
+   },
+   {
+    "item": "disinfectant",
+    "weight": 1
+   }
+  ]
+ },
+ {
+  "id": "restaurant_fridge",
+  "rollsMin": 1,
+  "rollsMax": 4,
+  "emptyChance": 0.1,
+  "entries": [
+   {
+    "item": "donair_meat_frozen",
+    "weight": 3,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "donair",
+    "weight": 2
+   },
+   {
+    "item": "mepsi_can",
+    "weight": 3,
+    "min": 1,
+    "max": 6
+   },
+   {
+    "item": "mepsi_2l",
+    "weight": 1
+   },
+   {
+    "item": "milk",
+    "weight": 1
+   }
+  ]
+ },
+ {
+  "id": "hardware",
+  "rollsMin": 1,
+  "rollsMax": 3,
+  "emptyChance": 0.2,
+  "entries": [
+   {
+    "item": "hammer",
+    "weight": 2
+   },
+   {
+    "item": "nails_box",
+    "weight": 2
+   },
+   {
+    "item": "planks",
+    "weight": 3,
+    "min": 1,
+    "max": 4
+   },
+   {
+    "item": "crowbar",
+    "weight": 1
+   },
+   {
+    "item": "gas_can",
+    "weight": 1.5
+   },
+   {
+    "item": "flashlight",
+    "weight": 1
+   }
+  ]
+ },
+ {
+  "id": "office",
+  "rollsMin": 0,
+  "rollsMax": 2,
+  "emptyChance": 0.4,
+  "entries": [
+   {
+    "item": "chocolate_bar",
+    "weight": 2
+   },
+   {
+    "item": "water_bottle",
+    "weight": 2
+   },
+   {
+    "item": "chips_bag",
+    "weight": 1
+   },
+   {
+    "item": "flashlight",
+    "weight": 0.5
+   },
+   {
+    "item": "mepsi_can",
+    "weight": 1
+   }
+  ]
+ },
+ {
+  "id": "car_trunk",
+  "rollsMin": 0,
+  "rollsMax": 3,
+  "emptyChance": 0.35,
+  "entries": [
+   {
+    "item": "water_bottle",
+    "weight": 2
+   },
+   {
+    "item": "gas_can",
+    "weight": 1
+   },
+   {
+    "item": "chips_bag",
+    "weight": 1
+   },
+   {
+    "item": "flashlight",
+    "weight": 1
+   },
+   {
+    "item": "bandage",
+    "weight": 1
+   },
+   {
+    "item": "crowbar",
+    "weight": 0.5
+   },
+   {
+    "item": "mepsi_can",
+    "weight": 1,
+    "min": 1,
+    "max": 3
+   }
+  ]
+ }
 ]

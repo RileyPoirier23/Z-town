@@ -13,6 +13,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+import cars  # noqa: E402
 import chars  # noqa: E402
 import icons  # noqa: E402
 import props  # noqa: E402
@@ -67,6 +68,12 @@ def main(which):
         for name, make in tiles.FURNITURE.items():
             m["objects"][name] = {"file": save(make(), f"objects/{name}.png"), "origin": list(ORIGIN)}
         m["objects"]["streetlight"] = {"file": save(tiles.obj_streetlight(), "objects/streetlight.png"), "origin": [ORIGIN[0], ORIGIN[1] + 128]}
+
+    if which in ("all", "cars"):
+        m["cars"] = {"frame": {"w": cars.FW, "h": cars.FH, "center": list(cars.CENTER), "dirs": cars.DIRS}, "models": {}}
+        for kind in cars.MODELS:
+            body, det = cars.sheets(kind)
+            m["cars"]["models"][kind] = {"body": save(body, f"cars/{kind}_body.png"), "details": save(det, f"cars/{kind}_details.png")}
 
     if which in ("all", "icons"):
         import glob

@@ -98,6 +98,12 @@ public static class SaveSystem
                 Battery = w.Phone.Battery, LastHeartHour = w.Phone.LastHeartHour, Delivered = w.Phone.Delivered.ToList(),
                 Inbox = w.Phone.Inbox.Select(m => new PhoneMessage { From = m.From, Line = m.Line, Day = m.Day, Hour = m.Hour, Minute = m.Minute, Read = m.Read }).ToList(),
             },
+            Vehicles = w.Vehicles.Select(v => new VehicleSave
+            {
+                Id = v.Id, Model = v.Model, Color = v.Color, X = v.X, Y = v.Y, Angle = v.Angle, Fuel = v.Fuel, FuelMax = v.FuelMax,
+                Condition = v.Condition, HasKeys = v.HasKeys, Length = v.Length, Width = v.Width,
+            }).ToList(),
+            Driving = w.Driving?.Id,
             Dad = w.Dad is { } dad ? new DadSave { X = dad.X, Y = dad.Y, Z = dad.Z, Facing = dad.Facing, Health = dad.Health.Value, State = dad.State.ToString(), Withdrawal = dad.Withdrawal } : null,
             EdgeDamage = w.EdgeDamage.Select(kv => new EdgeDamageSave { X = kv.Key.tile.X, Y = kv.Key.tile.Y, Z = kv.Key.tile.Z, Side = kv.Key.side.ToString(), Damage = kv.Value }).ToList(),
         };
@@ -176,6 +182,22 @@ public static class SaveSystem
         foreach (var a in w.Power.Appliances) if (s.Power.Appliances.TryGetValue(a.Id, out var on)) a.On = on;
 
         w.Tv.On = s.Tv.On; w.Tv.Channel = s.Tv.Channel; w.Tv.HasRerunsBox = s.Tv.RerunsBox;
+
+        // vehicles: the saved set replaces the freshly spawned one
+        foreach (var v in w.Vehicles) w.Containers.Remove(v.Trunk.Id);
+        w.Vehicles.Clear();
+        foreach (var vs in s.Vehicles)
+        {
+            var v = new Vehicles.Vehicle
+            {
+                Id = vs.Id, Model = vs.Model, Color = vs.Color, X = vs.X, Y = vs.Y, Angle = vs.Angle, Fuel = vs.Fuel, FuelMax = vs.FuelMax,
+                Condition = vs.Condition, HasKeys = vs.HasKeys, Length = vs.Length, Width = vs.Width,
+            };
+            v.Trunk = new Container { Id = v.Id + "_trunk", Kind = "trunk", LootTable = "car_trunk", Inventory = new Inventory(40f) };
+            w.Containers[v.Trunk.Id] = v.Trunk;
+            w.Vehicles.Add(v);
+        }
+        w.RestoreDriving(w.Vehicles.FirstOrDefault(v => v.Id == s.Driving));
 
         foreach (var (id, cs) in s.Containers)
         {
@@ -267,6 +289,24 @@ public sealed class SaveData
     public string? TrackedQuest { get; set; }
     public PhoneSave? Phone { get; set; }
     public DadSave? Dad { get; set; }
+    public List<VehicleSave> Vehicles { get; set; } = new();
+    public string? Driving { get; set; }
+}
+
+public sealed class VehicleSave
+{
+    public string Id { get; set; } = "";
+    public string Model { get; set; } = "sedan";
+    public string Color { get; set; } = "";
+    public float X { get; set; }
+    public float Y { get; set; }
+    public float Angle { get; set; }
+    public float Fuel { get; set; }
+    public float FuelMax { get; set; } = 50;
+    public float Condition { get; set; }
+    public bool HasKeys { get; set; }
+    public float Length { get; set; } = 4.4f;
+    public float Width { get; set; } = 1.9f;
 }
 
 public sealed class BarricadeSave

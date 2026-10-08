@@ -1,4 +1,29 @@
 {
+ "cars": {
+  "frame": {
+   "center": [
+    240,
+    240
+   ],
+   "dirs": 16,
+   "h": 360,
+   "w": 480
+  },
+  "models": {
+   "pickup": {
+    "body": "res://assets/gen/cars/pickup_body.png",
+    "details": "res://assets/gen/cars/pickup_details.png"
+   },
+   "sedan": {
+    "body": "res://assets/gen/cars/sedan_body.png",
+    "details": "res://assets/gen/cars/sedan_details.png"
+   },
+   "van": {
+    "body": "res://assets/gen/cars/van_body.png",
+    "details": "res://assets/gen/cars/van_details.png"
+   }
+  }
+ },
  "characters": {
   "anims": {
    "attack": 8,
