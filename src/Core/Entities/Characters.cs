@@ -33,6 +33,13 @@ public sealed class Dad : Living
 {
     public override EntityKind Kind => EntityKind.Dad;
     public Outfit Outfit { get; set; } = new();
+    public DadState State { get; set; } = DadState.OutOfIt;
+    /// <summary>0..1, how bad withdrawal is (the keep-him-clean thread; Chapter 2).</summary>
+    public float Withdrawal { get; set; }
+    public float Speed { get; set; } = 2.0f;
+    internal List<Map.TilePos>? Path;
+    internal int PathIndex;
+    internal float RepathTimer;
 }
 
 public sealed class Zombie : Living

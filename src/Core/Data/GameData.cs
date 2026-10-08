@@ -91,6 +91,8 @@ public sealed class GameData
     public SimConfig Sim { get; private set; } = new();
     public AnimationRules Animations { get; private set; } = new();
     public Entities.ClothingData Clothing { get; private set; } = new();
+    public Dictionary<string, Story.QuestDef> Quests { get; } = new();
+    public Story.PhoneConfig Phone { get; private set; } = new();
 
     /// <summary>Problems found while loading (duplicate ids etc.). The validator fails on any.</summary>
     public List<string> Problems { get; } = new();
@@ -120,6 +122,10 @@ public sealed class GameData
         d.Sim = ReadOpt<SimConfig>(src, $"{root}/sim.json", d) ?? new();
         d.Animations = ReadOpt<AnimationRules>(src, $"{root}/memere/animations.json", d) ?? new();
         d.Clothing = ReadOpt<Entities.ClothingData>(src, $"{root}/clothing.json", d) ?? new();
+        foreach (var f in src.List($"{root}/quests", ".json"))
+            foreach (var q in Read<List<Story.QuestDef>>(src, f, d) ?? new())
+                AddUnique(d.Quests, q.Id, q, f, d);
+        d.Phone = ReadOpt<Story.PhoneConfig>(src, $"{root}/phone.json", d) ?? new();
         return d;
     }
 

@@ -234,6 +234,7 @@ public partial class IsoView : Node2D
         DrawEntity(player);
         _silhouette = false;
         DrawSpeech();
+        DrawQuestMarker();
     }
 
     const float WallM = 2.45f;       // storey height in metres (192 px)
@@ -322,6 +323,57 @@ public partial class IsoView : Node2D
         // light the wall from the side you're looking at
         var lit = Light(owner);
         DrawTexture(tex, Screen(x, y) - art.TileOrigin, lit);
+        int planks = side == 'N' ? to.BarN : to.BarW;
+        if (planks > 0) DrawPlanks(x, y, side, planks, cut, lit);
+    }
+
+    void DrawPlanks(int x, int y, char side, int planks, bool cut, Color light)
+    {
+        var a = Screen(x, y);
+        var b = side == 'N' ? Screen(x + 1, y) : Screen(x, y + 1);
+        var wood = new Color(0.55f, 0.42f, 0.28f) * light;
+        wood.A = 1;
+        float maxH = cut ? 22 : 150;
+        for (int i = 0; i < planks; i++)
+        {
+            float h = Mathf.Min(maxH, 30 + i * 34);
+            float tilt = (i % 2 == 0 ? 10 : -10);
+            var p0 = a.Lerp(b, 0.08f) + new Vector2(0, -h - tilt);
+            var p1 = a.Lerp(b, 0.92f) + new Vector2(0, -h + tilt);
+            DrawLine(p0, p1, new Color(0.15f, 0.1f, 0.06f), 13);
+            DrawLine(p0, p1, wood, 10);
+            DrawCircle(p0.Lerp(p1, 0.12f), 1.6f, new Color(0.2f, 0.2f, 0.2f));
+            DrawCircle(p0.Lerp(p1, 0.88f), 1.6f, new Color(0.2f, 0.2f, 0.2f));
+        }
+    }
+
+    /// <summary>Where the tracked quest's marker is (Main sets it each frame).</summary>
+    public TilePos? QuestMarker { get; set; }
+
+    void DrawQuestMarker()
+    {
+        if (QuestMarker is not { } m || World == null) return;
+        var p = World.Player;
+        if (p.Tile.DistanceTo(m) < 2.5f) return;
+        float pulse = 0.5f + 0.5f * Mathf.Sin((float)_now * 4);
+        var at = Screen(m.X + 0.5f, m.Y + 0.5f) + new Vector2(0, -40 - 8 * pulse);
+        var cam = GetViewport().GetCamera2D();
+        var view = GetViewportRect().Size / (cam?.Zoom ?? Vector2.One);
+        var center = cam?.GetScreenCenterPosition() ?? Vector2.Zero;
+        var rect = new Rect2(center - view / 2 + new Vector2(60, 60), view - new Vector2(120, 120));
+        var col = new Color(0.82f, 0.42f, 0.31f);
+        if (rect.HasPoint(at))
+        {
+            DrawColoredPolygon(new[] { at + new Vector2(0, -16), at + new Vector2(11, 0), at + new Vector2(0, 16), at + new Vector2(-11, 0) }, Colors.Black);
+            DrawColoredPolygon(new[] { at + new Vector2(0, -12), at + new Vector2(8, 0), at + new Vector2(0, 12), at + new Vector2(-8, 0) }, col);
+            return;
+        }
+        // off screen: an arrow at the edge pointing the way
+        var dir = (at - center).Normalized();
+        var edge = center + dir * Mathf.Min(rect.Size.X / 2 / Mathf.Max(0.001f, Mathf.Abs(dir.X)), rect.Size.Y / 2 / Mathf.Max(0.001f, Mathf.Abs(dir.Y)));
+        var side2 = new Vector2(-dir.Y, dir.X);
+        DrawColoredPolygon(new[] { edge + dir * 22, edge - dir * 10 + side2 * 15, edge - dir * 10 - side2 * 15 }, Colors.Black);
+        DrawColoredPolygon(new[] { edge + dir * 17, edge - dir * 7 + side2 * 11, edge - dir * 7 - side2 * 11 }, col);
     }
 
     static string InteriorStyle(string? floor) => floor switch
@@ -396,7 +448,7 @@ public partial class IsoView : Node2D
                 break;
             case Dad d:
                 outfit = d.Outfit;
-                anim = a.moving ? "walk" : "idle";
+                anim = d.State == DadState.OutOfIt ? "dead" : a.moving ? "walk" : "idle";
                 break;
             default:
                 return;

@@ -1,0 +1,27 @@
+# Dad's lines. Placeholders until Riley says how Dad talks.
+speaker: dad
+lines:
+  - id: dad.wake
+    text: "[DAD: comes to, out of it, doesn't know what's going on]"
+    context: "You find Dad out of it at his place and shake him awake. Early in the outbreak."
+    status: draft
+
+  - id: dad.follow
+    text: "[DAD: agrees to come with you, not happy about it]"
+    context: "You tell Dad to come with you."
+    status: draft
+
+  - id: dad.wait
+    text: "[DAD: fine, he'll wait]"
+    context: "You tell Dad to wait where he is."
+    status: draft
+
+  - id: dad.arrive_home
+    text: "[DAD: arriving at memere's]"
+    context: "Dad gets to memere's house with you for the first time since things went bad."
+    status: draft
+
+  - id: dad.home_idle
+    text: "[DAD: something he'd say hanging around memere's]"
+    context: "You talk to Dad while he's staying at memere's."
+    status: draft

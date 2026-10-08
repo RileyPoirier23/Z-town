@@ -1,0 +1,48 @@
+[
+  { "id": "c1_home", "title": "Memere's", "chapter": 1, "startWhen": ["start"],
+    "steps": [
+      { "text": "Check on memere", "goal": { "type": "near_memere" }, "marker": "memere" },
+      { "text": "See what's in the fridge", "goal": { "type": "open", "kind": "fridge" }, "marker": "home" }
+    ] },
+
+  { "id": "c1_smokes", "title": "Her smokes", "chapter": 1, "startWhen": ["after:c1_home"],
+    "steps": [
+      { "text": "Find her smokes (corner store, gas station)", "goal": { "type": "have_item", "items": ["cigarettes_pack", "cigarettes_carton"] },
+        "marker": "nearest:convenience,gas_station,grocery,retail" },
+      { "text": "Bring them to memere", "goal": { "type": "give_memere", "supply": "cigarettes" }, "marker": "memere" }
+    ] },
+
+  { "id": "c1_mepsi", "title": "Mepsi run", "chapter": 1, "startWhen": ["after:c1_home", "lowsupply:mepsi"],
+    "steps": [
+      { "text": "Get her some Mepsi", "goal": { "type": "have_item", "items": ["mepsi_can", "mepsi_2l", "mepsi_case"] },
+        "marker": "nearest:convenience,gas_station,grocery,restaurant" },
+      { "text": "Bring it to memere", "goal": { "type": "give_memere", "supply": "mepsi" }, "marker": "memere" }
+    ] },
+
+  { "id": "c1_puffers", "title": "Puffers", "chapter": 1, "startWhen": ["after:c1_home", "day>=1"],
+    "steps": [
+      { "text": "Get puffers from a pharmacy", "goal": { "type": "have_item", "items": ["puffer"] }, "marker": "nearest:pharmacy,clinic" },
+      { "text": "Bring one to memere", "goal": { "type": "give_memere", "supply": "puffers" }, "marker": "memere" }
+    ] },
+
+  { "id": "c1_power", "title": "Keep the lights on", "chapter": 1, "startWhen": ["after:c1_home", "day>=2"],
+    "steps": [
+      { "text": "Check the generator out back", "goal": { "type": "near", "target": "generator" }, "marker": "generator" },
+      { "text": "Find a gas can (the shed?)", "goal": { "type": "have_item", "items": ["gas_can"] }, "marker": "shed" },
+      { "text": "Fill the generator", "goal": { "type": "generator_fuel", "min": 5 }, "marker": "generator" },
+      { "text": "Hook it up to the house", "goal": { "type": "generator_connected" }, "marker": "generator" }
+    ] },
+
+  { "id": "c1_dad", "title": "Where's Dad?", "chapter": 1, "startWhen": ["after:c1_home", "hour>=13"],
+    "steps": [
+      { "text": "Go to Dad's place", "goal": { "type": "near", "target": "dad" }, "marker": "dad" },
+      { "text": "Wake him up", "goal": { "type": "dad_state", "state": "Awake" }, "marker": "dad" },
+      { "text": "Bring Dad back to memere's", "goal": { "type": "dad_home" }, "marker": "home" }
+    ] },
+
+  { "id": "c1_board", "title": "Board up", "chapter": 1, "startWhen": ["after:c1_home", "day>=3"],
+    "steps": [
+      { "text": "Get a hammer, nails and planks", "goal": { "type": "have_item", "items": ["hammer"] }, "marker": "nearest:hardware,garage,warehouse" },
+      { "text": "Board up a window at memere's", "goal": { "type": "event", "kind": "barricade" }, "marker": "home" }
+    ] }
+]

@@ -11,7 +11,8 @@ public static class Pathfinder
 
     /// <param name="canEnter">Extra rule for which tiles the walker may stand on (e.g. zombies
     /// can never enter memere's protected rooms).</param>
-    public static List<TilePos>? Find(TileMap map, TilePos from, TilePos to, Func<TilePos, bool> canEnter, int maxNodes = 4000)
+    /// <param name="throughBreakables">plan as if closed doors, windows and barricades could be broken through (zombies)</param>
+    public static List<TilePos>? Find(TileMap map, TilePos from, TilePos to, Func<TilePos, bool> canEnter, int maxNodes = 4000, bool throughBreakables = false)
     {
         if (from == to) return new List<TilePos>();
         if (!map.InBounds(to) || !canEnter(to) || map.At(to).Solid) return null;
@@ -32,7 +33,7 @@ public static class Pathfinder
             foreach (var (dx, dy) in Dirs)
             {
                 var next = new TilePos(cur.X + dx, cur.Y + dy, cur.Z);
-                if (!CanStep(map, cur, next, canEnter)) continue;
+                if (!CanStep(map, cur, next, canEnter, throughBreakables)) continue;
                 float cost = gc + (dx != 0 && dy != 0 ? 1.4142f : 1f);
                 if (g.TryGetValue(next, out var old) && old <= cost) continue;
                 g[next] = cost;
@@ -44,20 +45,24 @@ public static class Pathfinder
         return null;
     }
 
-    public static bool CanStep(TileMap map, TilePos a, TilePos b, Func<TilePos, bool> canEnter)
+    public static bool CanStep(TileMap map, TilePos a, TilePos b, Func<TilePos, bool> canEnter, bool throughBreakables = false)
     {
         if (!map.InBounds(b) || map.At(b).Solid || !canEnter(b)) return false;
         int dx = b.X - a.X, dy = b.Y - a.Y;
         if (Math.Abs(dx) > 1 || Math.Abs(dy) > 1 || (dx == 0 && dy == 0)) return false;
-        if (dx == 0 || dy == 0) return map.EdgeBetween(a, b).IsPassable();
+        if (dx == 0 || dy == 0) return EdgeOk(map, a, b, throughBreakables);
+        // diagonals never go through doors (no corner-cutting through a doorway)
         var viaX = new TilePos(a.X + dx, a.Y, a.Z);
         var viaY = new TilePos(a.X, a.Y + dy, a.Z);
         return Ortho(map, a, viaX, canEnter) && Ortho(map, viaX, b, canEnter)
             && Ortho(map, a, viaY, canEnter) && Ortho(map, viaY, b, canEnter);
     }
 
+    static bool EdgeOk(TileMap map, TilePos a, TilePos b, bool throughBreakables) =>
+        map.Passable(a, b) || throughBreakables && map.Breakable(a, b);
+
     static bool Ortho(TileMap map, TilePos a, TilePos b, Func<TilePos, bool> canEnter) =>
-        map.InBounds(b) && !map.At(b).Solid && canEnter(b) && map.EdgeBetween(a, b).IsPassable();
+        map.InBounds(b) && !map.At(b).Solid && canEnter(b) && map.Passable(a, b);
 
     static List<TilePos> Rebuild(Dictionary<TilePos, TilePos> came, TilePos from, TilePos to)
     {

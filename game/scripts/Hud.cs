@@ -23,6 +23,9 @@ public partial class Hud : CanvasLayer
     public System.Func<string?>? EquippedItem { get; set; }
 
     Label _time = null!, _date = null!, _power = null!, _memereLine = null!, _asking = null!, _prompt = null!, _subtitle = null!, _help = null!, _equipName = null!;
+    Label _questTitle = null!, _questStep = null!, _phoneBadge = null!;
+    VBoxContainer _toasts = null!;
+    int _notesSeen;
     ProgressBar _comfort = null!, _health = null!;
     VBoxContainer _moodles = null!;
     TextureRect _equipIcon = null!;
@@ -77,6 +80,30 @@ public partial class Hud : CanvasLayer
             _supplies[id] = (bar, days);
         }
         _asking = Label(mv, 13, HorizontalAlignment.Left, new Color("e0b060"));
+
+        // ---- quest tracker (under memere's card)
+        var qp = Panel(Control.LayoutPreset.TopLeft, new Vector2(12, 196), 290);
+        var qv = (VBoxContainer)qp.GetChild(0);
+        _questTitle = Label(qv, 12, HorizontalAlignment.Left, new Color("d06a50"));
+        _questStep = Label(qv, 15);
+        Label(qv, 11, HorizontalAlignment.Left, Muted).Text = "J: next quest  ·  M: map  ·  P: phone";
+
+        // ---- phone badge (bottom right)
+        _phoneBadge = new Label { Text = "", HorizontalAlignment = HorizontalAlignment.Right };
+        _phoneBadge.AddThemeFontSizeOverride("font_size", 16);
+        _phoneBadge.AddThemeColorOverride("font_outline_color", Colors.Black);
+        _phoneBadge.AddThemeConstantOverride("outline_size", 5);
+        _phoneBadge.SetAnchorsPreset(Control.LayoutPreset.BottomRight);
+        _phoneBadge.Position = new Vector2(-260, -40);
+        _phoneBadge.Size = new Vector2(240, 30);
+        AddChild(_phoneBadge);
+
+        // ---- toasts (top centre)
+        _toasts = new VBoxContainer();
+        _toasts.SetAnchorsPreset(Control.LayoutPreset.CenterTop);
+        _toasts.Position = new Vector2(-200, 16);
+        _toasts.CustomMinimumSize = new Vector2(400, 0);
+        AddChild(_toasts);
 
         // ---- health + equipped (bottom left)
         var bl = Panel(Control.LayoutPreset.BottomLeft, new Vector2(12, -96), 250);
@@ -232,10 +259,63 @@ public partial class Hud : CanvasLayer
         _asking.Text = asking.Count > 0 ? "She's asking about: " + string.Join(", ", asking.Select(a => w.Data.Supplies[a].Label.ToLowerInvariant())) : "";
         _asking.Visible = asking.Count > 0;
 
+        // quests
+        var tracked = w.Quests.Tracked != null ? w.Quests.Quests.GetValueOrDefault(w.Quests.Tracked) : null;
+        var qdef = tracked != null ? w.Data.Quests.GetValueOrDefault(tracked.Id) : null;
+        if (qdef != null && tracked!.Step < qdef.Steps.Count)
+        {
+            var step = qdef.Steps[tracked.Step];
+            string dist = "";
+            if (step.Marker != null && ZTown.Core.Story.QuestLog.Marker(w, step.Marker) is { } mk)
+            {
+                float d = p.Tile.DistanceTo(mk);
+                if (d > 4) dist = $"  ·  {d:0} m {Compass(mk.X + 0.5f - p.X, mk.Y + 0.5f - p.Y)}";
+            }
+            _questTitle.Text = qdef.Title.ToUpperInvariant() + $"   ({w.Quests.Active.Count()} active)";
+            _questStep.Text = step.Text + dist;
+        }
+        else
+        {
+            _questTitle.Text = "QUESTS";
+            _questStep.Text = "Nothing right now. Look after memere.";
+        }
+        // phone
+        int unread = w.Phone.Unread;
+        _phoneBadge.Text = unread > 0 ? $"📱 {unread} new  (P)" : "";
+        // notifications
+        for (; _notesSeen < w.Notifications.Count; _notesSeen++) Toast(w.Notifications[_notesSeen]);
+
         _health.Value = p.Health.Value;
         var eq = EquippedItem?.Invoke();
         _equipIcon.Texture = eq != null ? Art?.Items.GetValueOrDefault(eq) : null;
         _equipName.Text = eq != null ? w.Data.Item(eq)?.Name ?? eq : "Bare hands";
+    }
+
+    public void Toast(string text)
+    {
+        var box = new PanelContainer();
+        box.AddThemeStyleboxOverride("panel", PanelStyle(0.85f));
+        var l = new Label { Text = text, HorizontalAlignment = HorizontalAlignment.Center };
+        l.AddThemeFontSizeOverride("font_size", 17);
+        box.AddChild(l);
+        _toasts.AddChild(box);
+        var tw = box.CreateTween();
+        tw.TweenInterval(3.5);
+        tw.TweenProperty(box, "modulate:a", 0f, 0.8);
+        tw.TweenCallback(Callable.From(box.QueueFree));
+    }
+
+    public void ResetNotifications(int count) => _notesSeen = count;
+
+    /// <summary>Direction on screen terms (the map is turned to the street grid, so: up/down/left/right on screen).</summary>
+    static string Compass(float dx, float dy)
+    {
+        // tile space -> screen direction
+        float sx = dx - dy, sy = (dx + dy) * 0.5f;
+        float a = Mathf.RadToDeg(Mathf.Atan2(sy, sx));
+        string[] names = { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
+        int i = Mathf.PosMod(Mathf.RoundToInt(a / 45f), 8);
+        return names[i];
     }
 
     static string Capital(string s) => s.Length == 0 ? s : char.ToUpperInvariant(s[0]) + s[1..];

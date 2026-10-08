@@ -7,6 +7,7 @@ using ZTown.Core.Entities;
 using ZTown.Core.Items;
 using ZTown.Core.Map;
 using ZTown.Core.Memere;
+using ZTown.Core.Story;
 
 namespace ZTown.Core.Save;
 
@@ -88,6 +89,15 @@ public static class SaveSystem
             },
             Tv = new TvSave { On = w.Tv.On, Channel = w.Tv.Channel, RerunsBox = w.Tv.HasRerunsBox },
             Containers = w.Containers.Values.ToDictionary(c => c.Id, c => new ContainerSave { Filled = c.Filled, Items = c.Inventory.Stacks.Select(Copy).ToList() }),
+            StoryEvents = new List<string>(w.StoryEvents),
+            Quests = w.Quests.Quests.Values.Select(q => new QuestProgress { Id = q.Id, Status = q.Status, Step = q.Step, EventMark = q.EventMark }).ToList(),
+            TrackedQuest = w.Quests.Tracked,
+            Phone = new PhoneSave
+            {
+                Battery = w.Phone.Battery, LastHeartHour = w.Phone.LastHeartHour, Delivered = w.Phone.Delivered.ToList(),
+                Inbox = w.Phone.Inbox.Select(m => new PhoneMessage { From = m.From, Line = m.Line, Day = m.Day, Hour = m.Hour, Minute = m.Minute, Read = m.Read }).ToList(),
+            },
+            Dad = w.Dad is { } dad ? new DadSave { X = dad.X, Y = dad.Y, Z = dad.Z, Facing = dad.Facing, Health = dad.Health.Value, State = dad.State.ToString(), Withdrawal = dad.Withdrawal } : null,
             EdgeDamage = w.EdgeDamage.Select(kv => new EdgeDamageSave { X = kv.Key.tile.X, Y = kv.Key.tile.Y, Z = kv.Key.tile.Z, Side = kv.Key.side.ToString(), Damage = kv.Value }).ToList(),
         };
         // door/window states (walls never change, so only openings are saved)
@@ -97,6 +107,8 @@ public static class SaveSystem
                 var t = w.Map.At(p);
                 if (t.North is not (Edge.None or Edge.Wall)) s.Openings.Add(new OpeningSave { X = p.X, Y = p.Y, Z = p.Z, Side = "N", State = t.North.ToString() });
                 if (t.West is not (Edge.None or Edge.Wall)) s.Openings.Add(new OpeningSave { X = p.X, Y = p.Y, Z = p.Z, Side = "W", State = t.West.ToString() });
+                if (t.BarN > 0) s.Barricades.Add(new BarricadeSave { X = p.X, Y = p.Y, Z = p.Z, Side = "N", Planks = t.BarN });
+                if (t.BarW > 0) s.Barricades.Add(new BarricadeSave { X = p.X, Y = p.Y, Z = p.Z, Side = "W", Planks = t.BarW });
             }
         return s;
     }
@@ -177,6 +189,34 @@ public static class SaveSystem
             if (o.Side == "N") w.Map.At(pos).North = e;
             else w.Map.At(pos).West = e;
         }
+        foreach (var bsv in s.Barricades)
+        {
+            var pos = new TilePos(bsv.X, bsv.Y, bsv.Z);
+            if (!w.Map.InBounds(pos)) continue;
+            if (bsv.Side == "N") w.Map.At(pos).BarN = (byte)bsv.Planks;
+            else w.Map.At(pos).BarW = (byte)bsv.Planks;
+        }
+        w.StoryEvents.Clear();
+        w.StoryEvents.AddRange(s.StoryEvents);
+        w.Quests.Quests.Clear();
+        foreach (var q in s.Quests) w.Quests.Quests[q.Id] = q;
+        w.Quests.Tracked = s.TrackedQuest;
+        if (s.Phone != null)
+        {
+            w.Phone.Battery = s.Phone.Battery;
+            w.Phone.LastHeartHour = s.Phone.LastHeartHour;
+            w.Phone.Delivered.Clear();
+            foreach (var d in s.Phone.Delivered) w.Phone.Delivered.Add(d);
+            w.Phone.Inbox.Clear();
+            w.Phone.Inbox.AddRange(s.Phone.Inbox);
+        }
+        if (s.Dad != null && w.Dad is { } dad)
+        {
+            dad.X = s.Dad.X; dad.Y = s.Dad.Y; dad.Z = s.Dad.Z; dad.Facing = s.Dad.Facing;
+            dad.Health.Restore(s.Dad.Health);
+            dad.Withdrawal = s.Dad.Withdrawal;
+            if (Enum.TryParse<DadState>(s.Dad.State, out var st)) dad.State = st;
+        }
         w.EdgeDamage.Clear();
         foreach (var d in s.EdgeDamage) w.EdgeDamage[(new TilePos(d.X, d.Y, d.Z), d.Side.Length > 0 ? d.Side[0] : 'N')] = d.Damage;
         w.Rng.Restore(s.Rng); // last: respawning zombies above rolls the RNG
@@ -218,6 +258,40 @@ public sealed class SaveData
     public Dictionary<string, ContainerSave> Containers { get; set; } = new();
     public List<OpeningSave> Openings { get; set; } = new();
     public List<EdgeDamageSave> EdgeDamage { get; set; } = new();
+    public List<BarricadeSave> Barricades { get; set; } = new();
+    public List<string> StoryEvents { get; set; } = new();
+    public List<Story.QuestProgress> Quests { get; set; } = new();
+    public string? TrackedQuest { get; set; }
+    public PhoneSave? Phone { get; set; }
+    public DadSave? Dad { get; set; }
+}
+
+public sealed class BarricadeSave
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Z { get; set; }
+    public string Side { get; set; } = "N";
+    public int Planks { get; set; }
+}
+
+public sealed class PhoneSave
+{
+    public float Battery { get; set; }
+    public double LastHeartHour { get; set; }
+    public List<int> Delivered { get; set; } = new();
+    public List<Story.PhoneMessage> Inbox { get; set; } = new();
+}
+
+public sealed class DadSave
+{
+    public float X { get; set; }
+    public float Y { get; set; }
+    public int Z { get; set; }
+    public float Facing { get; set; }
+    public float Health { get; set; } = 100;
+    public string State { get; set; } = "OutOfIt";
+    public float Withdrawal { get; set; }
 }
 
 public sealed class PlayerSave

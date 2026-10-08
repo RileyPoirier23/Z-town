@@ -1,0 +1,43 @@
+# Phone: news alerts, social posts, carrier messages. Parody outlets only.
+lines:
+  - id: phone.news.d0_1
+    speaker: news_alert
+    text: "BREAKING: Moncton police respond to reports of violent assaults downtown. Avoid Main St."
+    context: "Day 1 morning news push notification."
+    status: draft
+
+  - id: phone.news.d0_2
+    speaker: news_alert
+    text: "Hospitals in Moncton and Riverview are asking people to stay away from emergency rooms unless it's urgent."
+    context: "Day 1 afternoon."
+    status: draft
+
+  - id: phone.social.d0_1
+    speaker: social_post
+    text: "someone just bit a guy in the parking lot at the mall?? im not even joking"
+    context: "Day 1 evening, a post from a local on a parody social app."
+    status: draft
+
+  - id: phone.news.d1_1
+    speaker: news_alert
+    text: "Province declares state of emergency. Stay home. Schools closed. More information to follow."
+    context: "Day 2 morning."
+    status: draft
+
+  - id: phone.alert.d2
+    speaker: emergency_alert
+    text: "EMERGENCY ALERT: Residents of southeastern New Brunswick must remain indoors. Do not approach anyone showing signs of illness."
+    context: "Day 3, the loud emergency alert."
+    status: draft
+
+  - id: phone.alert.d4
+    speaker: emergency_alert
+    text: "EMERGENCY ALERT: Evacuation routes are closed. Shelter in place."
+    context: "Day 5."
+    status: draft
+
+  - id: phone.carrier.d5
+    speaker: carrier
+    text: "Your carrier: service in your area is interrupted. We apologize for the inconvenience."
+    context: "Day 6 evening, last thing before service dies."
+    status: draft

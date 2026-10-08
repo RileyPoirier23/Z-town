@@ -198,6 +198,7 @@ public sealed partial class GameWorld
         double hours = gameSeconds / 3600.0;
 
         TickZombies(realSeconds);
+        TickDad(realSeconds);
 
         _hourAccumulator += hours;
         // slow systems run in ~1 game-minute steps
@@ -227,6 +228,7 @@ public sealed partial class GameWorld
 
         TickPlayer(hours);
         TickMemere(hours);
+        TickStory(hours);
     }
 
     void Age(ItemStack s, double hours, bool cold)
@@ -490,25 +492,8 @@ public sealed partial class GameWorld
         }
     }
 
-    List<TilePos>? FindPathThroughBreakables(TilePos from, TilePos to)
-    {
-        // temporarily treat closed doors/windows as open by pathing on a predicate copy
-        var map = Map;
-        var opened = new List<(TilePos a, TilePos b, Edge e)>();
-        // cheap approach: search a box around the route for breakable edges and open them for the search
-        int minX = Math.Max(0, Math.Min(from.X, to.X) - 10), maxX = Math.Min(map.Width - 1, Math.Max(from.X, to.X) + 10);
-        int minY = Math.Max(0, Math.Min(from.Y, to.Y) - 10), maxY = Math.Min(map.Height - 1, Math.Max(from.Y, to.Y) + 10);
-        for (int y = minY; y <= maxY; y++)
-            for (int x = minX; x <= maxX; x++)
-            {
-                ref var t = ref map.At(x, y, from.Z);
-                if (t.North.IsBreakable() && y > 0) { opened.Add((new(x, y, from.Z), new(x, y - 1, from.Z), t.North)); t.North = Edge.DoorOpen; }
-                if (t.West.IsBreakable() && x > 0) { opened.Add((new(x, y, from.Z), new(x - 1, y, from.Z), t.West)); t.West = Edge.DoorOpen; }
-            }
-        var path = Pathfinder.Find(map, from, to, ZombieMayEnter, 2500);
-        foreach (var (a, b, e) in opened) map.SetEdgeBetween(a, b, e);
-        return path;
-    }
+    List<TilePos>? FindPathThroughBreakables(TilePos from, TilePos to) =>
+        Pathfinder.Find(Map, from, to, ZombieMayEnter, 2500, throughBreakables: true);
 
     void FollowPath(Zombie z, float dt)
     {
@@ -522,8 +507,8 @@ public sealed partial class GameWorld
             return;
         }
 
-        // next step through a closed door/window? bang on it
-        if (Math.Abs(next.X - cur.X) + Math.Abs(next.Y - cur.Y) == 1 && Map.EdgeBetween(cur, next).IsBreakable())
+        // next step through a closed door/window or a barricade? bang on it
+        if (Math.Abs(next.X - cur.X) + Math.Abs(next.Y - cur.Y) == 1 && !Map.Passable(cur, next) && Map.Breakable(cur, next))
         {
             b.Mode = ZombieMode.Thump;
             b.ThumpEdge = (cur, next);
@@ -550,7 +535,8 @@ public sealed partial class GameWorld
     {
         var b = z.Brain;
         var edge = Map.EdgeBetween(from, to);
-        if (!edge.IsBreakable())
+        int planks = Map.BarricadeBetween(from, to);
+        if (!Map.Breakable(from, to) || Map.Passable(from, to))
         {
             b.Mode = ZombieMode.Chase;
             b.ThumpEdge = null;
@@ -562,10 +548,10 @@ public sealed partial class GameWorld
         Noise.Emit(from, Data.Zombies.ThumpNoiseRadius, "thump");
         if (dmg >= 100)
         {
-            Map.SetEdgeBetween(from, to, edge == Edge.DoorClosed ? Edge.DoorBroken : Edge.WindowBroken);
             EdgeDamage.Remove(key);
-            b.Mode = ZombieMode.Chase;
-            b.ThumpEdge = null;
+            if (planks > 0) Map.SetBarricadeBetween(from, to, planks - 1); // planks go one at a time
+            else if (edge.IsBreakable()) Map.SetEdgeBetween(from, to, edge == Edge.DoorClosed ? Edge.DoorBroken : Edge.WindowBroken);
+            if (Map.Passable(from, to)) { b.Mode = ZombieMode.Chase; b.ThumpEdge = null; }
         }
     }
 
@@ -578,7 +564,9 @@ public sealed partial class GameWorld
         return (b, 'W');
     }
 
-    /// <summary>Bresenham line; walls and closed doors block sight.</summary>
+    bool Blocks(TilePos a, TilePos b) => Map.EdgeBetween(a, b).BlocksSight() || Map.BarricadeBetween(a, b) >= 2;
+
+    /// <summary>Bresenham line; walls, closed doors and heavy barricades block sight.</summary>
     public bool LineOfSight(TilePos a, TilePos b)
     {
         if (a.Z != b.Z) return false;
@@ -591,8 +579,8 @@ public sealed partial class GameWorld
             if (e2 >= dy) { err += dy; nx += sx; }
             if (e2 <= dx) { err += dx; ny += sy; }
             var cur = new TilePos(x, y, a.Z);
-            if (nx != x && Map.EdgeBetween(cur, new TilePos(nx, y, a.Z)).BlocksSight()) return false;
-            if (ny != y && Map.EdgeBetween(new TilePos(nx, y, a.Z), new TilePos(nx, ny, a.Z)).BlocksSight()) return false;
+            if (nx != x && Blocks(cur, new TilePos(nx, y, a.Z))) return false;
+            if (ny != y && Blocks(new TilePos(nx, y, a.Z), new TilePos(nx, ny, a.Z))) return false;
             x = nx;
             y = ny;
         }

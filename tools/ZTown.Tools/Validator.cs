@@ -66,6 +66,26 @@ public static class Validator
             foreach (var (slot, worn) in o.Slots)
                 if (cl.Garment(worn.Id)?.Slot != slot) p.Add($"outfit preset {name}: '{worn.Id}' isn't a {slot} garment");
 
+        var goalTypes = new HashSet<string> { "near_memere", "near", "open", "have_item", "give_memere", "generator_fuel", "generator_connected",
+            "generator_running", "dad_state", "dad_home", "at_home", "event" };
+        foreach (var q in data.Quests.Values)
+        {
+            if (q.Steps.Count == 0) p.Add($"quest {q.Id}: no steps");
+            foreach (var c in q.StartWhen.Where(c => c.StartsWith("after:")))
+                if (!data.Quests.ContainsKey(c[6..])) p.Add($"quest {q.Id}: starts after unknown quest '{c[6..]}'");
+            foreach (var st in q.Steps)
+            {
+                if (!goalTypes.Contains(st.Goal.Type)) p.Add($"quest {q.Id}: unknown goal type '{st.Goal.Type}'");
+                foreach (var it in st.Goal.Items) if (!data.Items.ContainsKey(it)) p.Add($"quest {q.Id}: unknown item '{it}'");
+                if (st.Goal.Supply != null && !data.Supplies.ContainsKey(st.Goal.Supply)) p.Add($"quest {q.Id}: unknown supply '{st.Goal.Supply}'");
+            }
+            foreach (var line in new[] { q.OnStartLine, q.OnDoneLine })
+                if (line != null && !dlg.Lines.ContainsKey(line)) p.Add($"quest {q.Id}: line '{line}' not in dialogue");
+        }
+        foreach (var t in data.Phone.Scripted)
+            if (!dlg.Lines.ContainsKey(t.Line)) p.Add($"phone: line '{t.Line}' not in dialogue");
+        if (!dlg.Lines.ContainsKey(data.Phone.HeartLine)) p.Add($"phone: heart line '{data.Phone.HeartLine}' not in dialogue");
+
         p.AddRange(MemereProtectionDataProblems(gameDir, data));
         return p;
     }

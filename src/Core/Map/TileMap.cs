@@ -42,6 +42,8 @@ public struct Tile
     public string? WallStyle;
     /// <summary>1-based index of the building this tile belongs to (0 = outdoors).</summary>
     public int Building;
+    /// <summary>Planks nailed across the north / west edge (0-4).</summary>
+    public byte BarN, BarW;
 }
 
 /// <summary>The tile grid: Width x Height on each floor from MinZ to MaxZ.</summary>
@@ -93,6 +95,32 @@ public sealed class TileMap
         else if (dx == 1 && dy == 0) At(b).West = e;
         else throw new ArgumentException("not orthogonal neighbours");
     }
+
+    public int BarricadeBetween(TilePos a, TilePos b)
+    {
+        int dx = b.X - a.X, dy = b.Y - a.Y;
+        if (dx == 0 && dy == -1) return At(a).BarN;
+        if (dx == 0 && dy == 1) return At(b).BarN;
+        if (dx == -1 && dy == 0) return At(a).BarW;
+        if (dx == 1 && dy == 0) return At(b).BarW;
+        return 0;
+    }
+
+    public void SetBarricadeBetween(TilePos a, TilePos b, int planks)
+    {
+        byte v = (byte)Math.Clamp(planks, 0, 4);
+        int dx = b.X - a.X, dy = b.Y - a.Y;
+        if (dx == 0 && dy == -1) At(a).BarN = v;
+        else if (dx == 0 && dy == 1) At(b).BarN = v;
+        else if (dx == -1 && dy == 0) At(a).BarW = v;
+        else if (dx == 1 && dy == 0) At(b).BarW = v;
+    }
+
+    /// <summary>Can you walk across the edge between two orthogonal neighbours right now?</summary>
+    public bool Passable(TilePos a, TilePos b) => EdgeBetween(a, b).IsPassable() && BarricadeBetween(a, b) == 0;
+
+    /// <summary>Something a zombie can bang through: a closed door/window or a barricade.</summary>
+    public bool Breakable(TilePos a, TilePos b) => EdgeBetween(a, b).IsBreakable() || BarricadeBetween(a, b) > 0;
 
     public IEnumerable<TilePos> AllTiles(int z = 0)
     {

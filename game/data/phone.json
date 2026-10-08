@@ -1,0 +1,17 @@
+{
+  "serviceEndsDay": 6,
+  "drainPerHour": 0.02,
+  "chargePerHour": 0.4,
+  "heartAfterHoursAway": 3,
+  "heartEveryHours": 10,
+  "heartLine": "memere.heart_text",
+  "scripted": [
+    { "day": 0, "hour": 8.5, "from": "news", "line": "phone.news.d0_1" },
+    { "day": 0, "hour": 13, "from": "news", "line": "phone.news.d0_2" },
+    { "day": 0, "hour": 18, "from": "social", "line": "phone.social.d0_1" },
+    { "day": 1, "hour": 9, "from": "news", "line": "phone.news.d1_1" },
+    { "day": 2, "hour": 10, "from": "alert", "line": "phone.alert.d2" },
+    { "day": 4, "hour": 12, "from": "alert", "line": "phone.alert.d4" },
+    { "day": 5, "hour": 20, "from": "carrier", "line": "phone.carrier.d5" }
+  ]
+}

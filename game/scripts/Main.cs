@@ -7,6 +7,7 @@ using ZTown.Core.Data;
 using ZTown.Core.Dialogue;
 using ZTown.Core.Map;
 using ZTown.Core.Save;
+using ZTown.Core.Story;
 
 namespace ZTown.Game;
 
@@ -27,6 +28,8 @@ public partial class Main : Node2D
     Camera2D _camera = null!;
     Hud _hud = null!;
     InventoryPanel _inventory = null!;
+    WorldMap _map = null!;
+    PhonePanel _phone = null!;
     float _speed = 1f;
     bool _wasHome = true;
     int _messagesSeen;
@@ -53,6 +56,10 @@ public partial class Main : Node2D
         AddChild(_hud);
         _inventory = new InventoryPanel { Toast = t => _hud.Say("", t), Art = _view.Art };
         AddChild(_inventory);
+        _map = new WorldMap();
+        AddChild(_map);
+        _phone = new PhonePanel { Dialogue = _dialogue };
+        AddChild(_phone);
 
         var args = OS.GetCmdlineUserArgs();
         if (args.Contains("--quickstart") || args.Contains("--demo") || args.Contains("--demo-inside")) NewGame(42, "Riley", null);
@@ -63,11 +70,17 @@ public partial class Main : Node2D
 
         // dev: `godot -- --screenshot=out.png` saves a frame and quits (used to preview builds)
         foreach (var arg in OS.GetCmdlineUserArgs())
+        {
             if (arg.StartsWith("--screenshot=")) _screenshotPath = arg["--screenshot=".Length..];
+            if (arg.StartsWith("--frames=")) _shotFrame = int.Parse(arg["--frames=".Length..]);
+            if (arg == "--open-map") _openMapAt = 5;
+            if (arg == "--open-phone") _openPhone = true;
+        }
     }
 
     string? _screenshotPath;
-    int _frames;
+    int _frames, _shotFrame = 90, _openMapAt = -1;
+    bool _openPhone;
 
     WorldConfig _worldCfg = new();
     MapFile? _mapFile;
@@ -200,6 +213,11 @@ public partial class Main : Node2D
         _hud.World = w;
         _inventory.World = w;
         _inventory.Close();
+        _map.World = w;
+        _map.Close();
+        _phone.World = w;
+        _phone.Close();
+        _hud.ResetNotifications(w.Notifications.Count);
         _messagesSeen = w.Messages.Count;
         _camera.Position = Iso.ToScreen(w.Player.X, w.Player.Y, w.Player.Z) + new Vector2(0, -80);
         _camera.ResetSmoothing();
@@ -263,6 +281,12 @@ public partial class Main : Node2D
         Key("quicksave", Godot.Key.F5);
         Key("quickload", Godot.Key.F9);
         Key("faster", Godot.Key.Equal, Godot.Key.KpAdd);
+        Key("map", Godot.Key.M);
+        Key("phone", Godot.Key.P);
+        Key("quest_next", Godot.Key.J);
+        Key("barricade", Godot.Key.B);
+        Key("unbarricade", Godot.Key.X);
+        Key("close", Godot.Key.Escape);
         Key("slower", Godot.Key.Minus, Godot.Key.KpSubtract);
     }
 
@@ -280,6 +304,26 @@ public partial class Main : Node2D
             if (_inventory.IsOpen) _inventory.Close();
             else _inventory.Show(null);
         }
+        if (e.IsActionPressed("map")) { _map.Toggle(); _phone.Close(); }
+        if (e.IsActionPressed("phone")) { _phone.Toggle(); _map.Close(); }
+        if (e.IsActionPressed("close")) { _map.Close(); _phone.Close(); _inventory.Close(); }
+        if (e.IsActionPressed("quest_next"))
+        {
+            var act = _world.Quests.Active.Select(q => q.Id).ToList();
+            if (act.Count > 0)
+            {
+                int i = act.IndexOf(_world.Quests.Tracked ?? "");
+                _world.Quests.Tracked = act[(i + 1) % act.Count];
+            }
+        }
+        if (e.IsActionPressed("barricade") && FacingEdge(includeBroken: true) is { } be)
+        {
+            if (!_world.Barricade(be.a, be.b))
+                _hud.Say("", _world.Map.BarricadeBetween(be.a, be.b) >= 4 ? "Can't fit more planks." : "Need a hammer, a plank and nails (and the door shut).");
+        }
+        if (e.IsActionPressed("unbarricade") && FacingEdge(includeBroken: true) is { } ue && !_world.RemoveBarricade(ue.a, ue.b))
+            _hud.Say("", "Need a hammer or crowbar to pry planks off.");
+        if (_map.IsOpen) return;
         if (e.IsActionPressed("use")) Use();
         if (e.IsActionPressed("channel") && NearTv()) _world.NextChannel();
         if (e.IsActionPressed("sleep"))
@@ -307,7 +351,7 @@ public partial class Main : Node2D
         var w = _world;
         var p = w.Player;
 
-        if (!_inventory.IsOpen && !p.Asleep)
+        if (!_inventory.IsOpen && !_map.IsOpen && !p.Asleep)
         {
             // screen directions → tile directions (screen up = tile -x -y)
             var input = Input.GetVector("move_left", "move_right", "move_up", "move_down");
@@ -338,7 +382,10 @@ public partial class Main : Node2D
             var m = w.Messages[_messagesSeen];
             var line = _dialogue.Lines.GetValueOrDefault(m.DialogueId);
             var text = _dialogue.Text(m.DialogueId);
-            if (line?.Speaker == "memere") _view.Speak(w.Memere.Id, text, 6);
+            if (m.Channel == "phone")
+                _hud.Toast($"📱 {(line?.Speaker == "memere" ? "Memere" : "Phone")}: {text}");
+            else if (line?.Speaker == "memere") _view.Speak(w.Memere.Id, text, 6);
+            else if (line?.Speaker == "dad" && w.Dad != null) _view.Speak(w.Dad.Id, text, 6);
             else _hud.Say(line?.Speaker ?? "", text);
         }
 
@@ -347,19 +394,27 @@ public partial class Main : Node2D
         if (home && !_wasHome) Save();
         _wasHome = home;
 
-        if (w.PlayerDied)
+        if (w.PlayerDied || w.DadDied)
         {
+            bool dad = w.DadDied && !w.PlayerDied;
             if (!LoadLastSave()) NewGame((ulong)DateTime.UtcNow.Ticks, _world.Player.Name, _world.Player.Outfit);
-            _hud.Say("", "You died. Back to your last save.");
+            _hud.Say("", dad ? "Dad didn't make it. Back to your last save." : "You died. Back to your last save.");
             return;
         }
+
+        // the tracked quest's marker
+        var tq = w.Quests.Tracked != null ? w.Quests.Quests.GetValueOrDefault(w.Quests.Tracked) : null;
+        var td = tq != null ? _data.Quests.GetValueOrDefault(tq.Id) : null;
+        _view.QuestMarker = td != null && tq!.Step < td.Steps.Count && td.Steps[tq.Step].Marker is { } mk ? QuestLog.Marker(w, mk) : null;
 
         _camera.Position = Iso.ToScreen(p.X, p.Y, p.Z) + new Vector2(0, -80);
         var mouseTile = Iso.ToTile(GetGlobalMousePosition());
         _view.HoverTile = new Vector2I(Mathf.FloorToInt(mouseTile.X), Mathf.FloorToInt(mouseTile.Y));
         _hud.SetPrompt(Prompt());
 
-        if (_screenshotPath != null && ++_frames == 90)
+        if (_frames == _openMapAt) _map.Toggle();
+        if (_openPhone && _frames == _shotFrame - 3) _phone.Toggle();
+        if (_screenshotPath != null && ++_frames == _shotFrame)
         {
             GetViewport().GetTexture().GetImage().SavePng(_screenshotPath);
             GetTree().Quit();
@@ -375,7 +430,7 @@ public partial class Main : Node2D
             .OrderBy(c => new Vector2(c.Pos.X + 0.5f - _world.Player.X, c.Pos.Y + 0.5f - _world.Player.Y).Length()).FirstOrDefault();
 
     /// <summary>The door/window edge on the player's tile in the direction they're facing.</summary>
-    (TilePos a, TilePos b)? FacingEdge()
+    (TilePos a, TilePos b)? FacingEdge(bool includeBroken = false)
     {
         var p = _world.Player;
         var t = p.Tile;
@@ -388,6 +443,7 @@ public partial class Main : Node2D
             if (!_world.Map.InBounds(n)) continue;
             var e = _world.Map.EdgeBetween(t, n);
             if (e is Edge.DoorClosed or Edge.DoorOpen or Edge.WindowClosed or Edge.WindowOpen) return (t, n);
+            if (includeBroken && e is Edge.DoorBroken or Edge.WindowBroken) return (t, n);
         }
         return null;
     }
@@ -395,17 +451,34 @@ public partial class Main : Node2D
     string Prompt()
     {
         if (_world.Player.Asleep) return "Sleeping…";
+        if (_world.PlayerNearDad && _world.Dad is { } dad)
+            return dad.State switch
+            {
+                ZTown.Core.Entities.DadState.OutOfIt => "E: wake Dad up",
+                ZTown.Core.Entities.DadState.Following => "E: tell Dad to wait here",
+                ZTown.Core.Entities.DadState.Home => "E: talk to Dad",
+                _ => "E: tell Dad to come with you",
+            };
         if (_world.PlayerNearMemere) return "E: give memere something";
         if (_world.PlayerNearGenerator && _world.Power.Generator.Present) return "E: generator (on/off, connect)";
         if (NearTv()) return "E: TV on/off   C: change channel";
         if (NearestContainer() is { } c) return $"E: search {c.Kind}";
-        if (FacingEdge() is { } edge) return $"E: {(_world.Map.EdgeBetween(edge.a, edge.b).ToString().Contains("Closed") ? "open" : "close")} {(_world.Map.EdgeBetween(edge.a, edge.b).ToString().StartsWith("Door") ? "door" : "window")}";
+        if (FacingEdge(includeBroken: true) is { } edge)
+        {
+            var ed = _world.Map.EdgeBetween(edge.a, edge.b);
+            int planks = _world.Map.BarricadeBetween(edge.a, edge.b);
+            string what = ed.ToString().StartsWith("Door") ? "door" : "window";
+            if (planks > 0) return $"Boarded ({planks}/4)   B: add plank   X: pry one off";
+            if (ed is Edge.DoorBroken or Edge.WindowBroken) return $"Broken {what}   B: board it up";
+            return $"E: {(ed.ToString().Contains("Closed") ? "open" : "close")} {what}   B: board up";
+        }
         return "";
     }
 
     void Use()
     {
         var w = _world;
+        if (w.PlayerNearDad) { w.InteractDad(); return; }
         if (w.PlayerNearMemere) { _inventory.Show(null); _hud.Say("", "Pick something and press \"Give to memere\"."); return; }
         if (w.PlayerNearGenerator && w.Power.Generator.Present)
         {

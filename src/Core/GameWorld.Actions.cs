@@ -21,6 +21,7 @@ public sealed partial class GameWorld
     {
         if (!Containers.TryGetValue(id, out var c) || !PlayerCanReach(c.Pos)) return null;
         Loot.FillOnce(c, Data.Loot, Defs, Rng);
+        Story($"open:{c.Kind}:{(IsHome(c.Pos) ? "home" : "away")}");
         return c;
     }
 
@@ -42,6 +43,7 @@ public sealed partial class GameWorld
             float units = def.MemereSupplyAmount * (def.Uses > 1 ? (float)s.UsesLeft / def.Uses : 1);
             Memere.Supplies.Add(def.MemereSupply, units);
             TakeOne(s);
+            Story($"give:{def.MemereSupply}");
             Messages.Add(new GameMessage("memere", $"memere.gift.{def.MemereSupply}"));
             return true;
         }
@@ -49,6 +51,7 @@ public sealed partial class GameWorld
         {
             FoodLiked = 1f;
             TakeOne(s);
+            Story("give:food");
             Messages.Add(new GameMessage("memere", $"memere.gift.food.{def.Id}"));
             return true;
         }
@@ -95,8 +98,7 @@ public sealed partial class GameWorld
             Edge.WindowOpen => Edge.WindowClosed,
             _ => e,
         };
-        if (next == e) return false;
-        // can't shut a door on someone standing in it
+        if (next == e || Map.BarricadeBetween(a, b) > 0) return false; // boarded up: take planks off first
         Map.SetEdgeBetween(a, b, next);
         return true;
     }
