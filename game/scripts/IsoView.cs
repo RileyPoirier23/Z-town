@@ -74,7 +74,7 @@ public partial class IsoView : Node2D
             for (int x = Mathf.Max(0, pt.X - ViewRadius); x <= Mathf.Min(map.Width - 1, pt.X + ViewRadius); x++)
             {
                 var t = new TilePos(x, y, pt.Z);
-                if (pt.DistanceTo(t) > ViewRadius) continue;
+                if (pt.DistanceTo(t) > (w.Weather.Foggy ? ViewRadius * 0.45f : ViewRadius)) continue;
                 // a tile counts as seen if you can see it, or the face of a wall on it
                 bool vis = w.LineOfSight(pt, t);
                 if (!vis)
@@ -96,6 +96,7 @@ public partial class IsoView : Node2D
         var w = World!;
         double h = w.Clock.HourOfDay;
         float day = h < 5 || h >= 21 ? 0f : h < 7 ? (float)(h - 5) / 2f : h >= 19 ? 1 - (float)(h - 19) / 2f : 1f;
+        day *= 1 - w.Weather.Overcast;
         var sun = new Color(1.0f, 0.98f, 0.94f);
         var moon = new Color(0.16f, 0.19f, 0.30f);
         var c = moon.Lerp(sun, day);
@@ -152,6 +153,8 @@ public partial class IsoView : Node2D
         }
         var pts = new Vector2[4];
         var cols = new Color[4];
+        var snowCols = new Color[4];
+        float snow = w.Weather.SnowCover;
         for (int y = y0; y <= y1; y++)
             for (int x = x0; x <= x1; x++)
             {
@@ -165,6 +168,12 @@ public partial class IsoView : Node2D
                 pts[0] = Screen(x, y); pts[1] = Screen(x + 1, y); pts[2] = Screen(x + 1, y + 1); pts[3] = Screen(x, y + 1);
                 cols[0] = Corner(x, y); cols[1] = Corner(x + 1, y); cols[2] = Corner(x + 1, y + 1); cols[3] = Corner(x, y + 1);
                 DrawPolygon(pts, cols, FloorUv, tex);
+                if (snow > 0 && t.Building == 0 && floor is not ("water" or "void"))
+                {
+                    var sc = new Color(0.92f, 0.94f, 0.97f, snow * (floor is "asphalt" or "road_line" or "road_line_y" ? 0.55f : 0.85f));
+                    for (int k = 0; k < 4; k++) { var lc = cols[k]; snowCols[k] = new Color(sc.R * lc.R * 1.1f, sc.G * lc.G * 1.1f, sc.B * lc.B * 1.1f, sc.A); }
+                    DrawPolygon(pts, snowCols);
+                }
             }
         if (HoverTile is { } hv && map.InBounds(new TilePos(hv.X, hv.Y)))
             DrawPolyline(new[] { Screen(hv.X, hv.Y), Screen(hv.X + 1, hv.Y), Screen(hv.X + 1, hv.Y + 1), Screen(hv.X, hv.Y + 1), Screen(hv.X, hv.Y) }, new Color(1, 1, 1, 0.35f), 2);
@@ -283,6 +292,8 @@ public partial class IsoView : Node2D
         // roofs are outside: never darkened by "can't see", only by time of day
         var c = new Color(light.R, light.G, light.B) * lit;
         if (!Visible(x, y)) c = c * 1.6f;
+        var snowy = World!.Weather.SnowCover;
+        if (snowy > 0) c = c.Lerp(new Color(0.95f, 0.96f, 0.98f) * Mathf.Clamp(light.R + 0.15f, 0, 1.1f), snowy * 0.8f);
         c.A = 1;
         var uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
         DrawPolygon(pts, new[] { c, c, c, c }, uv, tex);

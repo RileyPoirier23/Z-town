@@ -94,6 +94,7 @@ public sealed class GameData
     public Dictionary<string, Story.QuestDef> Quests { get; } = new();
     public Story.PhoneConfig Phone { get; private set; } = new();
     public Vehicles.VehicleConfig Vehicles { get; private set; } = new();
+    public Weather.WeatherConfig Weather { get; private set; } = new();
 
     /// <summary>Problems found while loading (duplicate ids etc.). The validator fails on any.</summary>
     public List<string> Problems { get; } = new();
@@ -128,6 +129,7 @@ public sealed class GameData
                 AddUnique(d.Quests, q.Id, q, f, d);
         d.Phone = ReadOpt<Story.PhoneConfig>(src, $"{root}/phone.json", d) ?? new();
         d.Vehicles = ReadOpt<Vehicles.VehicleConfig>(src, $"{root}/vehicles.json", d) ?? new();
+        d.Weather = ReadOpt<Weather.WeatherConfig>(src, $"{root}/weather.json", d) ?? new();
         return d;
     }
 

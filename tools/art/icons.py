@@ -1,5 +1,7 @@
 """Moodle and item icons (64x64), painted with simple shapes. Moodle pictograms are white on
 transparent; the game puts them on a coloured badge by severity, like Zomboid's moodles."""
+import math
+
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -50,6 +52,15 @@ def moodle(kind):
         d.polygon([(32 * k, 8 * k), (46 * k, 32 * k), (18 * k, 32 * k)], fill=W)
         d.ellipse([18 * k, 22 * k, 46 * k, 52 * k], fill=W)
         d.line([(10 * k, 56 * k), (54 * k, 56 * k)], fill=W, width=3 * k)
+    elif kind == "wet":           # three drops
+        for (x, y) in ((22, 20), (40, 26), (28, 40)):
+            d.polygon([(x * k, (y - 10) * k), ((x + 6) * k, (y + 2) * k), ((x - 6) * k, (y + 2) * k)], fill=W)
+            d.ellipse([(x - 6) * k, (y - 3) * k, (x + 6) * k, (y + 9) * k], fill=W)
+    elif kind == "cold":          # snowflake
+        for a in range(0, 180, 60):
+            r = math.radians(a)
+            dx, dy = math.cos(r) * 22, math.sin(r) * 22
+            d.line([((32 - dx) * k, (32 - dy) * k), ((32 + dx) * k, (32 + dy) * k)], fill=W, width=4 * k)
     elif kind == "stressed":      # lightning
         d.polygon([(36 * k, 8 * k), (18 * k, 36 * k), (30 * k, 36 * k), (26 * k, 56 * k), (46 * k, 26 * k), (34 * k, 26 * k)], fill=W)
     elif kind == "injured":       # bandage cross
@@ -167,4 +178,4 @@ def item_icon(item_id):
     return _done(im)
 
 
-MOODLES = ["hungry", "thirsty", "tired", "bored", "unhappy", "stressed", "injured", "bleeding", "infected"]
+MOODLES = ["hungry", "thirsty", "tired", "bored", "unhappy", "stressed", "injured", "bleeding", "wet", "cold", "infected"]

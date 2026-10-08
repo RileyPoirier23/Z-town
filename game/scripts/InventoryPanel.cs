@@ -28,6 +28,7 @@ public partial class InventoryPanel : CanvasLayer
 
     public override void _Ready()
     {
+        Layer = 3;
         _root = new PanelContainer { Visible = false };
         _root.AddThemeStyleboxOverride("panel", Hud.PanelStyle(0.92f));
         _root.SetAnchorsPreset(Control.LayoutPreset.Center);

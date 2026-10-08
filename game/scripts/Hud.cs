@@ -50,6 +50,7 @@ public partial class Hud : CanvasLayer
 
     public override void _Ready()
     {
+        Layer = 2; // above weather effects
         // ---- clock (top right)
         var clock = Panel(Control.LayoutPreset.TopRight, new Vector2(-180, 12), 168);
         var cv = (VBoxContainer)clock.GetChild(0);
@@ -272,7 +273,8 @@ public partial class Hud : CanvasLayer
 
         var p = w.Player;
         _time.Text = $"{w.Clock.Hour:00}:{w.Clock.Minute:00}";
-        _date.Text = $"{w.Clock.DayOfWeek}, day {w.Clock.Day + 1}" + (w.Data.Sim.TimeScale > 0 ? "" : "");
+        var (month, _) = ZTown.Core.Weather.Climate.Date(w.Data.Weather, w.Clock);
+        _date.Text = $"{w.Clock.DayOfWeek}, day {w.Clock.Day + 1} · {ZTown.Core.Weather.Climate.Season(month)}\n{w.Weather.Label}, {w.Weather.OutsideC:0}°C";
         var g = w.Power.Generator;
         _power.Text = w.Power.GridOn(w.Clock.Day) ? "Power: grid"
             : w.HousePowered ? $"Power: generator ({g.Fuel:0.0} L)" : "Power: OUT";

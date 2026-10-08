@@ -69,6 +69,7 @@ public static class SaveSystem
                 {
                     Hunger = w.Player.Needs.Hunger, Thirst = w.Player.Needs.Thirst, Fatigue = w.Player.Needs.Fatigue,
                     Boredom = w.Player.Needs.Boredom, Unhappiness = w.Player.Needs.Unhappiness, Stress = w.Player.Needs.Stress,
+                    Wetness = w.Player.Needs.Wetness, Cold = w.Player.Needs.Cold,
                 },
                 Inventory = w.Player.Inventory.Stacks.Select(Copy).ToList(),
                 Outfit = w.Player.Outfit.Clone(),
@@ -104,6 +105,7 @@ public static class SaveSystem
                 Condition = v.Condition, HasKeys = v.HasKeys, Length = v.Length, Width = v.Width,
             }).ToList(),
             Driving = w.Driving?.Id,
+            Weather = new WeatherSave { Sky = w.Weather.Sky.ToString(), NextChangeHour = w.Weather.NextChangeHour, SnowCover = w.Weather.SnowCover },
             Dad = w.Dad is { } dad ? new DadSave { X = dad.X, Y = dad.Y, Z = dad.Z, Facing = dad.Facing, Health = dad.Health.Value, State = dad.State.ToString(), Withdrawal = dad.Withdrawal } : null,
             EdgeDamage = w.EdgeDamage.Select(kv => new EdgeDamageSave { X = kv.Key.tile.X, Y = kv.Key.tile.Y, Z = kv.Key.tile.Z, Side = kv.Key.side.ToString(), Damage = kv.Value }).ToList(),
         };
@@ -154,6 +156,13 @@ public static class SaveSystem
         var n = s.Player.Needs;
         p.Needs.Hunger = n.Hunger; p.Needs.Thirst = n.Thirst; p.Needs.Fatigue = n.Fatigue;
         p.Needs.Boredom = n.Boredom; p.Needs.Unhappiness = n.Unhappiness; p.Needs.Stress = n.Stress;
+        p.Needs.Wetness = n.Wetness; p.Needs.Cold = n.Cold;
+        if (s.Weather != null)
+        {
+            if (Enum.TryParse<ZTown.Core.Weather.Sky>(s.Weather.Sky, out var sky)) w.Weather.Sky = sky;
+            w.Weather.NextChangeHour = s.Weather.NextChangeHour;
+            w.Weather.SnowCover = s.Weather.SnowCover;
+        }
         p.Inventory.Stacks.Clear();
         p.Inventory.Stacks.AddRange(s.Player.Inventory.Select(Copy));
         if (s.Player.Outfit != null) p.Outfit = s.Player.Outfit.Clone();
@@ -291,6 +300,7 @@ public sealed class SaveData
     public DadSave? Dad { get; set; }
     public List<VehicleSave> Vehicles { get; set; } = new();
     public string? Driving { get; set; }
+    public WeatherSave? Weather { get; set; }
 }
 
 public sealed class VehicleSave
@@ -355,8 +365,17 @@ public sealed class PlayerSave
     public List<Wound> Wounds { get; set; } = new();
 }
 
+public sealed class WeatherSave
+{
+    public string Sky { get; set; } = "Clear";
+    public double NextChangeHour { get; set; }
+    public float SnowCover { get; set; }
+}
+
 public sealed class NeedsSave
 {
+    public float Wetness { get; set; }
+    public float Cold { get; set; }
     public float Hunger { get; set; }
     public float Thirst { get; set; }
     public float Fatigue { get; set; }

@@ -9,6 +9,10 @@ public sealed class NeedsState
     public float Boredom { get; set; }
     public float Unhappiness { get; set; }
     public float Stress { get; set; }
+    /// <summary>0..1 soaked.</summary>
+    public float Wetness { get; set; }
+    /// <summary>0..1 how cold you are (1 = hypothermia).</summary>
+    public float Cold { get; set; }
 
     public void ClampAll()
     {
@@ -18,6 +22,8 @@ public sealed class NeedsState
         Boredom = Math.Clamp(Boredom, 0, 1);
         Unhappiness = Math.Clamp(Unhappiness, 0, 1);
         Stress = Math.Clamp(Stress, 0, 1);
+        Wetness = Math.Clamp(Wetness, 0, 1);
+        Cold = Math.Clamp(Cold, 0, 1);
     }
 }
 
@@ -58,6 +64,8 @@ public enum MoodleKind
     Stressed,
     Injured,
     Bleeding,
+    Wet,
+    Cold,
     Infected,
 }
 
@@ -86,6 +94,8 @@ public static class Moodles
         Add(MoodleKind.Bored, n.Boredom);
         Add(MoodleKind.Unhappy, n.Unhappiness);
         Add(MoodleKind.Stressed, n.Stress);
+        Add(MoodleKind.Wet, n.Wetness);
+        Add(MoodleKind.Cold, n.Cold);
         Add(MoodleKind.Injured, 1 - health01);
         return list;
     }

@@ -25,7 +25,7 @@ public partial class AudioManager : Node2D
     readonly Dictionary<string, AudioStream> _music = new();
     readonly List<AudioStreamPlayer2D> _pool = new();
     AudioStreamPlayer2D _gen = null!, _tv = null!, _engine = null!;
-    AudioStreamPlayer _amb = null!, _ambIndoor = null!, _musA = null!, _musB = null!;
+    AudioStreamPlayer _amb = null!, _ambIndoor = null!, _musA = null!, _musB = null!, _rain = null!;
     string _musicNow = "", _ambNow = "";
     float _stepTimer, _groanTimer;
     Vector2 _lastPlayer;
@@ -51,6 +51,9 @@ public partial class AudioManager : Node2D
         _tv = new AudioStreamPlayer2D { Stream = _loops.GetValueOrDefault("tv"), MaxDistance = 1300, Attenuation = 1.6f };
         _amb = new AudioStreamPlayer();
         _ambIndoor = new AudioStreamPlayer { Stream = _loops.GetValueOrDefault("amb_indoor"), VolumeDb = -80 };
+        _rain = new AudioStreamPlayer { Stream = _loops.GetValueOrDefault("rain"), VolumeDb = -80 };
+        AddChild(_rain);
+        _rain.Play();
         _musA = new AudioStreamPlayer { VolumeDb = -80 };
         _musB = new AudioStreamPlayer { VolumeDb = -80 };
         _engine = new AudioStreamPlayer2D { Stream = _loops.GetValueOrDefault("generator"), MaxDistance = 3000, Attenuation = 1.1f };
@@ -167,6 +170,8 @@ public partial class AudioManager : Node2D
         }
         bool inside = w.Map.InBounds(p.Tile) && w.Map.At(p.Tile).Building != 0;
         _amb.VolumeDb = Mathf.Lerp(_amb.VolumeDb, inside ? -24 : -10, dt * 2);
+        float rainDb = !w.Weather.Raining ? -80 : (inside ? -22 : -8) + (w.Weather.Sky == ZTown.Core.Weather.Sky.HeavyRain ? 4 : 0);
+        _rain.VolumeDb = Mathf.Lerp(_rain.VolumeDb, rainDb, dt * 1.5f);
         bool hum = inside && (w.IsHome(p.Tile) ? w.HousePowered : w.Power.GridOn(w.Clock.Day));
         _ambIndoor.VolumeDb = Mathf.Lerp(_ambIndoor.VolumeDb, hum ? -18 : -60, dt * 2);
 

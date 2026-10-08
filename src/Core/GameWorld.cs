@@ -101,6 +101,7 @@ public sealed partial class GameWorld
     /// <summary>Zombies further than this from the player sleep (not simulated) to keep big maps fast.</summary>
     public float ZombieActiveRadius { get; set; } = 70f;
     public HousePower Power { get; } = new();
+    public Weather.WeatherState Weather { get; } = new();
     public TvState Tv { get; } = new();
     public Dictionary<string, Container> Containers { get; } = new();
     public List<GameMessage> Messages { get; } = new();
@@ -214,6 +215,7 @@ public sealed partial class GameWorld
     void TickSlow(double hours)
     {
         int day = Clock.Day;
+        ZTown.Core.Weather.Climate.Tick(Data.Weather, Weather, Clock, Rng, hours);
 
         // power
         if (Power.Tick(hours, day, Data.Power.Generator) && Power.Generator.Present)
@@ -269,6 +271,15 @@ public sealed partial class GameWorld
             n.Boredom += (float)(cfg.BoredomPerHour * hours);
         }
 
+        // weather: rain soaks you outside, you dry off inside; cold depends on clothes and being wet
+        bool outside = Map.InBounds(p.Tile) && Map.At(p.Tile).Building == 0 && Driving == null;
+        if (outside && Weather.Raining) n.Wetness += (float)(hours * (Weather.Sky == ZTown.Core.Weather.Sky.HeavyRain ? 1.2 : 0.6));
+        else if (outside && Weather.Snowing) n.Wetness += (float)(hours * 0.25);
+        else n.Wetness -= (float)(hours * (outside ? 0.15 : 0.4));
+        float feels = AmbientCAtPlayer() + ClothingWarmth(p.Outfit) * 12f - n.Wetness * 8f;
+        if (feels < 10) n.Cold += (float)(hours * (10 - feels) * 0.012);
+        else n.Cold -= (float)(hours * 0.3);
+
         if (PlayerIsHome)
         {
             HoursSincePlayerHome = 0;
@@ -294,6 +305,7 @@ public sealed partial class GameWorld
         // sleeping through danger: something close wakes you
         if (p.Asleep && Zombies.Any(z => !z.IsDead && z.DistanceTo(p) < 7)) p.Asleep = false;
 
+        if (n.Cold >= 0.9f) new ColdExposure { Hours = (float)hours }.ApplyTo(this, p);
         if (n.Hunger >= 1) new Starvation { Hours = (float)hours }.ApplyTo(this, p);
         if (n.Thirst >= 1) new Dehydration { Hours = (float)hours }.ApplyTo(this, p);
         if (p.Infection.Infected) new InfectionProgress { Hours = (float)hours }.ApplyTo(this, p);
@@ -323,7 +335,7 @@ public sealed partial class GameWorld
         var input = new ComfortInputs
         {
             Powered = HousePowered,
-            Warmth01 = HousePowered ? 1f : WarmthWithoutPower(),
+            Warmth01 = Math.Clamp((IndoorC(true) - 8f) / 12f, 0, 1),
             FoodLiked01 = FoodLiked,
             TvOn = show != null && show.Id != Data.Tv.StaticShow,
             HerShowOn = show?.HerShow == true,
@@ -334,8 +346,23 @@ public sealed partial class GameWorld
         m.Activity = Comfort.ChooseActivity(Clock.HourOfDay, input, m.Supplies, Data.Supplies, Data.Comfort, Rng.NextDouble());
     }
 
-    /// <summary>Placeholder until seasons/temperature: colder nights without power.</summary>
-    float WarmthWithoutPower() => Clock.IsNight ? 0.3f : 0.6f;
+    /// <summary>Temperature inside memere's house (or any building): heated with power, else a bit above outside.</summary>
+    public float IndoorC(bool home)
+    {
+        bool heat = home ? HousePowered : Power.GridOn(Clock.Day);
+        return heat ? Data.Weather.HeatedIndoorC : MathF.Min(Data.Weather.HeatedIndoorC, Weather.OutsideC + Data.Weather.UnheatedIndoorBonusC);
+    }
+
+    /// <summary>Warmth of what the player's wearing (garment warmth from clothing.json).</summary>
+    public float ClothingWarmth(Outfit o) => o.Slots.Values.Sum(w => Data.Clothing.Garment(w.Id)?.Warmth ?? 0);
+
+    /// <summary>The temperature where the player is standing.</summary>
+    public float AmbientCAtPlayer()
+    {
+        var t = Player.Tile;
+        if (!Map.InBounds(t) || Map.At(t).Building == 0) return Driving != null ? Weather.OutsideC + 8 : Weather.OutsideC;
+        return IndoorC(IsHome(t));
+    }
 
     // ------------------------------------------------------------------ player movement
 
@@ -355,6 +382,7 @@ public sealed partial class GameWorld
             MoveMode.Sneak => Data.Sim.PlayerSneakSpeed,
             _ => Data.Sim.PlayerWalkSpeed,
         };
+        if (Weather.SnowCover > 0.3f && Map.InBounds(p.Tile) && Map.At(p.Tile).Building == 0) speed *= 1 - 0.25f * Weather.SnowCover;
         float step = speed * realSeconds;
         p.Facing = MathF.Atan2(dy, dx);
         TryMove(p, dx * step, dy * step, PlayerMayEnter);
@@ -432,6 +460,7 @@ public sealed partial class GameWorld
         var cfg = Data.Zombies;
         var b = z.Brain;
         float sight = Clock.IsNight ? cfg.NightSightRange : cfg.SightRange;
+        if (Weather.Foggy) sight *= 0.5f;
 
         // 1. see someone?
         Entity? seen = null;
@@ -465,7 +494,7 @@ public sealed partial class GameWorld
         foreach (var n in Noise.Current)
         {
             if (n.At.Z != z.Z) continue;
-            if (z.Tile.DistanceTo(n.At) > n.Radius * cfg.HearingMultiplier) continue;
+            if (z.Tile.DistanceTo(n.At) > n.Radius * cfg.HearingMultiplier * (Weather.Raining ? 0.7f : 1f)) continue;
             b.Mode = ZombieMode.Investigate;
             SetGoal(z, n.At);
             return;

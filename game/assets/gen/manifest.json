@@ -632,13 +632,15 @@
  "moodles": {
   "bleeding": "res://assets/gen/ui/moodle_bleeding.png",
   "bored": "res://assets/gen/ui/moodle_bored.png",
+  "cold": "res://assets/gen/ui/moodle_cold.png",
   "hungry": "res://assets/gen/ui/moodle_hungry.png",
   "infected": "res://assets/gen/ui/moodle_infected.png",
   "injured": "res://assets/gen/ui/moodle_injured.png",
   "stressed": "res://assets/gen/ui/moodle_stressed.png",
   "thirsty": "res://assets/gen/ui/moodle_thirsty.png",
   "tired": "res://assets/gen/ui/moodle_tired.png",
-  "unhappy": "res://assets/gen/ui/moodle_unhappy.png"
+  "unhappy": "res://assets/gen/ui/moodle_unhappy.png",
+  "wet": "res://assets/gen/ui/moodle_wet.png"
  },
  "objects": {
   "bed": {

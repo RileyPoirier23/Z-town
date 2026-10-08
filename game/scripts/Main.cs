@@ -30,6 +30,7 @@ public partial class Main : Node2D
     InventoryPanel _inventory = null!;
     WorldMap _map = null!;
     AudioManager _audio = null!;
+    WeatherFx _weatherFx = null!;
     PhonePanel _phone = null!;
     float _speed = 1f;
     bool _wasHome = true;
@@ -61,6 +62,8 @@ public partial class Main : Node2D
         AddChild(_map);
         _audio = new AudioManager();
         AddChild(_audio);
+        _weatherFx = new WeatherFx();
+        AddChild(_weatherFx);
         _inventory.Sound = k => _audio.Play(k, Iso.ToScreen(_world.Player.X, _world.Player.Y), -4);
         _phone = new PhonePanel { Dialogue = _dialogue };
         AddChild(_phone);
@@ -70,6 +73,13 @@ public partial class Main : Node2D
         else ShowTitle();
         if (args.Contains("--demo")) DemoSetup(true);
         if (args.Contains("--demo-inside")) DemoSetup(false);
+        foreach (var a in args)
+            if (a.StartsWith("--weather=") && _world != null && System.Enum.TryParse<ZTown.Core.Weather.Sky>(a[10..], true, out var sky))
+            {
+                _world.Weather.Sky = sky;
+                _world.Weather.NextChangeHour = double.MaxValue;
+                if (sky == ZTown.Core.Weather.Sky.Snow) _world.Weather.SnowCover = 0.8f;
+            }
         if (args.Contains("--demo-car"))
         {
             DemoSetup(true);
@@ -228,6 +238,7 @@ public partial class Main : Node2D
         _map.World = w;
         _map.Close();
         _audio.World = w;
+        _weatherFx.World = w;
         _audio.ResetWorld();
         _phone.World = w;
         _phone.Close();
