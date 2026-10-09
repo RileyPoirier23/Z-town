@@ -8,10 +8,25 @@ public partial class WeatherFx : CanvasLayer
 {
     public GameWorld? World { get; set; }
     Fx _fx = null!;
+    ColorRect _grade = null!;
+
+    const string GradeShader = @"shader_type canvas_item;
+uniform sampler2D screen_tex : hint_screen_texture, filter_linear;
+uniform float amount = 0.0;
+void fragment() {
+    vec3 c = texture(screen_tex, SCREEN_UV).rgb;
+    float g = dot(c, vec3(0.299, 0.587, 0.114));
+    vec3 grey = vec3(g) * vec3(0.98, 1.0, 1.02);
+    COLOR = vec4(mix(c, grey, amount), 1.0);
+}";
 
     public override void _Ready()
     {
         Layer = 1;
+        // era colour grade: the town gets greyer as the years pass (chapters.json "desaturate")
+        _grade = new ColorRect { MouseFilter = Control.MouseFilterEnum.Ignore, Material = new ShaderMaterial { Shader = new Shader { Code = GradeShader } } };
+        _grade.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        AddChild(_grade);
         _fx = new Fx { MouseFilter = Control.MouseFilterEnum.Ignore };
         _fx.SetAnchorsPreset(Control.LayoutPreset.FullRect);
         AddChild(_fx);
@@ -20,6 +35,9 @@ public partial class WeatherFx : CanvasLayer
     public override void _Process(double delta)
     {
         _fx.World = World;
+        float d = World?.Era.Desaturate ?? 0;
+        _grade.Visible = d > 0.001f;
+        if (_grade.Visible) ((ShaderMaterial)_grade.Material).SetShaderParameter("amount", d);
         _fx.QueueRedraw();
     }
 

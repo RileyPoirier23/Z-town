@@ -8,12 +8,15 @@ public sealed class QuestDef
     public string Id { get; set; } = "";
     public string Title { get; set; } = "";
     public int Chapter { get; set; } = 1;
-    /// <summary>When it starts: "start", "after:&lt;questId&gt;", "day&gt;=N", "hour&gt;=N" (all must hold).</summary>
+    /// <summary>When it starts: "start", "after:&lt;questId&gt;", "day&gt;=N", "cday&gt;=N" (days into the chapter),
+    /// "hour&gt;=N", "lowsupply:&lt;id&gt;" (all must hold). Only quests of the current chapter start.</summary>
     public List<string> StartWhen { get; set; } = new() { "start" };
     public List<StepDef> Steps { get; set; } = new();
     /// <summary>Message ids (dialogue) to play when the quest starts / finishes.</summary>
     public string? OnStartLine { get; set; }
     public string? OnDoneLine { get; set; }
+    /// <summary>Finishing this quest ends the chapter (time skips to the next one).</summary>
+    public bool EndsChapter { get; set; }
 }
 
 public sealed class StepDef
@@ -37,7 +40,8 @@ public sealed class GoalDef
     public float Min { get; set; }
 }
 
-public enum QuestStatus { Active, Done }
+/// <summary>Dropped = left unfinished when its chapter ended.</summary>
+public enum QuestStatus { Active, Done, Dropped }
 
 public sealed class QuestProgress
 {
@@ -69,7 +73,7 @@ public sealed class QuestLog
         // start anything whose conditions now hold
         foreach (var def in w.Data.Quests.Values)
         {
-            if (Quests.ContainsKey(def.Id) || !def.StartWhen.All(c => Holds(w, c))) continue;
+            if (Quests.ContainsKey(def.Id) || def.Chapter != w.Chapter || !def.StartWhen.All(c => Holds(w, c))) continue;
             Quests[def.Id] = new QuestProgress { Id = def.Id, EventMark = w.StoryEvents.Count };
             Tracked ??= def.Id;
             w.Notify($"New: {def.Title}");
@@ -93,6 +97,7 @@ public sealed class QuestLog
                     q.Status = QuestStatus.Done;
                     w.Notify($"Done: {def.Title}");
                     if (def.OnDoneLine != null) w.Messages.Add(new Events.GameMessage("story", def.OnDoneLine));
+                    if (def.EndsChapter && w.HasNextChapter) w.ChapterEndPending = true;
                     if (Tracked == q.Id) Tracked = Active.FirstOrDefault()?.Id;
                 }
             }
@@ -105,6 +110,7 @@ public sealed class QuestLog
         if (cond == "start") return true;
         if (cond.StartsWith("after:")) return w.Quests.Quests.TryGetValue(cond[6..], out var q) && q.Status == QuestStatus.Done;
         if (cond.StartsWith("day>=")) return w.Clock.Day >= int.Parse(cond[5..]);
+        if (cond.StartsWith("cday>=")) return w.ChapterDay >= int.Parse(cond[6..]);
         if (cond.StartsWith("hour>=")) return w.Clock.Hour >= int.Parse(cond[6..]) || w.Clock.Day > 0;
         if (cond.StartsWith("lowsupply:")) return Memere.Comfort.Asking(w.Memere.Supplies, w.Data.Supplies.Values).Contains(cond[10..]);
         return false;

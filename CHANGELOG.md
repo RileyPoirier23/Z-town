@@ -17,6 +17,10 @@
 - Skills that level by doing; crafting and cooking panel (C), skills panel (K):
   donairs, hot soup, bandages, spiked bat, planks.
 - Pause menu with settings.
+- Chapters 1–6 over about six years, each with its own quests. Sleep at memere's to end a
+  chapter; time skips ahead with a title card and the town ages: overgrown lawns, weeds through
+  the pavement, vines, cracks, litter, broken windows, looted stores, dead cars, fewer and
+  slower zombies, a greyer look. Memere and her house stay the same.
 
 ### Added (art pass)
 - Zomboid-style look: painted siding, brick, shingles, grass, roads and sidewalks; hip roofs

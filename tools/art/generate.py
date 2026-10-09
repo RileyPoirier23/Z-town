@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import cars  # noqa: E402
 import chars  # noqa: E402
 import icons  # noqa: E402
+import overlays  # noqa: E402
 import props  # noqa: E402
 import tiles  # noqa: E402
 from iso import ORIGIN  # noqa: E402
@@ -68,6 +69,10 @@ def main(which):
         for name, make in tiles.FURNITURE.items():
             m["objects"][name] = {"file": save(make(), f"objects/{name}.png"), "origin": list(ORIGIN)}
         m["objects"]["streetlight"] = {"file": save(tiles.obj_streetlight(), "objects/streetlight.png"), "origin": [ORIGIN[0], ORIGIN[1] + 128]}
+
+    if which in ("all", "overlays"):
+        m["overlays"] = {name: [save(img, f"overlays/{name}_{i}.png") for i, img in enumerate(imgs)]
+                         for name, imgs in overlays.all_overlays().items()}
 
     if which in ("all", "cars"):
         m["cars"] = {"frame": {"w": cars.FW, "h": cars.FH, "center": list(cars.CENTER), "dirs": cars.DIRS}, "models": {}}

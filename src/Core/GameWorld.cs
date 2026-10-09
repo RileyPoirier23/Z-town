@@ -158,7 +158,7 @@ public sealed partial class GameWorld
     public Zombie? TrySpawnZombie(TilePos p)
     {
         if (!Map.InBounds(p) || Map.At(p).Solid || ProtectedZones.Contains(p)) return null;
-        var z = new Zombie { Speed = Data.Zombies.ShamblerSpeed, Look = Rng.Range(0, int.MaxValue) };
+        var z = new Zombie { Speed = Data.Zombies.ShamblerSpeed * Era.ZombieSpeed, Look = Rng.Range(0, int.MaxValue) };
         z.PlaceAt(p);
         z.Facing = Rng.Range(0f, MathF.Tau);
         z.Health.Restore(Data.Zombies.Health);
@@ -233,6 +233,7 @@ public sealed partial class GameWorld
         TickMemere(hours);
         TickMemereLife();
         TickStory(hours);
+        TickChapter();
     }
 
     void Age(ItemStack s, double hours, bool cold)

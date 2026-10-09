@@ -124,3 +124,13 @@ Cost: ~40 MB of character sheets for 14 garments × 14 animations; more garments
 ### D-019 — Memere doesn't age
 **Accepted** (Riley: "stay the way i remember her"). Over the 5–7 years the world ages around
 her (eras, overgrowth, the player and Dad can change), but memere's look stays the same.
+
+### D-020 — Chapters end by sleeping at memere's; time skips age the town
+**Proposed.** Each chapter has a "Get some rest" quest that unlocks once its main quests are
+done. Sleeping at memere's then skips to the next chapter (`data/chapters.json`): you wake up
+at home healed, memere's stash has been kept up off screen, unfinished quests from the last
+chapter are dropped, and everything outside her house ages to the new era (broken windows and
+doors, less loot, stale gas and dead cars, fewer and slower zombies, tall grass, weeds, vines,
+litter, a greyer colour grade). Memere and her house don't change (D-019). Chapter 6 has no
+ending quest yet: the ending is written with Riley.
+

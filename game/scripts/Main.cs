@@ -33,6 +33,7 @@ public partial class Main : Node2D
     WeatherFx _weatherFx = null!;
     PauseMenu _pause = null!;
     CraftingPanel _craft = null!;
+    ChapterCard _card = null!;
     PhonePanel _phone = null!;
     float _speed = 1f;
     bool _wasHome = true;
@@ -68,6 +69,8 @@ public partial class Main : Node2D
         AddChild(_weatherFx);
         _craft = new CraftingPanel { Art = _view.Art, Toast = t => _hud.Say("", t) };
         AddChild(_craft);
+        _card = new ChapterCard();
+        AddChild(_card);
         _pause = new PauseMenu
         {
             ProcessMode = ProcessModeEnum.Always,
@@ -85,6 +88,12 @@ public partial class Main : Node2D
         var args = OS.GetCmdlineUserArgs();
         if (args.Contains("--quickstart") || args.Contains("--demo") || args.Contains("--demo-inside") || args.Contains("--demo-car")) NewGame(42, "Riley", null);
         else ShowTitle();
+        foreach (var a in args)   // dev: `--chapter=N` jumps the new game ahead to chapter N's era
+            if (a.StartsWith("--chapter=") && _world != null && int.TryParse(a[10..], out var chapter))
+            {
+                while (_world.Chapter < chapter && _world.AdvanceChapter()) { }
+                _messagesSeen = _world.Messages.Count;
+            }
         if (args.Contains("--demo")) DemoSetup(true);
         if (args.Contains("--demo-inside")) DemoSetup(false);
         foreach (var a in args)
@@ -239,6 +248,7 @@ public partial class Main : Node2D
         _world.Profile = profile ?? ZTown.Core.Character.Profile.Create(_data.Character, "unemployed", System.Array.Empty<string>());
         _world.Player.Inventory.TryAdd(_data.Item("baseball_bat")!, 1, _data.Item);
         _inventory.Equipped = _world.Player.Inventory.Stacks.FirstOrDefault();
+        if (_world.CurrentChapter is { } ch && _screenshotPath == null && !OS.GetCmdlineUserArgs().Any(a => a.StartsWith("--demo") || a == "--quickstart")) _card.Show(ch);
         Save();
     }
 
@@ -438,12 +448,19 @@ public partial class Main : Node2D
         }
 
         float scale = p.Asleep ? 30f : _speed;
-        w.Tick(dt * scale);
+        if (!_card.Showing) w.Tick(dt * scale);
 
         // memere and the world talking
         for (; _messagesSeen < w.Messages.Count; _messagesSeen++)
         {
             var m = w.Messages[_messagesSeen];
+            if (m.Channel == "chapter")
+            {
+                if (w.CurrentChapter is { } ch) _card.Show(ch);
+                _hud.ResetNotifications(w.Notifications.Count);
+                Save();
+                continue;
+            }
             var line = _dialogue.Lines.GetValueOrDefault(m.DialogueId);
             var text = _dialogue.Text(m.DialogueId);
             if (m.Channel == "phone") _audio.PhoneBuzz();

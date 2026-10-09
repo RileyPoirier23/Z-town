@@ -97,6 +97,8 @@ public sealed class GameData
     public Weather.WeatherConfig Weather { get; private set; } = new();
     public Character.CharacterData Character { get; private set; } = new();
     public Dictionary<string, Character.RecipeDef> Recipes { get; } = new();
+    /// <summary>Chapters in order (data/chapters.json).</summary>
+    public List<Story.ChapterDef> Chapters { get; private set; } = new();
 
     /// <summary>Problems found while loading (duplicate ids etc.). The validator fails on any.</summary>
     public List<string> Problems { get; } = new();
@@ -135,6 +137,7 @@ public sealed class GameData
         d.Character = ReadOpt<Character.CharacterData>(src, $"{root}/character.json", d) ?? new();
         foreach (var r in ReadOpt<List<Character.RecipeDef>>(src, $"{root}/recipes.json", d) ?? new())
             AddUnique(d.Recipes, r.Id, r, "recipes.json", d);
+        d.Chapters = (ReadOpt<List<Story.ChapterDef>>(src, $"{root}/chapters.json", d) ?? new()).OrderBy(c => c.Number).ToList();
         return d;
     }
 

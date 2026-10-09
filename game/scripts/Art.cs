@@ -21,6 +21,8 @@ public sealed class Art
     public Vector2 CarCenter = new(240, 240);
     public readonly Dictionary<string, Texture2D> Items = new();
     public readonly Dictionary<string, Sprite> Objects = new();
+    /// <summary>Era overlays (tall grass, weeds, cracks, litter, leaves, vines_N/W[_cut]) -> variants.</summary>
+    public readonly Dictionary<string, Texture2D[]> Overlays = new();
     /// <summary>Character layers (body, garments, held items) -> anim -> sheet.</summary>
     public readonly Dictionary<string, Layer> Layers = new();
     public readonly Dictionary<string, int> AnimFrames = new();
@@ -63,6 +65,13 @@ public sealed class Art
             foreach (var x in md.EnumerateObject()) art.Moodles[x.Name] = T(x.Value.GetString()!);
         if (root.TryGetProperty("items", out var its))
             foreach (var x in its.EnumerateObject()) art.Items[x.Name] = T(x.Value.GetString()!);
+        if (root.TryGetProperty("overlays", out var ovs))
+            foreach (var o in ovs.EnumerateObject())
+            {
+                var list = new List<Texture2D>();
+                foreach (var v in o.Value.EnumerateArray()) list.Add(T(v.GetString()!));
+                art.Overlays[o.Name] = list.ToArray();
+            }
         if (root.TryGetProperty("roofs", out var roofs))
             foreach (var r in roofs.EnumerateObject()) art.Roofs[r.Name] = T(r.Value.GetString()!);
         foreach (var o in root.GetProperty("objects").EnumerateObject())

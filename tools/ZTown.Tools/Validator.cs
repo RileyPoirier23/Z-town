@@ -79,9 +79,26 @@ public static class Validator
                 foreach (var it in st.Goal.Items) if (!data.Items.ContainsKey(it)) p.Add($"quest {q.Id}: unknown item '{it}'");
                 if (st.Goal.Supply != null && !data.Supplies.ContainsKey(st.Goal.Supply)) p.Add($"quest {q.Id}: unknown supply '{st.Goal.Supply}'");
             }
+            if (data.Chapters.Count > 0 && !data.Chapters.Any(c => c.Number == q.Chapter)) p.Add($"quest {q.Id}: unknown chapter {q.Chapter}");
+            foreach (var c in q.StartWhen.Where(c => c.StartsWith("after:")))
+                if (data.Quests.TryGetValue(c[6..], out var dep) && dep.Chapter != q.Chapter) p.Add($"quest {q.Id}: starts after '{dep.Id}' from another chapter");
             foreach (var line in new[] { q.OnStartLine, q.OnDoneLine })
                 if (line != null && !dlg.Lines.ContainsKey(line)) p.Add($"quest {q.Id}: line '{line}' not in dialogue");
         }
+        for (int i = 0; i < data.Chapters.Count; i++)
+        {
+            var ch = data.Chapters[i];
+            if (ch.Number != i + 1) p.Add($"chapters: expected chapter {i + 1}, found {ch.Number}");
+            if (i > 0 && ch.StartDay <= data.Chapters[i - 1].StartDay) p.Add($"chapter {ch.Number}: startDay must be after chapter {i}'s");
+            var e = ch.Era;
+            foreach (var (n, v) in new[] { ("overgrowth", e.Overgrowth), ("litter", e.Litter), ("decay", e.Decay), ("desaturate", e.Desaturate),
+                         ("lootLeft", e.LootLeft), ("fuelLeft", e.FuelLeft), ("carsDead", e.CarsDead), ("memereSupplies", e.MemereSupplies) })
+                if (v < 0 || v > 1) p.Add($"chapter {ch.Number}: era {n} must be 0..1");
+            if (e.Zombies < 0 || e.ZombieSpeed <= 0) p.Add($"chapter {ch.Number}: era zombie numbers must be positive");
+            if (i < data.Chapters.Count - 1 && !data.Quests.Values.Any(q => q.Chapter == ch.Number && q.EndsChapter))
+                p.Add($"chapter {ch.Number}: no quest ends it (endsChapter)");
+        }
+
         var cd = data.Character;
         foreach (var r in data.Recipes.Values)
         {

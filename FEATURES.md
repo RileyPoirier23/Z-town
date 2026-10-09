@@ -113,7 +113,7 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Interiors: grocery, big-box, school, church, apartment, mall, hospital, police, fire hall, restaurants | P1–P2 |
 | Hand-edit & **lock** buildings | **P0** (memere's house) |
 | In-editor notes + photos per building | P1 |
-| Era overlays (vegetation, collapse, wrecks) across 5–7 years, driven by chapter | P2 (P1: Collapse era only) |
+| Era overlays (vegetation, collapse, wrecks) across 5–7 years, driven by chapter | P2 ✔ (overgrowth, litter, decay; wrecks/collapsed landmarks to come) |
 | Full Moncton / Riverview / Salisbury coverage | P2 |
 | OSM attribution in credits and map screen | **P0** |
 
@@ -157,7 +157,7 @@ Items marked **(B42)** are things Zomboid added or reworked in Build 42.
 | Feature | P |
 |---|---|
 | Quest system (data-driven), quest log | **P0** (one objective) / P1 |
-| Chapters with time skips | P1 |
+| Chapters with time skips | P1 ✔ |
 | In-engine scripted scenes / cutscenes | P1 |
 | Collectible lore: texts, news alerts, flyers, receipts, social posts | P1 |
 | Early-days phone: battery, texts, social feed, service dying | P1 |

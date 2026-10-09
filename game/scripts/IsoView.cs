@@ -168,6 +168,7 @@ public partial class IsoView : Node2D
                 pts[0] = Screen(x, y); pts[1] = Screen(x + 1, y); pts[2] = Screen(x + 1, y + 1); pts[3] = Screen(x, y + 1);
                 cols[0] = Corner(x, y); cols[1] = Corner(x + 1, y); cols[2] = Corner(x + 1, y + 1); cols[3] = Corner(x, y + 1);
                 DrawPolygon(pts, cols, FloorUv, tex);
+                if (FlatOverlay(t, floor, x, y) is { } ov) DrawPolygon(pts, cols, FloorUv, ov);
                 if (snow > 0 && t.Building == 0 && floor is not ("water" or "void"))
                 {
                     var sc = new Color(0.92f, 0.94f, 0.97f, snow * (floor is "asphalt" or "road_line" or "road_line_y" ? 0.55f : 0.85f));
@@ -202,6 +203,13 @@ public partial class IsoView : Node2D
                     float d = x + y + 0.5f;
                     Add(d, 0, () => DrawWall(xx, yy, 'W', playerDepth));
                 }
+                if (t.Object == null && !t.Solid && StandingOverlay(t, x, y) is { } grass)
+                    Add(x + y + 0.9f, 1, () =>
+                    {
+                        var col = Light(new TilePos(xx, yy));
+                        if (w.Weather.SnowCover > 0) col = col.Lerp(new Color(0.95f, 0.96f, 0.98f) * col.R, w.Weather.SnowCover * 0.6f);
+                        DrawTexture(grass, Screen(xx, yy) - art.TileOrigin, col);
+                    });
                 if (t.Object != null && art.Objects.TryGetValue(ObjectSprite(t.Object, x, y), out var spr))
                 {
                     bool flat = t.Object == "rug";
@@ -303,6 +311,55 @@ public partial class IsoView : Node2D
         if (!b.RoofDist.ContainsKey((x + 1, y))) DrawLine(pts[1], pts[2], eave, 2);
     }
 
+    /// <summary>Stable 0..1 noise per tile (and layer), so overlays don't flicker or move.</summary>
+    static float Hash(int x, int y, int salt)
+    {
+        uint h = (uint)x * 374761393u + (uint)y * 668265263u + (uint)salt * 2246822519u;
+        h = (h ^ (h >> 13)) * 1274126177u;
+        h ^= h >> 16;
+        return (h & 0xFFFFFF) / (float)0x1000000;
+    }
+
+    Texture2D? Pick(string name, int x, int y)
+    {
+        if (!Art!.Overlays.TryGetValue(name, out var v) || v.Length == 0) return null;
+        return v[(int)(Hash(x, y, 99) * v.Length) % v.Length];
+    }
+
+    static bool Hard(string floor) => floor is "asphalt" or "road_line" or "road_line_y" or "parking" or "sidewalk" or "driveway";
+    static bool Soft(string floor) => floor is "grass" or "field" or "dirt";
+
+    /// <summary>Cracks, litter and dead leaves on the ground, by era. Memere's house stays clean.</summary>
+    Texture2D? FlatOverlay(in Tile t, string floor, int x, int y)
+    {
+        var w = World!;
+        var era = w.Era;
+        if (t.Building != 0)
+            return t.Building != w.HomeBuilding + 1 && Hash(x, y, 3) < era.Decay * 0.35f ? Pick("litter", x, y) : null;
+        if (Hard(floor))
+        {
+            if (Hash(x, y, 2) < era.Overgrowth * 0.35f + era.Decay * 0.1f) return Pick("cracks", x, y);
+            if (Hash(x, y, 3) < era.Litter * 0.15f) return Pick("litter", x, y);
+        }
+        else if (Soft(floor))
+        {
+            if (Hash(x, y, 3) < era.Litter * 0.08f) return Pick("litter", x, y);
+            if (Hash(x, y, 6) < era.Litter * 0.25f) return Pick("leaves", x, y);
+        }
+        return null;
+    }
+
+    /// <summary>Tall grass on lawns and weeds through the pavement as the years go by.</summary>
+    Texture2D? StandingOverlay(in Tile t, int x, int y)
+    {
+        var era = World!.Era;
+        if (t.Building != 0 || era.Overgrowth <= 0) return null;
+        var floor = t.Floor ?? "grass";
+        if (Soft(floor)) return Hash(x, y, 4) < era.Overgrowth * 0.9f ? Pick("grass_tall", x, y) : null;
+        if (Hard(floor)) return Hash(x, y, 5) < era.Overgrowth * (floor == "sidewalk" ? 0.6f : 0.35f) ? Pick("weeds", x, y) : null;
+        return null;
+    }
+
     string ObjectSprite(string obj, int x, int y)
     {
         if (obj == "tv" && World!.Tv.On && World.HousePowered) return "tv_on";
@@ -344,6 +401,13 @@ public partial class IsoView : Node2D
         // light the wall from the side you're looking at
         var lit = Light(owner);
         DrawTexture(tex, Screen(x, y) - art.TileOrigin, lit);
+        if (style != "fence_wood" && !style.StartsWith("wallpaper") && style != "store_white")
+        {
+            int bOwner = to.Building != 0 ? to.Building : map.InBounds(other) ? map.At(other).Building : 0;
+            if (bOwner != w.HomeBuilding + 1 && Hash(x, y, side) < w.Era.Overgrowth * 0.6f
+                && art.Overlays.TryGetValue($"vines_{side}{(cut ? "_cut" : "")}", out var vines))
+                DrawTexture(vines[(int)(Hash(x, y, 7) * vines.Length) % vines.Length], Screen(x, y) - art.TileOrigin, lit);
+        }
         int planks = side == 'N' ? to.BarN : to.BarW;
         if (planks > 0) DrawPlanks(x, y, side, planks, cut, lit);
     }

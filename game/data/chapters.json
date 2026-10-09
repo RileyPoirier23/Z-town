@@ -1,0 +1,56 @@
+// The story's chapters and the "era" the town is in during each one (5–7 years in all, D-017).
+// A chapter ends when a quest with "endsChapter": true is done; time then skips to the next
+// chapter's startDay and the town ages to that chapter's era.
+//
+// startDay counts from the outbreak (day 0 = Sept 1, see weather.json startDayOfYear).
+// card = the line on the chapter title card. It's UI copy, not dialogue; placeholder.
+//
+// Era numbers are 0..1 except where noted:
+//   overgrowth   tall grass, weeds in cracks, vines on walls (looks)
+//   litter       trash and dead leaves on the ground (looks)
+//   decay        broken windows and doors in other buildings
+//   desaturate   how grey the town looks
+//   lootLeft     share of loot still out there (1 = untouched)
+//   zombies      zombie count vs. the start (can go above 1)
+//   zombieSpeed  how fast they shamble vs. the start (they rot)
+//   fuelLeft     share of gas left in parked cars (it goes stale too)
+//   carsDead     share of parked cars that won't start any more
+//   memereSupplies  her stash at the start of the chapter, as a share of the starting amount
+//                   (the player kept her going off screen during the skip)
+[
+  { "number": 1, "id": "collapse", "title": "Collapse", "startDay": 0,
+    "card": "September.",
+    "era": { "overgrowth": 0.0, "litter": 0.12, "decay": 0.0, "desaturate": 0.0,
+             "lootLeft": 1.0, "zombies": 1.0, "zombieSpeed": 1.0, "fuelLeft": 1.0, "carsDead": 0.0,
+             "memereSupplies": 1.0 } },
+
+  { "number": 2, "id": "lights_out", "title": "Lights out", "startDay": 42,
+    "card": "Six weeks later.",
+    "era": { "overgrowth": 0.15, "litter": 0.45, "decay": 0.25, "desaturate": 0.08,
+             "lootLeft": 0.6, "zombies": 1.3, "zombieSpeed": 1.0, "fuelLeft": 0.7, "carsDead": 0.1,
+             "memereSupplies": 0.8 } },
+
+  { "number": 3, "id": "first_winter", "title": "First winter", "startDay": 112,
+    "card": "December.",
+    "era": { "overgrowth": 0.2, "litter": 0.55, "decay": 0.4, "desaturate": 0.15,
+             "lootLeft": 0.4, "zombies": 1.2, "zombieSpeed": 0.95, "fuelLeft": 0.5, "carsDead": 0.25,
+             "memereSupplies": 0.6 } },
+
+  { "number": 4, "id": "thaw", "title": "Thaw", "startDay": 240,
+    "card": "Spring.",
+    "era": { "overgrowth": 0.45, "litter": 0.6, "decay": 0.55, "desaturate": 0.12,
+             "lootLeft": 0.3, "zombies": 0.9, "zombieSpeed": 0.9, "fuelLeft": 0.35, "carsDead": 0.45,
+             "memereSupplies": 0.5 } },
+
+  { "number": 5, "id": "scarcity", "title": "Scarcity", "startDay": 975,
+    "card": "Two years on.",
+    "era": { "overgrowth": 0.75, "litter": 0.5, "decay": 0.75, "desaturate": 0.2,
+             "lootLeft": 0.12, "zombies": 0.6, "zombieSpeed": 0.8, "fuelLeft": 0.1, "carsDead": 0.8,
+             "memereSupplies": 0.35 } },
+
+  { "number": 6, "id": "long_after", "title": "Long after", "startDay": 2160,
+    "card": "Years later.",
+    "era": { "overgrowth": 1.0, "litter": 0.35, "decay": 0.9, "desaturate": 0.25,
+             "lootLeft": 0.05, "zombies": 0.35, "zombieSpeed": 0.7, "fuelLeft": 0.0, "carsDead": 0.97,
+             "memereSupplies": 0.25 } }
+]

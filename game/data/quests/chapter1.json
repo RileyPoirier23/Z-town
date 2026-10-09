@@ -44,5 +44,11 @@
     "steps": [
       { "text": "Get a hammer, nails and planks", "goal": { "type": "have_item", "items": ["hammer"] }, "marker": "nearest:hardware,garage,warehouse" },
       { "text": "Board up a window at memere's", "goal": { "type": "event", "kind": "barricade" }, "marker": "home" }
+    ] },
+
+  { "id": "c1_end", "title": "Get some rest", "chapter": 1, "endsChapter": true,
+    "startWhen": ["after:c1_dad", "after:c1_power", "after:c1_board", "day>=5"],
+    "steps": [
+      { "text": "Get some sleep at memere's (Z)", "goal": { "type": "event", "kind": "sleep_home" }, "marker": "home" }
     ] }
 ]

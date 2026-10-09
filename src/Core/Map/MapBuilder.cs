@@ -68,7 +68,9 @@ public static class MapBuilder
         var dadHouse = PickHouse(w, cfg.DadHouse, w.Memere.Tile, home, 160);
         if (dadHouse != null) SetUpDad(w, data, dadHouse, gens[dadHouse]);
 
+        w.SafeRadius = cfg.SafeRadius;
         SpawnZombies(w, cfg, home);
+        w.StartZombies = w.Zombies.Count();
         w.SpawnParkedCars(new Sim.Rng(seed ^ 0xCA75));
         // a neighbour's car with keys in it, not far from memere's, so early runs are possible
         var near = w.Vehicles.OrderBy(v => MathF.Abs(v.X - w.Player.X) + MathF.Abs(v.Y - w.Player.Y)).FirstOrDefault();

@@ -56,6 +56,8 @@ public static class SaveSystem
             Clock = w.Clock.TotalSeconds,
             Rng = w.Rng.State,
             HoursSincePlayerHome = w.HoursSincePlayerHome,
+            Chapter = w.Chapter,
+            StartZombies = w.StartZombies,
             FoodLiked = w.FoodLiked,
             Player = new PlayerSave
             {
@@ -150,6 +152,8 @@ public static class SaveSystem
 
         w.Clock.Restore(s.Clock);
         w.HoursSincePlayerHome = s.HoursSincePlayerHome;
+        if (s.Chapter > 0) w.Chapter = s.Chapter;
+        if (s.StartZombies != null) w.StartZombies = s.StartZombies.Value;
         w.FoodLiked = s.FoodLiked;
 
         var p = w.Player;
@@ -289,6 +293,9 @@ public sealed class SaveData
     public double Clock { get; set; }
     public ulong Rng { get; set; }
     public double HoursSincePlayerHome { get; set; }
+    /// <summary>Added after v1 shipped; missing (0) means chapter 1.</summary>
+    public int Chapter { get; set; }
+    public int? StartZombies { get; set; }
     public float FoodLiked { get; set; }
     public PlayerSave Player { get; set; } = new();
     public MemereSave Memere { get; set; } = new();

@@ -154,7 +154,11 @@ public sealed partial class GameWorld
         Tv.Channel = chs[(i + 1) % chs.Count].Id;
     }
 
-    public void Sleep() => Player.Asleep = true;
+    public void Sleep()
+    {
+        Player.Asleep = true;
+        if (PlayerIsHome) Story("sleep_home");
+    }
 
     /// <summary>Bandage your worst wound (uses a bandage; disinfectant too if you have it).</summary>
     public Entities.Wound? BandageSelf()

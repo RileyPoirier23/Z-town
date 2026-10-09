@@ -46,6 +46,9 @@ public class SoakTests
                 if (w.Player.IsDead) w.Player.Health.Heal(100);
                 if (w.Zombies.Count() > 120) foreach (var z in w.Zombies.Skip(120).ToList()) w.Remove(z);
 
+                // and the years go by: every chapter skip happens during the soak
+                if (i > 0 && i % (ticks / 6) == 0) w.AdvanceChapter();
+
                 w.Tick(dt);
 
                 foreach (var z in w.Zombies)

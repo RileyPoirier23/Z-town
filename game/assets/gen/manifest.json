@@ -865,6 +865,58 @@
    ]
   }
  },
+ "overlays": {
+  "cracks": [
+   "res://assets/gen/overlays/cracks_0.png",
+   "res://assets/gen/overlays/cracks_1.png",
+   "res://assets/gen/overlays/cracks_2.png",
+   "res://assets/gen/overlays/cracks_3.png",
+   "res://assets/gen/overlays/cracks_4.png",
+   "res://assets/gen/overlays/cracks_5.png"
+  ],
+  "grass_tall": [
+   "res://assets/gen/overlays/grass_tall_0.png",
+   "res://assets/gen/overlays/grass_tall_1.png",
+   "res://assets/gen/overlays/grass_tall_2.png",
+   "res://assets/gen/overlays/grass_tall_3.png"
+  ],
+  "leaves": [
+   "res://assets/gen/overlays/leaves_0.png",
+   "res://assets/gen/overlays/leaves_1.png"
+  ],
+  "litter": [
+   "res://assets/gen/overlays/litter_0.png",
+   "res://assets/gen/overlays/litter_1.png",
+   "res://assets/gen/overlays/litter_2.png",
+   "res://assets/gen/overlays/litter_3.png"
+  ],
+  "vines_N": [
+   "res://assets/gen/overlays/vines_N_0.png",
+   "res://assets/gen/overlays/vines_N_1.png",
+   "res://assets/gen/overlays/vines_N_2.png"
+  ],
+  "vines_N_cut": [
+   "res://assets/gen/overlays/vines_N_cut_0.png",
+   "res://assets/gen/overlays/vines_N_cut_1.png",
+   "res://assets/gen/overlays/vines_N_cut_2.png"
+  ],
+  "vines_W": [
+   "res://assets/gen/overlays/vines_W_0.png",
+   "res://assets/gen/overlays/vines_W_1.png",
+   "res://assets/gen/overlays/vines_W_2.png"
+  ],
+  "vines_W_cut": [
+   "res://assets/gen/overlays/vines_W_cut_0.png",
+   "res://assets/gen/overlays/vines_W_cut_1.png",
+   "res://assets/gen/overlays/vines_W_cut_2.png"
+  ],
+  "weeds": [
+   "res://assets/gen/overlays/weeds_0.png",
+   "res://assets/gen/overlays/weeds_1.png",
+   "res://assets/gen/overlays/weeds_2.png",
+   "res://assets/gen/overlays/weeds_3.png"
+  ]
+ },
  "roofs": {
   "flat_tar": "res://assets/gen/roofs/flat_tar.png",
   "shingle_brown": "res://assets/gen/roofs/shingle_brown.png",

@@ -1,0 +1,73 @@
+// Quests for chapters 2–6. Objective text is UI copy (not dialogue), placeholder until Riley's
+// story pass. Chapter 6 has no ending quest on purpose: the ending gets written with Riley.
+[
+  // ---------------------------------------------------------------- 2. Lights out
+  { "id": "c2_gas", "title": "Feed the generator", "chapter": 2, "startWhen": ["start"],
+    "steps": [
+      { "text": "Find gas (cars, the gas station)", "goal": { "type": "have_item", "items": ["gas_can"] }, "marker": "nearest:gas_station,garage" },
+      { "text": "Fill the generator", "goal": { "type": "generator_fuel", "min": 10 }, "marker": "generator" }
+    ] },
+  { "id": "c2_donair", "title": "Donair night", "chapter": 2, "startWhen": ["cday>=1"],
+    "steps": [
+      { "text": "Find donair meat", "goal": { "type": "have_item", "items": ["donair_meat_frozen", "donair"] }, "marker": "nearest:restaurant,fast_food,grocery,convenience" },
+      { "text": "Make donairs on memere's stove (C)", "goal": { "type": "event", "kind": "craft:donair" }, "marker": "home" },
+      { "text": "Bring one to memere", "goal": { "type": "event", "kind": "give:food" }, "marker": "memere" }
+    ] },
+  { "id": "c2_reruns", "title": "Her shows", "chapter": 2, "startWhen": ["cday>=2"],
+    "steps": [
+      { "text": "Find a box of reruns for her TV", "goal": { "type": "have_item", "items": ["reruns_box"] }, "marker": "nearest:retail,electronics,mall,department_store" },
+      { "text": "Bring it home", "goal": { "type": "at_home" }, "marker": "home" }
+    ] },
+  { "id": "c2_end", "title": "Get some rest", "chapter": 2, "endsChapter": true,
+    "startWhen": ["after:c2_gas", "after:c2_donair", "cday>=7"],
+    "steps": [ { "text": "Get some sleep at memere's (Z)", "goal": { "type": "event", "kind": "sleep_home" }, "marker": "home" } ] },
+
+  // ---------------------------------------------------------------- 3. First winter
+  { "id": "c3_board", "title": "Keep the cold out", "chapter": 3, "startWhen": ["start"],
+    "steps": [
+      { "text": "Get planks and nails", "goal": { "type": "have_item", "items": ["planks"] }, "marker": "nearest:hardware,garage,warehouse" },
+      { "text": "Board up another window at memere's", "goal": { "type": "event", "kind": "barricade" }, "marker": "home" }
+    ] },
+  { "id": "c3_pantry", "title": "Stock the pantry", "chapter": 3, "startWhen": ["start"],
+    "steps": [
+      { "text": "Find canned food", "goal": { "type": "have_item", "items": ["canned_soup", "canned_beans"] }, "marker": "nearest:grocery,convenience" },
+      { "text": "Bring it home", "goal": { "type": "at_home" }, "marker": "home" }
+    ] },
+  { "id": "c3_puffers", "title": "Puffers", "chapter": 3, "startWhen": ["cday>=2"],
+    "steps": [
+      { "text": "Find puffers", "goal": { "type": "have_item", "items": ["puffer"] }, "marker": "nearest:pharmacy,clinic,hospital" },
+      { "text": "Bring one to memere", "goal": { "type": "give_memere", "supply": "puffers" }, "marker": "memere" }
+    ] },
+  { "id": "c3_end", "title": "Get some rest", "chapter": 3, "endsChapter": true,
+    "startWhen": ["after:c3_board", "after:c3_pantry", "cday>=10"],
+    "steps": [ { "text": "Get some sleep at memere's (Z)", "goal": { "type": "event", "kind": "sleep_home" }, "marker": "home" } ] },
+
+  // ---------------------------------------------------------------- 4. Thaw
+  { "id": "c4_town", "title": "What's left", "chapter": 4, "startWhen": ["start"],
+    "steps": [
+      { "text": "See what's left at the grocery store", "goal": { "type": "near", "target": "nearest:grocery,convenience" }, "marker": "nearest:grocery,convenience" },
+      { "text": "Bring back water", "goal": { "type": "have_item", "items": ["water_bottle"] }, "marker": "nearest:grocery,convenience" }
+    ] },
+  { "id": "c4_mepsi", "title": "Mepsi", "chapter": 4, "startWhen": ["cday>=1"],
+    "steps": [
+      { "text": "Find her some Mepsi", "goal": { "type": "have_item", "items": ["mepsi_can", "mepsi_2l", "mepsi_case"] }, "marker": "nearest:convenience,gas_station,grocery" },
+      { "text": "Bring it to memere", "goal": { "type": "give_memere", "supply": "mepsi" }, "marker": "memere" }
+    ] },
+  { "id": "c4_end", "title": "Get some rest", "chapter": 4, "endsChapter": true,
+    "startWhen": ["after:c4_town", "cday>=7"],
+    "steps": [ { "text": "Get some sleep at memere's (Z)", "goal": { "type": "event", "kind": "sleep_home" }, "marker": "home" } ] },
+
+  // ---------------------------------------------------------------- 5. Scarcity
+  { "id": "c5_smokes", "title": "The last smokes in town", "chapter": 5, "startWhen": ["start"],
+    "steps": [
+      { "text": "Find her smokes, wherever they're left", "goal": { "type": "have_item", "items": ["cigarettes_pack", "cigarettes_carton"] }, "marker": "nearest:convenience,gas_station,grocery,retail" },
+      { "text": "Bring them to memere", "goal": { "type": "give_memere", "supply": "cigarettes" }, "marker": "memere" }
+    ] },
+  { "id": "c5_end", "title": "Get some rest", "chapter": 5, "endsChapter": true,
+    "startWhen": ["after:c5_smokes", "cday>=10"],
+    "steps": [ { "text": "Get some sleep at memere's (Z)", "goal": { "type": "event", "kind": "sleep_home" }, "marker": "home" } ] },
+
+  // ---------------------------------------------------------------- 6. Long after
+  { "id": "c6_home", "title": "Home", "chapter": 6, "startWhen": ["start"],
+    "steps": [ { "text": "Sit with memere", "goal": { "type": "near_memere" }, "marker": "memere" } ] }
+]
